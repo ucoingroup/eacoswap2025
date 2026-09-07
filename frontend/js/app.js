@@ -483,13 +483,14 @@ async function fetchSwapQuote() {
     const resp = await fetch(url);
     if (!resp.ok) throw new Error('Backend returned ' + resp.status);
     const data = await resp.json();
+    const quoteData = data.data || data;
 
-    if (data && data.outAmount) {
+    if (quoteData && quoteData.outAmount) {
       const outDecimals = getTokenDecimals(outputMint);
-      const outAmount = (parseInt(data.outAmount, 10) / Math.pow(10, outDecimals)).toFixed(6);
-      const slippage = (data.slippageBps / 100).toFixed(2) + '%';
-      const route = (data.routePlan && data.routePlan.map(r => r.swapInfo?.label || 'DEX').join(' -> ')) || 'Jupiter Aggregator';
-      const priceImpact = data.priceImpactPct ? parseFloat(data.priceImpactPct).toFixed(4) + '%' : '--';
+      const outAmount = (parseInt(quoteData.outAmount, 10) / Math.pow(10, outDecimals)).toFixed(6);
+      const slippage = (quoteData.slippageBps / 100).toFixed(2) + '%';
+      const route = (quoteData.routePlan && quoteData.routePlan.map(r => r.swapInfo?.label || 'DEX').join(' -> ')) || 'Jupiter Aggregator';
+      const priceImpact = quoteData.priceImpactPct ? parseFloat(quoteData.priceImpactPct).toFixed(4) + '%' : '--';
 
       document.getElementById('quoteOutputAmount').textContent = outAmount + ' ' + outputSelect.options[outputSelect.selectedIndex].text;
       document.getElementById('quoteSlippage').textContent = slippage;
@@ -542,9 +543,10 @@ async function fetchMarketCapData(range){
     const resp = await fetch(API_BASE + '/api/tokens/market-cap?range=' + range);
     if (!resp.ok) throw new Error('API error: ' + resp.status);
     const data = await resp.json();
-    if (!Array.isArray(data)) throw new Error('Invalid response');
+    const tokenArray = Array.isArray(data) ? data : (data.data || []);
+    if (!Array.isArray(tokenArray)) throw new Error('Invalid response');
 
-    liveTokenCache = data.map((t,i)=>({
+    liveTokenCache = tokenArray.map((t,i)=>({
       rank:i+1,
       name:t.name||'--',
       symbol:(t.symbol||'--').toUpperCase(),
@@ -816,8 +818,8 @@ async function fetchSolPrice(){
     const resp = await fetch(API_BASE + '/api/sol-price');
     if (!resp.ok) throw new Error('API error');
     const d = await resp.json();
-    if (d && d.price !== undefined) {
-      document.getElementById('statSolPrice').textContent = '$' + parseFloat(d.price).toFixed(2);
+    if (d && d.data && d.data.solana && d.data.solana.usd !== undefined) {
+      document.getElementById('statSolPrice').textContent = '$' + parseFloat(d.data.solana.usd).toFixed(2);
     }
   } catch (e) {
     // fallback
