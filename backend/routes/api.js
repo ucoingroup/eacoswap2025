@@ -295,4 +295,9 @@ router.get('/config', (req, res) => {
   });
 });
 
+// ===== API 404 Handler =====
+router.use((req, res) => {
+  res.status(404).json({ success: false, error: 'API endpoint not found: ' + req.method + ' ' + req.path });
+});
+
 module.exports = router;

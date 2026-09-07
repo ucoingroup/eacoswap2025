@@ -1,7 +1,8 @@
 # ===== EACOswap Dockerfile =====
 # Multi-stage: install deps -> copy app -> production runtime
+# Using DaoCloud mirror for China network environment
 
-FROM node:20-alpine AS builder
+FROM docker.m.daocloud.io/library/node:20-alpine AS builder
 
 LABEL maintainer="EACOswap"
 LABEL description="EACOswap - Solana DEX Navigation & EACO Exchange Hub (Backend + Frontend)"
@@ -15,7 +16,7 @@ RUN npm install --production && \
     npm cache clean --force
 
 # ---- Production stage ----
-FROM node:20-alpine AS production
+FROM docker.m.daocloud.io/library/node:20-alpine AS production
 
 WORKDIR /app
 
