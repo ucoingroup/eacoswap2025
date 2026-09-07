@@ -1,0 +1,43 @@
+{
+  "name": "EACOswap - Solana DEX Navigation Hub",
+  "short_name": "EACOswap",
+  "description": "Navigate top 10 Solana DEXs, exchange EACO for SOL, USDT, USDC, wBNB, TRX, wETH, wBTC, eCNH. Multi-language, multi-theme PWA.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0a0e27",
+  "theme_color": "#6C5CE7",
+  "orientation": "any",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48Y2lyY2xlIGN4PSI5NiIgY3k9Ijk2IiByPSI4MCIgZmlsbD0iIzZDNUNFNyIvPjx0ZXh0IHg9Ijk2IiB5PSIxMTgiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjgwIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RTwvdGV4dD48L3N2Zz4=",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjIyMCIgZmlsbD0iIzZDNUNFNyIvPjx0ZXh0IHg9IjI1NiIgeT0iMzE2IiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMDAiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5FPC90ZXh0Pjwvc3ZnPg==",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "EACO Exchange",
+      "url": "./#exchange",
+      "description": "Exchange EACO for SOL, USDT, USDC, wBNB, TRX, wETH, wBTC, eCNH"
+    },
+    {
+      "name": "Top 10 DEX",
+      "url": "./#dex",
+      "description": "Navigate top 10 Solana DEX platforms"
+    },
+    {
+      "name": "Market Cap Rankings",
+      "url": "./#mcap",
+      "description": "SOL chain token market cap rankings"
+    }
+  ]
+}

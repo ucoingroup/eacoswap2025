@@ -1,0 +1,46 @@
+# ===== EACOswap .dockerignore =====
+# Reduce build context size and avoid copying unnecessary files
+
+# Dependencies
+node_modules/
+backend/node_modules/
+
+# Environment files (secrets - injected via env_file or -e)
+backend/.env
+*.env
+.env.local
+.env.*.local
+
+# Git
+.git/
+.gitignore
+
+# Documentation (not needed in image)
+*.md
+docs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Test files
+backend/__tests__/
+backend/coverage/
+*.test.js
+*.spec.js
+
+# Docker files themselves
+Dockerfile
+docker-compose.yml
+.dockerignore

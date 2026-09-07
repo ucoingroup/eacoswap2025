@@ -1,0 +1,40 @@
+# ===== EACOswap docker-compose.yml =====
+# Usage:
+#   1. Copy backend/.env.example to backend/.env and fill in API keys
+#   2. docker compose up -d --build
+#   3. Visit http://localhost:3000
+
+services:
+  eacoswap:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: eacoswap
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - backend/.env
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    volumes:
+      # Optional: mount frontend for hot-replace without rebuild
+      - ./frontend:/app/frontend:ro
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - eacoswap-net
+
+networks:
+  eacoswap-net:
+    driver: bridge

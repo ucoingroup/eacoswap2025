@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EACOswap - Solana DEX Navigation & EACO Exchange Hub</title>
+<meta name="description" content="EACOswap: Navigate top 10 Solana DEXs, exchange EACO for SOL, USDT, USDC, wBNB, TRX, wETH, wBTC, eCNH. Multi-language, multi-theme.">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-theme="cosmic">
+
+<!-- Stars Background -->
+<div class="stars-bg" id="starsBg"></div>
+
+<!-- Header -->
+<header>
+<div class="header-inner">
+  <div class="logo">
+    <div class="logo-icon">E</div>
+    <span class="logo-text">EACOswap</span>
+  </div>
+  <div class="controls">
+    <!-- Language Switcher -->
+    <div class="ctrl-group" id="langGroup">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="zh">华语</button>
+      <button class="lang-btn" data-lang="es">ES</button>
+      <button class="lang-btn" data-lang="ar">ع</button>
+      <button class="lang-btn" data-lang="fr">FR</button>
+      <button class="lang-btn" data-lang="ru">RU</button>
+    </div>
+    <!-- Theme Switcher -->
+    <div class="ctrl-group" id="themeGroup">
+      <button class="theme-btn active" data-theme="cosmic" data-i18n="theme_cosmic">Cosmic</button>
+      <button class="theme-btn" data-theme="army" data-i18n="theme_army">Army</button>
+      <button class="theme-btn" data-theme="classic" data-i18n="theme_classic">Classic</button>
+    </div>
+    <!-- Connect Wallet -->
+    <button id="connectWalletBtn" class="wallet-btn" data-i18n="connect_wallet">Connect Wallet</button>
+  </div>
+</div>
+</header>
+
+<!-- Wallet Panel (hidden by default) -->
+<div id="walletPanel" class="wallet-panel" style="display:none">
+  <div class="wallet-panel-inner">
+    <h4 data-i18n="wallet_title">Connect Solana Wallet</h4>
+    <div class="wallet-list">
+      <button class="wallet-option" data-wallet="phantom">
+        <img src="https://phantom.app/img/phantom-logo.svg" alt="Phantom" onerror="this.style.display='none'">
+        <span>Phantom</span>
+      </button>
+      <button class="wallet-option" data-wallet="solflare">
+        <img src="https://solflare.com/img/logo.svg" alt="Solflare" onerror="this.style.display='none'">
+        <span>Solflare</span>
+      </button>
+      <button class="wallet-option" data-wallet="backpack">
+        <img src="https://backpack.app/icons/backpack.svg" alt="Backpack" onerror="this.style.display='none'">
+        <span>Backpack</span>
+      </button>
+    </div>
+    <div id="walletStatus" class="wallet-status"></div>
+    <button id="disconnectWalletBtn" class="wallet-disconnect" style="display:none" data-i18n="disconnect_wallet">Disconnect</button>
+    <button id="closeWalletPanel" class="wallet-close" data-i18n="close">Close</button>
+  </div>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+<div class="container">
+  <h1 data-i18n="hero_title">EACOswap</h1>
+  <p class="subtitle" data-i18n="hero_sub">Solana DEX Navigation Hub - Exchange EACO for SOL, USDT, USDC, wBNB, TRX, wETH, wBTC, eCNH all on-chain</p>
+  <div class="hero-badges">
+    <span class="badge"><strong>Solana</strong> Chain</span>
+    <span class="badge"><strong>10+</strong> DEX</span>
+    <span class="badge"><strong>8</strong> Swap Pairs</span>
+    <span class="badge"><strong>6</strong> Languages</span>
+    <span class="badge"><strong>3</strong> Themes</span>
+  </div>
+  <div class="search-box">
+    <input type="text" id="searchInput" data-i18n-ph="search_ph" placeholder="Search DEX or token...">
+    <button onclick="performSearch()" data-i18n="search_btn">Search</button>
+  </div>
+  <div class="update-indicator"><span class="update-dot"></span><span data-i18n="auto_update">Auto-updating weekly/monthly</span></div>
+</div>
+</section>
+
+<!-- Stats Banner -->
+<div class="container">
+<div class="stats-banner">
+  <div class="stat-item"><div class="stat-value" id="statSolPrice">--</div><div class="stat-label" data-i18n="stat_sol_price">SOL Price</div></div>
+  <div class="stat-item"><div class="stat-value" id="statSolTvl">--</div><div class="stat-label" data-i18n="stat_sol_tvl">Solana TVL</div></div>
+  <div class="stat-item"><div class="stat-value" id="statDexVol">--</div><div class="stat-label" data-i18n="stat_dex_vol">24h DEX Vol</div></div>
+  <div class="stat-item"><div class="stat-value" id="statTokens">--</div><div class="stat-label" data-i18n="stat_spl_tokens">SPL Tokens</div></div>
+  <div class="stat-item"><div class="stat-value" id="statEacoHolders">--</div><div class="stat-label" data-i18n="stat_eaco_holders">EACO Holders</div></div>
+</div>
+</div>
+
+<!-- ===== Section 1: Top 10 DEX ===== -->
+<section class="section" id="dexSection">
+<div class="container">
+  <h2 class="section-title"><span class="num">1</span><span data-i18n="dex_title">Top 10 Solana DEXs</span></h2>
+  <p class="section-desc" data-i18n="dex_desc">Global leading DEX platforms supporting Solana chain and EACO token trading</p>
+  <div class="dex-grid" id="dexGrid"></div>
+</div>
+</section>
+
+<!-- ===== Section 2: EACO Exchange ===== -->
+<section class="section" id="exchangeSection">
+<div class="container">
+  <h2 class="section-title"><span class="num">2</span><span data-i18n="exchange_title">EACO Exchange Hub</span></h2>
+  <p class="section-desc" data-i18n="exchange_desc">EACO can be swapped for the following tokens, all on Solana chain. Click any token to view on OrbMarkets.</p>
+
+  <!-- Mini Swap Quote Panel -->
+  <div class="swap-quote-panel">
+    <h4 data-i18n="swap_quote_title">EACO Swap Quote Calculator</h4>
+    <div class="swap-quote-row">
+      <div class="swap-input-group">
+        <label data-i18n="swap_input_label">You pay (EACO)</label>
+        <input type="number" id="swapInputAmount" placeholder="1000" min="0" step="any">
+      </div>
+      <div class="swap-input-group">
+        <label data-i18n="swap_output_label">You receive</label>
+        <select id="swapOutputToken">
+          <option value="So11111111111111111111111111111111111111112">SOL</option>
+          <option value="Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB">USDT</option>
+          <option value="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v">USDC</option>
+          <option value="9gP2kCy3wA1ctvYWQk75guqXuHfrEomqydHLtcTCqiLa">wBNB</option>
+          <option value="GbbesPbaYh5uiAZSYNXTc7w9jty1rpg3P9L4JeN4LkKc">TRX</option>
+          <option value="7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs">wETH</option>
+          <option value="3NZ9JMVBmGAqocybic2c7LQCJScmgsAZ6vQqTDzcqmJh">wBTC</option>
+          <option value="7GQnqthWKa5v2GqXYWhmgWZY5mCRrniwK3Xuinm9GKw5">eCNH</option>
+        </select>
+      </div>
+      <button id="getQuoteBtn" class="quote-btn" data-i18n="get_quote">Get Quote</button>
+    </div>
+    <div id="quoteResult" class="quote-result" style="display:none">
+      <div class="quote-row"><span data-i18n="quote_output">Output:</span> <strong id="quoteOutputAmount">--</strong></div>
+      <div class="quote-row"><span data-i18n="quote_slippage">Slippage:</span> <strong id="quoteSlippage">--</strong></div>
+      <div class="quote-row"><span data-i18n="quote_route">Route:</span> <span id="quoteRoute">--</span></div>
+      <div class="quote-row"><span data-i18n="quote_price_impact">Price Impact:</span> <strong id="quotePriceImpact">--</strong></div>
+    </div>
+    <div id="quoteError" class="quote-error" style="display:none"></div>
+  </div>
+
+  <div class="exchange-wrap">
+    <div class="exchange-tabs">
+      <button class="exchange-tab active" data-tab="all" data-i18n="tab_all">All Pairs</button>
+      <button class="exchange-tab" data-tab="stable" data-i18n="tab_stable">Stablecoins</button>
+      <button class="exchange-tab" data-tab="wrapped" data-i18n="tab_wrapped">Wrapped Assets</button>
+      <button class="exchange-tab" data-tab="native" data-i18n="tab_native">Native</button>
+    </div>
+    <div class="exchange-content">
+      <div class="token-grid" id="tokenGrid"></div>
+    </div>
+  </div>
+  <div style="margin-top:16px;padding:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)">
+    <h4 style="color:var(--accent);margin-bottom:8px" data-i18n="exchange_methods">How to Exchange EACO</h4>
+    <div style="font-size:.85rem;color:var(--text2);line-height:1.8">
+      <strong data-i18n="method_1">Method 1: Jupiter Aggregator</strong> - <span data-i18n="method_1_d">Visit jup.ag, select EACO as input token, choose output token, Jupiter routes through best-priced pools.</span><br>
+      <strong data-i18n="method_2">Method 2: Raydium AMM</strong> - <span data-i18n="method_2_d">Visit raydium.io, use Swap feature, EACO pairs available in CLMM and AMM pools.</span><br>
+      <strong data-i18n="method_3">Method 3: Orca Whirlpool</strong> - <span data-i18n="method_3_d">Visit orca.so, concentrated liquidity pools for tighter spreads on EACO pairs.</span><br>
+      <strong data-i18n="method_4">Method 4: Meteora DLMM</strong> - <span data-i18n="method_4_d">Visit meteora.ag, dynamic liquidity market maker for optimal EACO swap rates.</span><br>
+      <strong data-i18n="method_5">Method 5: Phoenix Orderbook</strong> - <span data-i18n="method_5_d">Visit phoenix.finance, on-chain orderbook DEX for limit orders on EACO.</span><br>
+      <strong data-i18n="method_6">Method 6: Direct OrbMarkets</strong> - <span data-i18n="method_6_d">Use orbmarkets.io token pages for real-time pricing and direct swap links.</span>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ===== Section 3: Market Cap Rankings ===== -->
+<section class="section" id="mcapSection">
+<div class="container">
+  <h2 class="section-title"><span class="num">3</span><span data-i18n="mcap_title">SOL Chain Token Market Cap Rankings</span></h2>
+  <p class="section-desc" data-i18n="mcap_desc">Top SPL tokens by market capitalization. Data updates weekly and monthly via OrbMarkets developer tools.</p>
+  <div class="mcap-controls">
+    <button class="mcap-btn active" data-range="100" data-i18n="mcap_top100">Top 100</button>
+    <button class="mcap-btn" data-range="1000" data-i18n="mcap_top1000">Top 1000</button>
+    <button class="mcap-btn" data-range="10000" data-i18n="mcap_top10000">Top 10000</button>
+  </div>
+  <div class="mcap-period">
+    <span data-i18n="period_label">Timeframe:</span>
+    <select id="periodSelect">
+      <option value="daily" data-i18n="period_daily">Daily</option>
+      <option value="weekly" data-i18n="period_weekly">Weekly</option>
+      <option value="monthly" data-i18n="period_monthly">Monthly</option>
+    </select>
+    <span class="update-indicator" id="mcapApiStatus"><span class="update-dot"></span>Ready</span>
+    <span class="update-indicator"><span class="update-dot"></span><span data-i18n="last_update">Last update:</span> <span id="lastUpdate">--</span></span>
+    <span class="update-indicator"><span data-i18n="next_update">Next refresh:</span> <span id="nextUpdateCountdown">60:00</span></span>
+  </div>
+  <div class="mcap-table-wrap">
+    <table class="mcap-table" id="mcapTable">
+      <thead>
+        <tr>
+          <th class="rank-col">#</th>
+          <th data-i18n="th_token">Token</th>
+          <th data-i18n="th_symbol">Symbol</th>
+          <th class="price-col" data-i18n="th_price">Price</th>
+          <th data-i18n="th_mcap">Market Cap</th>
+          <th data-i18n="th_vol">24h Volume</th>
+          <th data-i18n="th_chg">Change</th>
+          <th data-i18n="th_link">Links</th>
+        </tr>
+      </thead>
+      <tbody id="mcapBody">
+        <tr><td colspan="8" class="mcap-loading" data-i18n="loading">Loading token data...</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+    <a href="https://www.coingecko.com/en?chain=solana&page=1" target="_blank" style="padding:6px 14px;border:1px solid var(--border);border-radius:6px;font-size:.8rem">CoinGecko - Solana</a>
+    <a href="https://coinmarketcap.com/view/solana-ecosystem" target="_blank" style="padding:6px 14px;border:1px solid var(--border);border-radius:6px;font-size:.8rem">CoinMarketCap - Solana</a>
+    <a href="https://birdeye.so/chain/solana" target="_blank" style="padding:6px 14px;border:1px solid var(--border);border-radius:6px;font-size:.8rem">Birdeye - Solana</a>
+    <a href="https://orbmarkets.io/" target="_blank" style="padding:6px 14px;border:1px solid var(--border);border-radius:6px;font-size:.8rem">OrbMarkets</a>
+    <a href="https://dune.com/browse/dashboards?order=featured&time_range=all&chains=1399811149" target="_blank" style="padding:6px 14px;border:1px solid var(--border);border-radius:6px;font-size:.8rem">Dune - Solana Analytics</a>
+  </div>
+</div>
+</section>
+
+<!-- ===== Section 4: Top 10 Solana Blockchain Explorers ===== -->
+<section class="section" id="explorerSection">
+<div class="container">
+  <h2 class="section-title"><span class="num">4</span><span data-i18n="explorer_title">Top 10 Solana Blockchain Explorers</span></h2>
+  <p class="section-desc" data-i18n="explorer_desc">Global leading Solana blockchain explorers and data query platforms. Updated monthly with the latest features and stats.</p>
+  <div class="dex-grid" id="explorerGrid"></div>
+  <div style="margin-top:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <span class="update-indicator"><span class="update-dot"></span><span data-i18n="explorer_monthly">Monthly update</span> | <span data-i18n="last_update">Last update:</span> <span id="explorerUpdate">--</span></span>
+  </div>
+</div>
+</section>
+
+<!-- ===== Section 5: EACO Info ===== -->
+<section class="section" id="eacoSection">
+<div class="container">
+  <h2 class="section-title"><span class="num">5</span><span data-i18n="eaco_title">EACO - Earth Chain Token</span></h2>
+  <p class="section-desc" data-i18n="eaco_desc">EACO (Earth Coin) is a Solana-chain token dedicated to leveraging global surplus labor for value exchange, quantifying Earth resources, and protecting our planet.</p>
+  <div class="eaco-info">
+    <div class="eaco-card">
+      <h3 data-i18n="eaco_basic">Basic Information</h3>
+      <ul>
+        <li><strong data-i18n="eaco_chain">Chain:</strong> Solana (SPL)</li>
+        <li><strong data-i18n="eaco_contract">Contract:</strong> DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH</li>
+        <li><strong data-i18n="eaco_symbol">Symbol:</strong> EACO</li>
+        <li><strong data-i18n="eaco_type">Type:</strong> Community / Public Welfare Token</li>
+        <li><strong data-i18n="eaco_vision">Vision:</strong> <span data-i18n="eaco_vision_v">eaco for earth</span></li>
+        <li><strong data-i18n="eaco_mission">Mission:</strong> <span data-i18n="eaco_mission_v">Leverage global surplus labor for value exchange</span></li>
+      </ul>
+    </div>
+    <div class="eaco-card">
+      <h3 data-i18n="eaco_resources">Resources & Links</h3>
+      <p data-i18n="eaco_resources_d">Explore EACO on these platforms:</p>
+      <div class="eaco-links">
+        <a href="https://orbmarkets.io/token/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH" target="_blank">OrbMarkets</a>
+        <a href="https://solscan.io/token/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH" target="_blank">Solscan</a>
+        <a href="https://solana.fm/address/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH" target="_blank">SolanaFM</a>
+        <a href="https://explorer.solana.com/address/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH" target="_blank">Solana Explorer</a>
+        <a href="https://birdeye.so/token/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH" target="_blank">Birdeye</a>
+        <a href="https://jup.ag/swap/SOL-EACO" target="_blank">Jupiter Swap</a>
+        <a href="https://raydium.io/swap/?inputMint=sol&outputMint=DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH" target="_blank">Raydium Swap</a>
+        <a href="https://dexscreener.com/solana/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH" target="_blank">DexScreener</a>
+        <a href="https://www.geckoterminal.com/solana/pools" target="_blank">GeckoTerminal</a>
+        <a href="https://coinmarketcap.com/currencies/eaco/" target="_blank">CoinMarketCap</a>
+        <a href="https://www.coingecko.com/en/coins/eaco" target="_blank">CoinGecko</a>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ===== Section 6: Developer Tools ===== -->
+<section class="section" id="devToolsSection">
+<div class="container">
+  <h2 class="section-title"><span class="num">6</span><span data-i18n="dev_title">Developer Tools & Auto-Update</span></h2>
+  <p class="section-desc" data-i18n="dev_desc">Integrated with OrbMarkets API and Solana data sources for weekly/monthly automatic token information updates.</p>
+  <div class="dev-tools">
+    <div class="dev-tool-card">
+      <h4>OrbMarkets Token API</h4>
+      <p data-i18n="dev_orb_d">Fetch real-time token data, prices, and market cap from OrbMarkets.</p>
+      <code>GET /api/birdeye/token/:address</code>
+      <code>GET /api/birdeye/price/:address</code>
+    </div>
+    <div class="dev-tool-card">
+      <h4>Helius RPC API</h4>
+      <p data-i18n="dev_helius_d">High-performance Solana RPC by Helius (Free tier: 1M credits/month). Use server proxy or configure your own key.</p>
+      <code>POST /api/helius/rpc</code>
+      <code>GET /api/helius/das/assets-by-owner?owner=&lt;address&gt;</code>
+      <code>GET /api/helius/token-accounts?owner=&lt;address&gt;</code>
+    </div>
+    <div class="dev-tool-card">
+      <h4>Jupiter Price API</h4>
+      <p data-i18n="dev_jup_d">Get best swap prices across all Solana DEX pools.</p>
+      <code>GET /api/jupiter/quote?inputMint=&lt;mint&gt;&outputMint=&lt;mint&gt;&amount=&lt;lamports&gt;</code>
+    </div>
+    <div class="dev-tool-card">
+      <h4>Birdeye API</h4>
+      <p data-i18n="dev_bird_d">Comprehensive token market data and analytics.</p>
+      <code>GET /api/birdeye/token/:address</code>
+      <code>GET /api/birdeye/price/:address</code>
+    </div>
+    <div class="dev-tool-card">
+      <h4 data-i18n="dev_cron">Hourly/Weekly/Monthly Cron</h4>
+      <p data-i18n="dev_cron_d">Scheduled fetch of top 100/1000/10000 SPL tokens by market cap, stored in browser localStorage for offline viewing.</p>
+      <code>GET /api/health</code>
+      <code>GET /api/config</code>
+    </div>
+    <div class="dev-tool-card">
+      <h4 data-i18n="dev_dexs">DEX Aggregator</h4>
+      <p data-i18n="dev_dexs_d">Jupiter routes EACO swaps through Raydium, Orca, Meteora, Phoenix and more.</p>
+      <code>GET /api/sol-price</code>
+      <code>GET /api/tokens/market-cap?range=100|1000|10000</code>
+    </div>
+  </div>
+  <!-- API Key Configuration -->
+  <div class="api-config-box">
+    <h4 style="color:var(--accent);margin-bottom:8px" data-i18n="api_config_title">API Key Configuration (Optional)</h4>
+    <p style="font-size:.85rem;color:var(--text2);margin-bottom:12px" data-i18n="api_config_desc">eacoswap works without any API key by default (CoinGecko free API). For enhanced performance, you can configure your own Helius API key below. Key is stored in your browser only.</p>
+
+    <!-- Server Proxy Toggle -->
+    <div class="proxy-toggle-row">
+      <label class="proxy-toggle">
+        <input type="checkbox" id="useServerProxy" checked>
+        <span class="proxy-slider"></span>
+      </label>
+      <span data-i18n="use_server_proxy">Use Server Proxy (recommended)</span>
+      <span class="proxy-hint" data-i18n="use_server_proxy_hint">Routes all Helius RPC calls through backend /api/helius/*</span>
+    </div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;max-width:500px;margin-top:12px">
+      <input type="password" id="heliusKeyInput" placeholder="Helius API Key (optional)" style="flex:1;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:.85rem">
+      <button onclick="saveHeliusKey()" style="padding:8px 16px;background:var(--accent);color:var(--bg);border:none;border-radius:6px;font-weight:600;font-size:.85rem;cursor:pointer" data-i18n="api_config_save">Save</button>
+      <button onclick="clearHeliusKey()" style="padding:8px 16px;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:6px;font-weight:600;font-size:.85rem;cursor:pointer" data-i18n="api_config_clear">Clear</button>
+    </div>
+    <p id="heliusStatus" style="margin-top:8px;font-size:.75rem;color:var(--text2)"></p>
+    <p style="margin-top:8px;font-size:.75rem;color:var(--text2)">
+      <span data-i18n="api_config_note">Note: Get a free Helius API key at</span> <a href="https://dashboard.helius.dev" target="_blank">dashboard.helius.dev</a>
+      <span data-i18n="api_config_note2">. Free tier includes 1M credits/month. API Key is stored in browser localStorage only.</span>
+    </p>
+  </div>
+</div>
+</section>
+
+<!-- ===== Section 7: Public Welfare Link ===== -->
+<section class="container">
+<div class="charity-section">
+  <h3 data-i18n="charity_title">EACO Public Welfare 2025</h3>
+  <p data-i18n="charity_desc">Protecting the Earth is a shared emotional value. Join the EACO public welfare initiative.</p>
+  <a href="https://ucoingroup.github.io/eacoweb3-2026/eaco-charity2025.html" target="_blank" class="charity-btn">
+    <span data-i18n="charity_link">Enter EACO Public Welfare 2025</span>
+  </a>
+</div>
+</section>
+
+<!-- Footer -->
+<footer>
+<div class="footer-inner">
+  <div class="footer-col">
+    <h4>EACOswap</h4>
+    <a href="#dexSection" data-i18n="footer_dex">Top DEXs</a>
+    <a href="#exchangeSection" data-i18n="footer_exchange">EACO Exchange</a>
+    <a href="#mcapSection" data-i18n="footer_mcap">Market Rankings</a>
+    <a href="#explorerSection" data-i18n="footer_explorers">Explorers</a>
+    <a href="#eacoSection" data-i18n="footer_eaco">EACO Info</a>
+    <a href="#devToolsSection" data-i18n="footer_dev">Developer Tools</a>
+  </div>
+  <div class="footer-col">
+    <h4 data-i18n="footer_tokens">Tokens</h4>
+    <a href="https://orbmarkets.io/token/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH" target="_blank">EACO</a>
+    <a href="https://orbmarkets.io/token/7GQnqthWKa5v2GqXYWhmgWZY5mCRrniwK3Xuinm9GKw5" target="_blank">eCNH</a>
+    <a href="https://orbmarkets.io/token/GbbesPbaYh5uiAZSYNXTc7w9jty1rpg3P9L4JeN4LkKc" target="_blank">TRX (wormhole)</a>
+    <a href="https://orbmarkets.io/token/3NZ9JMVBmGAqocybic2c7LQCJScmgsAZ6vQqTDzcqmJh" target="_blank">wBTC</a>
+    <a href="https://orbmarkets.io/token/9gP2kCy3wA1ctvYWQk75guqXuHfrEomqydHLtcTCqiLa" target="_blank">wBNB</a>
+    <a href="https://orbmarkets.io/token/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" target="_blank">USDC</a>
+    <a href="https://orbmarkets.io/token/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB" target="_blank">USDT</a>
+    <a href="https://orbmarkets.io/token/7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs" target="_blank">WETH</a>
+  </div>
+  <div class="footer-col">
+    <h4 data-i18n="footer_dex_list">DEX List</h4>
+    <a href="https://jup.ag" target="_blank">Jupiter</a>
+    <a href="https://raydium.io" target="_blank">Raydium</a>
+    <a href="https://www.orca.so" target="_blank">Orca</a>
+    <a href="https://www.meteora.ag" target="_blank">Meteora</a>
+    <a href="https://phoenix.finance" target="_blank">Phoenix</a>
+    <a href="https://lifinity.io" target="_blank">Lifinity</a>
+    <a href="https://drift.trade" target="_blank">Drift</a>
+    <a href="https://zeta.markets" target="_blank">Zeta</a>
+    <a href="https://crema.finance" target="_blank">Crema</a>
+    <a href="https://saros.finance" target="_blank">Saros</a>
+  </div>
+  <div class="footer-col">
+    <h4 data-i18n="footer_data">Data Sources</h4>
+    <a href="https://orbmarkets.io" target="_blank">OrbMarkets</a>
+    <a href="https://www.coingecko.com/en?chain=solana" target="_blank">CoinGecko</a>
+    <a href="https://coinmarketcap.com/view/solana-ecosystem" target="_blank">CoinMarketCap</a>
+    <a href="https://birdeye.so" target="_blank">Birdeye</a>
+    <a href="https://dune.com/browse/dashboards?order=featured&time_range=all&chains=1399811149" target="_blank">Dune Analytics</a>
+    <a href="https://defillama.com/chain/Solana" target="_blank">DefiLlama</a>
+  </div>
+  <div class="footer-col">
+    <h4 data-i18n="footer_explorers">Explorers</h4>
+    <a href="https://solscan.io" target="_blank">Solscan</a>
+    <a href="https://explorer.solana.com" target="_blank">Solana Explorer</a>
+    <a href="https://solana.fm" target="_blank">SolanaFM</a>
+    <a href="https://solanabeach.io" target="_blank">Solana Beach</a>
+    <a href="https://dexscreener.com/solana" target="_blank">DexScreener</a>
+    <a href="https://www.geckoterminal.com/solana" target="_blank">GeckoTerminal</a>
+    <a href="https://birdeye.so" target="_blank">Birdeye</a>
+    <a href="https://www.solanatracker.io" target="_blank">Solana Tracker</a>
+    <a href="https://orbmarkets.io" target="_blank">OrbMarkets</a>
+    <a href="https://dappradar.com/chain/solana" target="_blank">DappRadar</a>
+  </div>
+  <div class="footer-col">
+    <h4 data-i18n="footer_charity">Public Welfare</h4>
+    <a href="https://ucoingroup.github.io/eacoweb3-2026/eaco-charity2025.html" target="_blank">EACO Public Welfare 2025</a>
+    <a href="https://orbmarkets.io/token/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH" target="_blank">EACO on OrbMarkets</a>
+  </div>
+</div>
+<div class="footer-bottom">
+  <span data-i18n="footer_copy">EACOswap - Solana DEX Navigation Hub | eaco for earth | </span>
+  <a href="https://orbmarkets.io/token/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH" target="_blank">EACO</a>
+  <span> | </span>
+  <a href="https://ucoingroup.github.io/eacoweb3-2026/eaco-charity2025.html" target="_blank">EACO Public Welfare 2025</a>
+  <span> | </span>
+  <span data-i18n="footer_auto">Auto-updated weekly/monthly</span>
+</div>
+</footer>
+
+<script src="js/app.js"></script>
+<script>
+// Register Service Worker for PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').then(function(registration) {
+      console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    }, function(err) {
+      console.log('ServiceWorker registration failed: ', err);
+    });
+  });
+}
+</script>
+</body>
+</html>
