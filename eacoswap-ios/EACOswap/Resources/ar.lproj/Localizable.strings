@@ -1,0 +1,128 @@
+// Localizable.strings (Arabic)
+// EACOswap
+// Created by EACO Team on 2026-09-07.
+
+// MARK: - Tab Bar
+"tab.home" = "الرئيسية";
+"tab.exchange" = "التبادل";
+"tab.market" = "السوق";
+"tab.faq" = "الاسئلة";
+"tab.settings" = "الاعدادات";
+
+// MARK: - Common
+"common.ok" = "موافق";
+"common.cancel" = "الغاء";
+"common.save" = "حفظ";
+"common.retry" = "اعادة المحاولة";
+"common.loading" = "جاري التحميل...";
+"common.error" = "خطأ";
+"common.success" = "نجاح";
+"common.done" = "تم";
+"common.close" = "اغلاق";
+"common.back" = "رجوع";
+"common.next" = "التالي";
+"common.search" = "بحث";
+"common.share" = "مشاركة";
+"common.copy" = "نسخ";
+"common.copied" = "تم النسخ الى الحافظة";
+"common.select" = "اختيار";
+"common.all" = "الكل";
+
+// MARK: - Errors
+"error.invalid_url" = "عنوان URL غير صالح";
+"error.invalid_response" = "استجابة خادم غير صالحة";
+"error.no_internet" = "لا يوجد اتصال بالانترنت. يرجى التحقق من الشبكة.";
+"error.unauthorized" = "وصول غير مصرح به";
+"error.rate_limited" = "طلبات كثيرة جدا. يرجى المحاولة لاحقا.";
+"error.server_error" = "خطأ في الخادم (رمز %d)";
+"error.http_error" = "خطأ HTTP %d";
+"error.network_error" = "خطأ في الشبكة: %@";
+"error.decoding_error" = "خطأ في تحليل البيانات: %@";
+"error.offline_title" = "انت غير متصل";
+"error.offline_message" = "تحقق من الاتصال وحاول مرة اخرى.";
+
+// MARK: - Exchange
+"exchange.from" = "من";
+"exchange.to" = "الى";
+"exchange.max" = "الحد الاقصى";
+"exchange.get_quote" = "الحصول على عرض سعر";
+"exchange.execute_swap" = "تنفيذ التبادل";
+"exchange.select_token" = "اختيار الرمز";
+"exchange.enter_amount" = "يرجى ادخال المبلغ";
+"exchange.loading" = "جاري التحميل...";
+"exchange.error_title" = "خطأ في التبادل";
+"exchange.output" = "النتيجة";
+"exchange.slippage" = "انزلاق السعر";
+"exchange.price_impact" = "تأثير السعر";
+"exchange.route" = "المسار";
+
+// MARK: - Market
+"market.top_100" = "افضل 100";
+"market.top_1000" = "افضل 1000";
+"market.top_10000" = "افضل 10000";
+"market.rank" = "الترتيب";
+"market.token" = "الرمز";
+"market.price" = "السعر";
+"market.market_cap" = "القيمة السوقية";
+"market.volume" = "الحجم (24س)";
+"market.change" = "التغير (24س)";
+"market.open_orb" = "فتح في OrbMarkets";
+"market.open_coingecko" = "فتح في CoinGecko";
+"market.no_data" = "لا توجد بيانات متاحة";
+
+// MARK: - FAQ
+"faq.search_placeholder" = "البحث في الاسئلة الشائعة...";
+"faq.category_all" = "الكل";
+"faq.category_general" = "عام";
+"faq.category_wallet" = "المحفظة";
+"faq.category_trading" = "التداول";
+"faq.category_security" = "الامان";
+"faq.category_technical" = "تقني";
+"faq.category_tokenomics" = "اقتصاديات الرمز";
+"faq.no_results" = "لم يتم العثور على نتائج";
+
+// MARK: - Settings
+"settings.language" = "اللغة";
+"settings.select_language" = "اختيار اللغة";
+"settings.theme" = "السمة";
+"settings.select_theme" = "اختيار السمة";
+"settings.server_url" = "عنوان الخادم";
+"settings.server_url_desc" = "ادخل عنوان خادم الواجهة الخلفية";
+"settings.invalid_url" = "عنوان URL غير صالح";
+"settings.invalid_url_message" = "يرجى ادخال عنوان HTTP او HTTPS صالح.";
+"settings.contract" = "عقد EACO";
+"settings.version" = "الاصدار";
+"settings.welfare" = "رفاهية EACO 2025";
+"settings.links" = "الروابط الرسمية";
+"settings.clear_cache" = "مسح ذاكرة التخزين المؤقت";
+"settings.clear_cache_title" = "مسح ذاكرة التخزين المؤقت؟";
+"settings.clear_cache_message" = "سيؤدي هذا الى ازالة جميع البيانات المخزنة ومحتوى الويب.";
+"settings.clear" = "مسح";
+"settings.cache_cleared" = "تم مسح ذاكرة التخزين المؤقت";
+"settings.reset_defaults" = "استعادة الافتراضيات";
+"settings.reset_title" = "اعادة تعيين الاعدادات؟";
+"settings.reset_message" = "سيؤدي هذا الى استعادة جميع الاعدادات الى قيمها الافتراضية.";
+"settings.reset" = "اعادة تعيين";
+"settings.copied" = "تم النسخ!";
+"settings.contract_copied" = "تم نسخ عنوان العقد الى الحافظة";
+"settings.header_language" = "اللغة";
+"settings.header_theme" = "السمة";
+"settings.header_server" = "الخادم";
+"settings.header_about" = "حول";
+"settings.header_actions" = "الاجراءات";
+
+// MARK: - Themes
+"theme.cosmic" = "كوني";
+"theme.army" = "عسكري";
+"theme.classic" = "كلاسيكي";
+
+// MARK: - Wallet
+"wallet.not_installed" = "تطبيق المحفظة غير مثبت";
+"wallet.not_installed_title" = "لم يتم العثور على المحفظة";
+"wallet.not_installed_message" = "%@ غير مثبت. هل تريد تثبيته او المتابعة على الويب؟";
+"wallet.install" = "تثبيت";
+"wallet.continue_web" = "المتابعة على الويب";
+"wallet.invalid_callback" = "عنوان URL لرد الاتصال غير صالح";
+"wallet.connection_rejected" = "تم رفض اتصال المحفظة";
+"wallet.timeout" = "انتهت مهلة اتصال المحفظة";
+"wallet.unknown_error" = "خطأ غير معروف في المحفظة";

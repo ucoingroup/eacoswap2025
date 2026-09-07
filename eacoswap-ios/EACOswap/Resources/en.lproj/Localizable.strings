@@ -1,0 +1,128 @@
+// Localizable.strings (English) - Base
+// EACOswap
+// Created by EACO Team on 2026-09-07.
+
+// MARK: - Tab Bar
+"tab.home" = "Home";
+"tab.exchange" = "Exchange";
+"tab.market" = "Market";
+"tab.faq" = "FAQ";
+"tab.settings" = "Settings";
+
+// MARK: - Common
+"common.ok" = "OK";
+"common.cancel" = "Cancel";
+"common.save" = "Save";
+"common.retry" = "Retry";
+"common.loading" = "Loading...";
+"common.error" = "Error";
+"common.success" = "Success";
+"common.done" = "Done";
+"common.close" = "Close";
+"common.back" = "Back";
+"common.next" = "Next";
+"common.search" = "Search";
+"common.share" = "Share";
+"common.copy" = "Copy";
+"common.copied" = "Copied to clipboard";
+"common.select" = "Select";
+"common.all" = "All";
+
+// MARK: - Errors
+"error.invalid_url" = "Invalid URL";
+"error.invalid_response" = "Invalid server response";
+"error.no_internet" = "No internet connection. Please check your network.";
+"error.unauthorized" = "Unauthorized access";
+"error.rate_limited" = "Too many requests. Please try again later.";
+"error.server_error" = "Server error (code %d)";
+"error.http_error" = "HTTP error %d";
+"error.network_error" = "Network error: %@";
+"error.decoding_error" = "Data parsing error: %@";
+"error.offline_title" = "You're Offline";
+"error.offline_message" = "Check your connection and try again.";
+
+// MARK: - Exchange
+"exchange.from" = "From";
+"exchange.to" = "To";
+"exchange.max" = "MAX";
+"exchange.get_quote" = "Get Quote";
+"exchange.execute_swap" = "Execute Swap";
+"exchange.select_token" = "Select Token";
+"exchange.enter_amount" = "Please enter an amount";
+"exchange.loading" = "Loading...";
+"exchange.error_title" = "Swap Error";
+"exchange.output" = "Output";
+"exchange.slippage" = "Slippage";
+"exchange.price_impact" = "Price Impact";
+"exchange.route" = "Route";
+
+// MARK: - Market
+"market.top_100" = "Top 100";
+"market.top_1000" = "Top 1000";
+"market.top_10000" = "Top 10000";
+"market.rank" = "Rank";
+"market.token" = "Token";
+"market.price" = "Price";
+"market.market_cap" = "Market Cap";
+"market.volume" = "Volume (24h)";
+"market.change" = "Change (24h)";
+"market.open_orb" = "Open in OrbMarkets";
+"market.open_coingecko" = "Open in CoinGecko";
+"market.no_data" = "No data available";
+
+// MARK: - FAQ
+"faq.search_placeholder" = "Search FAQ...";
+"faq.category_all" = "All";
+"faq.category_general" = "General";
+"faq.category_wallet" = "Wallet";
+"faq.category_trading" = "Trading";
+"faq.category_security" = "Security";
+"faq.category_technical" = "Technical";
+"faq.category_tokenomics" = "Tokenomics";
+"faq.no_results" = "No results found";
+
+// MARK: - Settings
+"settings.language" = "Language";
+"settings.select_language" = "Select Language";
+"settings.theme" = "Theme";
+"settings.select_theme" = "Select Theme";
+"settings.server_url" = "Server URL";
+"settings.server_url_desc" = "Enter backend server URL";
+"settings.invalid_url" = "Invalid URL";
+"settings.invalid_url_message" = "Please enter a valid HTTP or HTTPS URL.";
+"settings.contract" = "EACO Contract";
+"settings.version" = "Version";
+"settings.welfare" = "EACO Public Welfare 2025";
+"settings.links" = "Official Links";
+"settings.clear_cache" = "Clear Cache";
+"settings.clear_cache_title" = "Clear Cache?";
+"settings.clear_cache_message" = "This will remove all cached data and web content.";
+"settings.clear" = "Clear";
+"settings.cache_cleared" = "Cache cleared";
+"settings.reset_defaults" = "Reset to Defaults";
+"settings.reset_title" = "Reset Settings?";
+"settings.reset_message" = "This will restore all settings to default values.";
+"settings.reset" = "Reset";
+"settings.copied" = "Copied!";
+"settings.contract_copied" = "Contract address copied to clipboard";
+"settings.header_language" = "LANGUAGE";
+"settings.header_theme" = "THEME";
+"settings.header_server" = "SERVER";
+"settings.header_about" = "ABOUT";
+"settings.header_actions" = "ACTIONS";
+
+// MARK: - Themes
+"theme.cosmic" = "Cosmic";
+"theme.army" = "Army";
+"theme.classic" = "Classic";
+
+// MARK: - Wallet
+"wallet.not_installed" = "Wallet app not installed";
+"wallet.not_installed_title" = "Wallet Not Found";
+"wallet.not_installed_message" = "%@ is not installed. Would you like to install it or continue on the web?";
+"wallet.install" = "Install";
+"wallet.continue_web" = "Continue on Web";
+"wallet.invalid_callback" = "Invalid wallet callback URL";
+"wallet.connection_rejected" = "Wallet connection was rejected";
+"wallet.timeout" = "Wallet connection timed out";
+"wallet.unknown_error" = "Unknown wallet error";

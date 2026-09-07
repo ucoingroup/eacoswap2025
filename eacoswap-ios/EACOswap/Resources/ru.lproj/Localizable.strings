@@ -1,0 +1,128 @@
+// Localizable.strings (Russian)
+// EACOswap
+// Created by EACO Team on 2026-09-07.
+
+// MARK: - Tab Bar
+"tab.home" = "Главная";
+"tab.exchange" = "Обмен";
+"tab.market" = "Рынок";
+"tab.faq" = "FAQ";
+"tab.settings" = "Настройки";
+
+// MARK: - Common
+"common.ok" = "OK";
+"common.cancel" = "Отмена";
+"common.save" = "Сохранить";
+"common.retry" = "Повторить";
+"common.loading" = "Загрузка...";
+"common.error" = "Ошибка";
+"common.success" = "Успех";
+"common.done" = "Готово";
+"common.close" = "Закрыть";
+"common.back" = "Назад";
+"common.next" = "Далее";
+"common.search" = "Поиск";
+"common.share" = "Поделиться";
+"common.copy" = "Копировать";
+"common.copied" = "Скопировано в буфер обмена";
+"common.select" = "Выбрать";
+"common.all" = "Все";
+
+// MARK: - Errors
+"error.invalid_url" = "Неверный URL";
+"error.invalid_response" = "Неверный ответ сервера";
+"error.no_internet" = "Нет подключения к интернету. Проверьте сеть.";
+"error.unauthorized" = "Несанкционированный доступ";
+"error.rate_limited" = "Слишком много запросов. Попробуйте позже.";
+"error.server_error" = "Ошибка сервера (код %d)";
+"error.http_error" = "Ошибка HTTP %d";
+"error.network_error" = "Ошибка сети: %@";
+"error.decoding_error" = "Ошибка разбора данных: %@";
+"error.offline_title" = "Вы офлайн";
+"error.offline_message" = "Проверьте подключение и попробуйте снова.";
+
+// MARK: - Exchange
+"exchange.from" = "Из";
+"exchange.to" = "В";
+"exchange.max" = "МАКС";
+"exchange.get_quote" = "Получить Котировку";
+"exchange.execute_swap" = "Выполнить Обмен";
+"exchange.select_token" = "Выбрать Токен";
+"exchange.enter_amount" = "Пожалуйста, введите сумму";
+"exchange.loading" = "Загрузка...";
+"exchange.error_title" = "Ошибка Обмена";
+"exchange.output" = "Выход";
+"exchange.slippage" = "Проскальзывание";
+"exchange.price_impact" = "Влияние на Цену";
+"exchange.route" = "Маршрут";
+
+// MARK: - Market
+"market.top_100" = "Топ 100";
+"market.top_1000" = "Топ 1000";
+"market.top_10000" = "Топ 10000";
+"market.rank" = "Ранг";
+"market.token" = "Токен";
+"market.price" = "Цена";
+"market.market_cap" = "Капитализация";
+"market.volume" = "Объем (24ч)";
+"market.change" = "Изменение (24ч)";
+"market.open_orb" = "Открыть в OrbMarkets";
+"market.open_coingecko" = "Открыть в CoinGecko";
+"market.no_data" = "Данные недоступны";
+
+// MARK: - FAQ
+"faq.search_placeholder" = "Поиск в FAQ...";
+"faq.category_all" = "Все";
+"faq.category_general" = "Общее";
+"faq.category_wallet" = "Кошелек";
+"faq.category_trading" = "Трейдинг";
+"faq.category_security" = "Безопасность";
+"faq.category_technical" = "Технический";
+"faq.category_tokenomics" = "Токеномика";
+"faq.no_results" = "Результатов не найдено";
+
+// MARK: - Settings
+"settings.language" = "Язык";
+"settings.select_language" = "Выбрать Язык";
+"settings.theme" = "Тема";
+"settings.select_theme" = "Выбрать Тему";
+"settings.server_url" = "URL Сервера";
+"settings.server_url_desc" = "Введите URL сервера бэкенда";
+"settings.invalid_url" = "Неверный URL";
+"settings.invalid_url_message" = "Пожалуйста, введите действительный HTTP или HTTPS URL.";
+"settings.contract" = "Контракт EACO";
+"settings.version" = "Версия";
+"settings.welfare" = "Благосостояние EACO 2025";
+"settings.links" = "Официальные Ссылки";
+"settings.clear_cache" = "Очистить Кэш";
+"settings.clear_cache_title" = "Очистить Кэш?";
+"settings.clear_cache_message" = "Это удалит все кэшированные данные и веб-контент.";
+"settings.clear" = "Очистить";
+"settings.cache_cleared" = "Кэш очищен";
+"settings.reset_defaults" = "Сбросить до Настроек по Умолчанию";
+"settings.reset_title" = "Сбросить Настройки?";
+"settings.reset_message" = "Это восстановит все настройки до значений по умолчанию.";
+"settings.reset" = "Сбросить";
+"settings.copied" = "Скопировано!";
+"settings.contract_copied" = "Адрес контракта скопирован в буфер обмена";
+"settings.header_language" = "ЯЗЫК";
+"settings.header_theme" = "ТЕМА";
+"settings.header_server" = "СЕРВЕР";
+"settings.header_about" = "О ПРИЛОЖЕНИИ";
+"settings.header_actions" = "ДЕЙСТВИЯ";
+
+// MARK: - Themes
+"theme.cosmic" = "Космическая";
+"theme.army" = "Военная";
+"theme.classic" = "Классическая";
+
+// MARK: - Wallet
+"wallet.not_installed" = "Приложение кошелька не установлено";
+"wallet.not_installed_title" = "Кошелек Не Найден";
+"wallet.not_installed_message" = "%@ не установлен. Хотите установить или продолжить в веб?";
+"wallet.install" = "Установить";
+"wallet.continue_web" = "Продолжить в Веб";
+"wallet.invalid_callback" = "Неверный URL обратного вызова кошелька";
+"wallet.connection_rejected" = "Подключение кошелька отклонено";
+"wallet.timeout" = "Время ожидания подключения кошелька истекло";
+"wallet.unknown_error" = "Неизвестная ошибка кошелька";

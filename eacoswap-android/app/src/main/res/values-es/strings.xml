@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EACOswap</string>
+    <string name="nav_home">Inicio</string>
+    <string name="nav_exchange">Intercambio</string>
+    <string name="nav_market">Mercado</string>
+    <string name="nav_faq">FAQ</string>
+    <string name="nav_settings">Ajustes</string>
+    <string name="server_url_label">URL del Servidor</string>
+    <string name="server_url_hint">http://10.0.2.2:3000</string>
+    <string name="save">Guardar</string>
+    <string name="theme_label">Tema</string>
+    <string name="apply_theme">Aplicar Tema</string>
+    <string name="language_label">Idioma</string>
+    <string name="apply_language">Aplicar Idioma</string>
+    <string name="about_label">Acerca de</string>
+    <string name="version_text">Versión %1$s</string>
+    <string name="eaco_contract_label">Contrato EACO: %1$s\n(Toca para copiar)</string>
+    <string name="welfare_link_text">Bienestar Público EACO 2025 →</string>
+    <string name="clear_cache">Borrar Caché</string>
+    <string name="clear_cache_title">Borrar Caché</string>
+    <string name="clear_cache_message">Esto borrará todos los datos en caché. ¿Continuar?</string>
+    <string name="cache_cleared">Caché borrada</string>
+    <string name="server_url_saved">URL del servidor guardada</string>
+    <string name="copied_to_clipboard">Copiado al portapapeles</string>
+    <string name="select_wallet">Seleccionar Cartera</string>
+    <string name="wallet_connecting">Conectando a %1$s…</string>
+    <string name="wallet_not_installed">%1$s no está instalada. Abriendo tienda…</string>
+    <string name="share_title">Compartir</string>
+    <string name="offline_title">Sin Conexión</string>
+    <string name="offline_message">No se puede conectar al servidor de EACOswap.\nVerifica tu conexión e inténtalo de nuevo.</string>
+    <string name="retry">Reintentar</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+</resources>

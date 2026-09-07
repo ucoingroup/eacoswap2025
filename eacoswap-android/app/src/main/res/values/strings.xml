@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EACOswap</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_exchange">Exchange</string>
+    <string name="nav_market">Market</string>
+    <string name="nav_faq">FAQ</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Settings -->
+    <string name="server_url_label">Server URL</string>
+    <string name="server_url_hint">http://10.0.2.2:3000</string>
+    <string name="save">Save</string>
+    <string name="theme_label">Theme</string>
+    <string name="apply_theme">Apply Theme</string>
+    <string name="language_label">Language</string>
+    <string name="apply_language">Apply Language</string>
+    <string name="about_label">About</string>
+    <string name="version_text">Version %1$s</string>
+    <string name="eaco_contract_label">EACO Contract: %1$s\n(Tap to copy)</string>
+    <string name="welfare_link_text">EACO Public Welfare 2025 →</string>
+    <string name="clear_cache">Clear Cache</string>
+    <string name="clear_cache_title">Clear Cache</string>
+    <string name="clear_cache_message">This will clear all cached data. Continue?</string>
+    <string name="cache_cleared">Cache cleared</string>
+    <string name="server_url_saved">Server URL saved</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+
+    <!-- Wallet -->
+    <string name="select_wallet">Select Wallet</string>
+    <string name="wallet_connecting">Connecting to %1$s…</string>
+    <string name="wallet_not_installed">%1$s not installed. Opening store…</string>
+
+    <!-- Share -->
+    <string name="share_title">Share</string>
+
+    <!-- Offline -->
+    <string name="offline_title">No Connection</string>
+    <string name="offline_message">Please check your internet connection and try again.</string>
+    <string name="retry">Retry</string>
+
+    <!-- Buttons -->
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+</resources>

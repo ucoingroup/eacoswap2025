@@ -1,0 +1,188 @@
+/*
+  Localizable_zh.strings
+  EACOswap
+
+  Chinese (Simplified)
+  Created by EACO Team on 2026-09-07.
+*/
+
+// MARK: - Tab Names
+"tab.home"       = "首页";
+"tab.exchange"   = "交易";
+"tab.market"     = "市场";
+"tab.faq"        = "常见问题";
+"tab.settings"   = "设置";
+
+// MARK: - Settings
+"settings.title"           = "设置";
+"settings.language"        = "语言";
+"settings.theme"           = "主题";
+"settings.server_url"      = "服务器地址";
+"settings.about"           = "关于";
+"settings.clear_cache"     = "清除缓存";
+"settings.reset"           = "恢复默认设置";
+"settings.charity"         = "慈善";
+"settings.version"         = "版本";
+"settings.terms"           = "服务条款";
+"settings.privacy"         = "隐私政策";
+"settings.rate_app"        = "评价应用";
+"settings.share_app"       = "分享应用";
+"settings.notifications"   = "通知";
+"settings.biometric"       = "生物识别锁";
+"settings.appearance"      = "外观";
+"settings.data_usage"      = "数据使用";
+"settings.help"            = "帮助与支持";
+
+// MARK: - Theme Names
+"theme.cosmic"  = "宇宙";
+"theme.army"    = "军旅";
+"theme.classic" = "经典";
+
+// MARK: - Wallet
+"wallet.title"        = "钱包";
+"wallet.connect"      = "连接钱包";
+"wallet.disconnect"   = "断开连接";
+"wallet.phantom"      = "Phantom";
+"wallet.solflare"     = "Solflare";
+"wallet.backpack"     = "Backpack";
+"wallet.connected"    = "钱包已连接";
+"wallet.not_connected" = "未连接钱包";
+"wallet.address"      = "地址";
+"wallet.balance"      = "余额";
+"wallet.copy_address" = "复制地址";
+"wallet.view_explorer" = "在浏览器中查看";
+"wallet.select_provider" = "选择钱包";
+
+// MARK: - Exchange
+"exchange.title"           = "交易";
+"exchange.from"            = "从";
+"exchange.to"              = "到";
+"exchange.amount"          = "数量";
+"exchange.get_quote"       = "获取报价";
+"exchange.slippage"        = "滑点";
+"exchange.route"           = "路由";
+"exchange.price_impact"    = "价格影响";
+"exchange.output"          = "输出";
+"exchange.execute_swap"    = "执行交易";
+"exchange.select_token"    = "选择代币";
+"exchange.loading"         = "加载中...";
+"exchange.error_title"     = "交易错误";
+"exchange.enter_amount"    = "请输入数量";
+"exchange.insufficient"    = "余额不足";
+"exchange.confirm"         = "确认交易";
+"exchange.max"             = "最大";
+"exchange.half"            = "一半";
+"exchange.min_received"    = "最低收到";
+"exchange.fee"             = "网络费用";
+"exchange.total"           = "总计";
+
+// MARK: - Market
+"market.title"          = "市场";
+"market.top100"         = "前100";
+"market.top1000"        = "前1000";
+"market.top10000"       = "前10000";
+"market.rank"           = "排名";
+"market.price"          = "价格";
+"market.mcap"           = "市值";
+"market.volume"         = "成交量";
+"market.change"         = "24小时涨跌";
+"market.coin"           = "币种";
+"market.search"         = "搜索币种...";
+"market.no_data"        = "暂无市场数据";
+"market.last_updated"   = "最后更新";
+"market.gainers"        = "涨幅榜";
+"market.losers"         = "跌幅榜";
+"market.trending"       = "趋势";
+"market.new_listings"   = "新上市";
+
+// MARK: - FAQ
+"faq.title"              = "常见问题";
+"faq.search"             = "搜索问题...";
+"faq.categories"         = "分类";
+"faq.no_results"         = "未找到结果";
+"faq.helpful"            = "这有帮助吗？";
+"faq.yes"                = "是";
+"faq.no"                 = "否";
+"faq.contact_support"    = "联系客服";
+"faq.loading"            = "加载常见问题...";
+"faq.error_load"         = "加载失败";
+"faq.retry"              = "重试";
+"faq.category_general"   = "常规";
+"faq.category_wallet"    = "钱包";
+"faq.category_swap"      = "交易";
+"faq.category_security"  = "安全";
+"faq.category_token"     = "代币";
+
+// MARK: - Common Actions
+"common.ok"        = "确定";
+"common.cancel"    = "取消";
+"common.done"      = "完成";
+"common.error"     = "错误";
+"common.retry"     = "重试";
+"common.loading"   = "加载中...";
+"common.offline"   = "您已离线";
+"common.copy"      = "复制";
+"common.share"     = "分享";
+"common.open"      = "打开";
+"common.close"     = "关闭";
+"common.save"      = "保存";
+"common.delete"    = "删除";
+"common.edit"      = "编辑";
+"common.back"      = "返回";
+"common.next"      = "下一步";
+"common.search"    = "搜索";
+"common.filter"    = "筛选";
+"common.sort"      = "排序";
+"common.refresh"   = "刷新";
+"common.more"      = "更多";
+"common.less"      = "更少";
+"common.confirm"   = "确认";
+"common.dismiss"   = "忽略";
+"common.continue"  = "继续";
+"common.submit"    = "提交";
+"common.send"      = "发送";
+"common.receive"   = "接收";
+"common.success"   = "成功";
+"common.failed"    = "失败";
+"common.warning"   = "警告";
+"common.info"      = "信息";
+"common.unknown"   = "未知";
+
+// MARK: - EACO Info
+"eaco.contract"         = "EACO合约";
+"eaco.orbmarkets"       = "在OrbMarkets查看";
+"eaco.charity"          = "EACO慈善";
+"eaco.symbol"           = "EACO";
+"eaco.description"      = "EACO是Solana上的社区驱动代币。";
+"eaco.total_supply"     = "总供应量";
+"eaco.holders"          = "持有者";
+"eaco.transfers"        = "转账";
+"eaco.website"          = "官方网站";
+"eaco.whitepaper"       = "白皮书";
+
+// MARK: - Errors
+"error.generic"           = "出了点问题。";
+"error.invalid_url"     = "无效的网址。";
+"error.invalid_response" = "服务器响应无效。";
+"error.no_internet"      = "无网络连接。";
+"error.unauthorized"     = "未授权。请检查您的凭据。";
+"error.rate_limited"     = "请求过多。请稍后再试。";
+"error.server_error"     = "服务器错误（%d）。请重试。";
+"error.http_error"       = "HTTP错误 %d。";
+"error.timeout"         = "请求超时。";
+"error.parse"           = "数据解析失败。";
+"error.offline_title"    = "您已离线";
+"error.offline_message"  = "请检查网络连接后重试。";
+
+// MARK: - Notifications
+"notif.price_alert"       = "价格提醒";
+"notif.swap_complete"     = "交易完成";
+"notif.deposit"           = "收到存款";
+"notif.market_update"     = "市场更新";
+
+// MARK: - About
+"about.title"             = "关于EACOswap";
+"about.version"           = "版本 %@";
+"about.copyright"         = "© 2026 EACO团队。保留所有权利。";
+"about.license"           = "开源许可证";
+"about.acknowledgements"  = "致谢";

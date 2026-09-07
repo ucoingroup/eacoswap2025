@@ -1,0 +1,188 @@
+/*
+  Localizable_es.strings
+  EACOswap
+
+  Spanish
+  Created by EACO Team on 2026-09-07.
+*/
+
+// MARK: - Tab Names
+"tab.home"       = "Inicio";
+"tab.exchange"   = "Intercambio";
+"tab.market"     = "Mercado";
+"tab.faq"        = "FAQ";
+"tab.settings"   = "Ajustes";
+
+// MARK: - Settings
+"settings.title"           = "Ajustes";
+"settings.language"        = "Idioma";
+"settings.theme"           = "Tema";
+"settings.server_url"      = "URL del Servidor";
+"settings.about"           = "Acerca de";
+"settings.clear_cache"     = "Borrar Caché";
+"settings.reset"           = "Restablecer Predeterminados";
+"settings.charity"         = "Caridad";
+"settings.version"         = "Versión";
+"settings.terms"           = "Términos de Servicio";
+"settings.privacy"         = "Política de Privacidad";
+"settings.rate_app"        = "Calificar App";
+"settings.share_app"       = "Compartir App";
+"settings.notifications"   = "Notificaciones";
+"settings.biometric"       = "Bloqueo Biométrico";
+"settings.appearance"      = "Apariencia";
+"settings.data_usage"      = "Uso de Datos";
+"settings.help"            = "Ayuda y Soporte";
+
+// MARK: - Theme Names
+"theme.cosmic"  = "Cósmico";
+"theme.army"    = "Militar";
+"theme.classic" = "Clásico";
+
+// MARK: - Wallet
+"wallet.title"        = "Cartera";
+"wallet.connect"      = "Conectar Cartera";
+"wallet.disconnect"   = "Desconectar";
+"wallet.phantom"      = "Phantom";
+"wallet.solflare"     = "Solflare";
+"wallet.backpack"     = "Backpack";
+"wallet.connected"    = "Cartera Conectada";
+"wallet.not_connected" = "Sin Cartera Conectada";
+"wallet.address"      = "Dirección";
+"wallet.balance"      = "Saldo";
+"wallet.copy_address" = "Copiar Dirección";
+"wallet.view_explorer" = "Ver en Explorador";
+"wallet.select_provider" = "Seleccionar Cartera";
+
+// MARK: - Exchange
+"exchange.title"           = "Intercambio";
+"exchange.from"            = "De";
+"exchange.to"              = "A";
+"exchange.amount"          = "Cantidad";
+"exchange.get_quote"       = "Obtener Cotización";
+"exchange.slippage"        = "Deslizamiento";
+"exchange.route"           = "Ruta";
+"exchange.price_impact"    = "Impacto de Precio";
+"exchange.output"          = "Salida";
+"exchange.execute_swap"    = "Ejecutar Intercambio";
+"exchange.select_token"    = "Seleccionar Token";
+"exchange.loading"         = "Cargando...";
+"exchange.error_title"     = "Error de Intercambio";
+"exchange.enter_amount"    = "Por favor ingrese una cantidad";
+"exchange.insufficient"    = "Saldo insuficiente";
+"exchange.confirm"         = "Confirmar Intercambio";
+"exchange.max"             = "Máx";
+"exchange.half"            = "Mitad";
+"exchange.min_received"    = "Mínimo Recibido";
+"exchange.fee"             = "Tarifa de Red";
+"exchange.total"           = "Total";
+
+// MARK: - Market
+"market.title"          = "Mercado";
+"market.top100"         = "Top 100";
+"market.top1000"        = "Top 1.000";
+"market.top10000"       = "Top 10.000";
+"market.rank"           = "Rango";
+"market.price"          = "Precio";
+"market.mcap"           = "Capitalización";
+"market.volume"         = "Volumen";
+"market.change"         = "Cambio 24h";
+"market.coin"           = "Moneda";
+"market.search"         = "Buscar monedas...";
+"market.no_data"        = "No hay datos de mercado disponibles";
+"market.last_updated"   = "Última actualización";
+"market.gainers"        = "Mayores Ganancias";
+"market.losers"         = "Mayores Pérdidas";
+"market.trending"       = "Tendencias";
+"market.new_listings"   = "Nuevos Listados";
+
+// MARK: - FAQ
+"faq.title"              = "Preguntas Frecuentes";
+"faq.search"             = "Buscar preguntas...";
+"faq.categories"         = "Categorías";
+"faq.no_results"         = "No se encontraron resultados";
+"faq.helpful"            = "¿Fue útil?";
+"faq.yes"                = "Sí";
+"faq.no"                 = "No";
+"faq.contact_support"    = "Contactar Soporte";
+"faq.loading"            = "Cargando FAQ...";
+"faq.error_load"         = "Error al cargar FAQ";
+"faq.retry"              = "Reintentar";
+"faq.category_general"   = "General";
+"faq.category_wallet"    = "Cartera";
+"faq.category_swap"      = "Intercambio";
+"faq.category_security"  = "Seguridad";
+"faq.category_token"     = "Token";
+
+// MARK: - Common Actions
+"common.ok"        = "OK";
+"common.cancel"    = "Cancelar";
+"common.done"      = "Hecho";
+"common.error"     = "Error";
+"common.retry"     = "Reintentar";
+"common.loading"   = "Cargando...";
+"common.offline"   = "Sin conexión";
+"common.copy"      = "Copiar";
+"common.share"     = "Compartir";
+"common.open"      = "Abrir";
+"common.close"     = "Cerrar";
+"common.save"      = "Guardar";
+"common.delete"    = "Eliminar";
+"common.edit"      = "Editar";
+"common.back"      = "Atrás";
+"common.next"      = "Siguiente";
+"common.search"    = "Buscar";
+"common.filter"    = "Filtrar";
+"common.sort"      = "Ordenar";
+"common.refresh"   = "Actualizar";
+"common.more"      = "Más";
+"common.less"      = "Menos";
+"common.confirm"   = "Confirmar";
+"common.dismiss"   = "Descartar";
+"common.continue"  = "Continuar";
+"common.submit"    = "Enviar";
+"common.send"      = "Enviar";
+"common.receive"   = "Recibir";
+"common.success"   = "Éxito";
+"common.failed"    = "Fallido";
+"common.warning"   = "Advertencia";
+"common.info"      = "Información";
+"common.unknown"   = "Desconocido";
+
+// MARK: - EACO Info
+"eaco.contract"         = "Contrato EACO";
+"eaco.orbmarkets"       = "Ver en OrbMarkets";
+"eaco.charity"          = "Caridad EACO";
+"eaco.symbol"           = "EACO";
+"eaco.description"      = "EACO es un token impulsado por la comunidad en Solana.";
+"eaco.total_supply"     = "Suministro Total";
+"eaco.holders"          = "Titulares";
+"eaco.transfers"        = "Transferencias";
+"eaco.website"          = "Sitio Web Oficial";
+"eaco.whitepaper"       = "Whitepaper";
+
+// MARK: - Errors
+"error.generic"           = "Algo salió mal.";
+"error.invalid_url"     = "URL inválida.";
+"error.invalid_response" = "Respuesta del servidor inválida.";
+"error.no_internet"      = "Sin conexión a Internet.";
+"error.unauthorized"     = "No autorizado. Verifique sus credenciales.";
+"error.rate_limited"     = "Demasiadas solicitudes. Inténtelo más tarde.";
+"error.server_error"     = "Error del servidor (%d). Inténtelo de nuevo.";
+"error.http_error"       = "Error HTTP %d.";
+"error.timeout"         = "Tiempo de espera agotado.";
+"error.parse"           = "Error al analizar datos.";
+"error.offline_title"    = "Sin conexión";
+"error.offline_message"  = "Verifique su conexión a Internet e inténtelo de nuevo.";
+
+// MARK: - Notifications
+"notif.price_alert"       = "Alerta de Precio";
+"notif.swap_complete"     = "Intercambio Completado";
+"notif.deposit"           = "Depósito Recibido";
+"notif.market_update"     = "Actualización de Mercado";
+
+// MARK: - About
+"about.title"             = "Acerca de EACOswap";
+"about.version"           = "Versión %@";
+"about.copyright"         = "© 2026 EACO Team. Todos los derechos reservados.";
+"about.license"           = "Licencias de Código Abierto";
+"about.acknowledgements"  = "Agradecimientos";

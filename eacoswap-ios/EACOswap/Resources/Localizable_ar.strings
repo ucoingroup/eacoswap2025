@@ -1,0 +1,188 @@
+/*
+  Localizable_ar.strings
+  EACOswap
+
+  Arabic
+  Created by EACO Team on 2026-09-07.
+*/
+
+// MARK: - Tab Names
+"tab.home"       = "الرئيسية";
+"tab.exchange"   = "التبادل";
+"tab.market"     = "السوق";
+"tab.faq"        = "الأسئلة الشائعة";
+"tab.settings"   = "الإعدادات";
+
+// MARK: - Settings
+"settings.title"           = "الإعدادات";
+"settings.language"        = "اللغة";
+"settings.theme"           = "السمة";
+"settings.server_url"      = "عنوان الخادم";
+"settings.about"           = "حول";
+"settings.clear_cache"     = "مسح ذاكرة التخزين المؤقت";
+"settings.reset"           = "إعادة تعيين للإعدادات الافتراضية";
+"settings.charity"         = "الأعمال الخيرية";
+"settings.version"         = "الإصدار";
+"settings.terms"           = "شروط الخدمة";
+"settings.privacy"         = "سياسة الخصوصية";
+"settings.rate_app"        = "تقييم التطبيق";
+"settings.share_app"       = "مشاركة التطبيق";
+"settings.notifications"   = "الإشعارات";
+"settings.biometric"       = "قفل بيومتري";
+"settings.appearance"      = "المظهر";
+"settings.data_usage"      = "استهلاك البيانات";
+"settings.help"            = "المساعدة والدعم";
+
+// MARK: - Theme Names
+"theme.cosmic"  = "كوني";
+"theme.army"    = "عسكري";
+"theme.classic" = "كلاسيكي";
+
+// MARK: - Wallet
+"wallet.title"        = "المحفظة";
+"wallet.connect"      = "ربط المحفظة";
+"wallet.disconnect"   = "فصل الاتصال";
+"wallet.phantom"      = "Phantom";
+"wallet.solflare"     = "Solflare";
+"wallet.backpack"     = "Backpack";
+"wallet.connected"    = "تم ربط المحفظة";
+"wallet.not_connected" = "لا يوجد محفظة متصلة";
+"wallet.address"      = "العنوان";
+"wallet.balance"      = "الرصيد";
+"wallet.copy_address" = "نسخ العنوان";
+"wallet.view_explorer" = "عرض في المستكشف";
+"wallet.select_provider" = "اختيار المحفظة";
+
+// MARK: - Exchange
+"exchange.title"           = "التبادل";
+"exchange.from"            = "من";
+"exchange.to"              = "إلى";
+"exchange.amount"          = "المبلغ";
+"exchange.get_quote"       = "الحصول على عرض";
+"exchange.slippage"        = "انزلاق السعر";
+"exchange.route"           = "المسار";
+"exchange.price_impact"    = "تأثير السعر";
+"exchange.output"          = "الناتج";
+"exchange.execute_swap"    = "تنفيذ التبادل";
+"exchange.select_token"    = "اختيار الرمز";
+"exchange.loading"         = "جارٍ التحميل...";
+"exchange.error_title"     = "خطأ في التبادل";
+"exchange.enter_amount"    = "يرجى إدخال مبلغ";
+"exchange.insufficient"    = "رصيد غير كافٍ";
+"exchange.confirm"         = "تأكيد التبادل";
+"exchange.max"             = "الحد الأقصى";
+"exchange.half"            = "النصف";
+"exchange.min_received"    = "الحد الأدنى المستلم";
+"exchange.fee"             = "رسوم الشبكة";
+"exchange.total"           = "المجموع";
+
+// MARK: - Market
+"market.title"          = "السوق";
+"market.top100"         = "أفضل 100";
+"market.top1000"        = "أفضل 1000";
+"market.top10000"       = "أفضل 10000";
+"market.rank"           = "الترتيب";
+"market.price"          = "السعر";
+"market.mcap"           = "القيمة السوقية";
+"market.volume"         = "حجم التداول";
+"market.change"         = "تغير 24 ساعة";
+"market.coin"           = "العملة";
+"market.search"         = "بحث عن عملات...";
+"market.no_data"        = "لا توجد بيانات سوق متاحة";
+"market.last_updated"   = "آخر تحديث";
+"market.gainers"        = "أكبر المكاسب";
+"market.losers"         = "أكبر الخسائر";
+"market.trending"       = "الاتجاهات";
+"market.new_listings"   = "قوائم جديدة";
+
+// MARK: - FAQ
+"faq.title"              = "الأسئلة الشائعة";
+"faq.search"             = "البحث في الأسئلة...";
+"faq.categories"         = "الفئات";
+"faq.no_results"         = "لم يتم العثور على نتائج";
+"faq.helpful"            = "هل كان هذا مفيداً؟";
+"faq.yes"                = "نعم";
+"faq.no"                 = "لا";
+"faq.contact_support"    = "الاتصال بالدعم";
+"faq.loading"            = "جارٍ تحميل الأسئلة...";
+"faq.error_load"         = "فشل التحميل";
+"faq.retry"              = "إعادة المحاولة";
+"faq.category_general"   = "عام";
+"faq.category_wallet"    = "المحفظة";
+"faq.category_swap"      = "التبادل";
+"faq.category_security"  = "الأمان";
+"faq.category_token"     = "الرمز";
+
+// MARK: - Common Actions
+"common.ok"        = "موافق";
+"common.cancel"    = "إلغاء";
+"common.done"      = "تم";
+"common.error"     = "خطأ";
+"common.retry"     = "إعادة المحاولة";
+"common.loading"   = "جارٍ التحميل...";
+"common.offline"   = "أنت غير متصل";
+"common.copy"      = "نسخ";
+"common.share"     = "مشاركة";
+"common.open"      = "فتح";
+"common.close"     = "إغلاق";
+"common.save"      = "حفظ";
+"common.delete"    = "حذف";
+"common.edit"      = "تعديل";
+"common.back"      = "رجوع";
+"common.next"      = "التالي";
+"common.search"    = "بحث";
+"common.filter"    = "تصفية";
+"common.sort"      = "فرز";
+"common.refresh"   = "تحديث";
+"common.more"      = "المزيد";
+"common.less"      = "أقل";
+"common.confirm"   = "تأكيد";
+"common.dismiss"   = "تجاهل";
+"common.continue"  = "متابعة";
+"common.submit"    = "إرسال";
+"common.send"      = "إرسال";
+"common.receive"   = "استلام";
+"common.success"   = "نجاح";
+"common.failed"    = "فشل";
+"common.warning"   = "تحذير";
+"common.info"      = "معلومات";
+"common.unknown"   = "غير معروف";
+
+// MARK: - EACO Info
+"eaco.contract"         = "عقد EACO";
+"eaco.orbmarkets"       = "عرض على OrbMarkets";
+"eaco.charity"          = "أعمال EACO الخيرية";
+"eaco.symbol"           = "EACO";
+"eaco.description"      = "EACO هو رمز مجتمعي على Solana.";
+"eaco.total_supply"     = "الإجمالي المعروض";
+"eaco.holders"          = "الحاملون";
+"eaco.transfers"        = "التحويلات";
+"eaco.website"          = "الموقع الرسمي";
+"eaco.whitepaper"       = "ورقة بيضاء";
+
+// MARK: - Errors
+"error.generic"           = "حدث خطأ ما.";
+"error.invalid_url"     = "عنوان URL غير صالح.";
+"error.invalid_response" = "استجابة خادم غير صالحة.";
+"error.no_internet"      = "لا يوجد اتصال بالإنترنت.";
+"error.unauthorized"     = "غير مصرح. يرجى التحقق من بيانات الاعتماد.";
+"error.rate_limited"     = "طلبات كثيرة جداً. يرجى المحاولة لاحقاً.";
+"error.server_error"     = "خطأ في الخادم (%d). يرجى إعادة المحاولة.";
+"error.http_error"       = "خطأ HTTP %d.";
+"error.timeout"         = "انتهت مهلة الطلب.";
+"error.parse"           = "فشل في تحليل البيانات.";
+"error.offline_title"    = "أنت غير متصل";
+"error.offline_message"  = "يرجى التحقق من اتصالك بالإنترنت وإعادة المحاولة.";
+
+// MARK: - Notifications
+"notif.price_alert"       = "تنبيه السعر";
+"notif.swap_complete"     = "اكتمال التبادل";
+"notif.deposit"           = "تم استلام الإيداع";
+"notif.market_update"     = "تحديث السوق";
+
+// MARK: - About
+"about.title"             = "حول EACOswap";
+"about.version"           = "الإصدار %@";
+"about.copyright"         = "© 2026 EACO Team. جميع الحقوق محفوظة.";
+"about.license"           = "تراخيص مفتوحة المصدر";
+"about.acknowledgements"  = "شكر وتقدير";

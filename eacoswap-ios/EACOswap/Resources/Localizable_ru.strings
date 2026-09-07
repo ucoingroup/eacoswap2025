@@ -1,0 +1,188 @@
+/*
+  Localizable_ru.strings
+  EACOswap
+
+  Russian
+  Created by EACO Team on 2026-09-07.
+*/
+
+// MARK: - Tab Names
+"tab.home"       = "Главная";
+"tab.exchange"   = "Обмен";
+"tab.market"     = "Рынок";
+"tab.faq"        = "Вопросы и ответы";
+"tab.settings"   = "Настройки";
+
+// MARK: - Settings
+"settings.title"           = "Настройки";
+"settings.language"        = "Язык";
+"settings.theme"           = "Тема";
+"settings.server_url"      = "Адрес сервера";
+"settings.about"           = "О приложении";
+"settings.clear_cache"     = "Очистить кэш";
+"settings.reset"           = "Сбросить настройки";
+"settings.charity"         = "Благотворительность";
+"settings.version"         = "Версия";
+"settings.terms"           = "Условия использования";
+"settings.privacy"         = "Политика конфиденциальности";
+"settings.rate_app"        = "Оценить приложение";
+"settings.share_app"       = "Поделиться приложением";
+"settings.notifications"   = "Уведомления";
+"settings.biometric"       = "Биометрическая блокировка";
+"settings.appearance"      = "Внешний вид";
+"settings.data_usage"      = "Использование данных";
+"settings.help"            = "Помощь и поддержка";
+
+// MARK: - Theme Names
+"theme.cosmic"  = "Космическая";
+"theme.army"    = "Военная";
+"theme.classic" = "Классическая";
+
+// MARK: - Wallet
+"wallet.title"        = "Кошелёк";
+"wallet.connect"      = "Подключить кошелёк";
+"wallet.disconnect"   = "Отключить";
+"wallet.phantom"      = "Phantom";
+"wallet.solflare"     = "Solflare";
+"wallet.backpack"     = "Backpack";
+"wallet.connected"    = "Кошелёк подключён";
+"wallet.not_connected" = "Кошелёк не подключён";
+"wallet.address"      = "Адрес";
+"wallet.balance"      = "Баланс";
+"wallet.copy_address" = "Скопировать адрес";
+"wallet.view_explorer" = "Посмотреть в обозревателе";
+"wallet.select_provider" = "Выбрать кошелёк";
+
+// MARK: - Exchange
+"exchange.title"           = "Обмен";
+"exchange.from"            = "Из";
+"exchange.to"              = "В";
+"exchange.amount"          = "Сумма";
+"exchange.get_quote"       = "Получить котировку";
+"exchange.slippage"        = "Проскальзывание";
+"exchange.route"           = "Маршрут";
+"exchange.price_impact"    = "Влияние на цену";
+"exchange.output"          = "Результат";
+"exchange.execute_swap"    = "Выполнить обмен";
+"exchange.select_token"    = "Выбрать токен";
+"exchange.loading"         = "Загрузка...";
+"exchange.error_title"     = "Ошибка обмена";
+"exchange.enter_amount"    = "Введите сумму";
+"exchange.insufficient"    = "Недостаточно средств";
+"exchange.confirm"         = "Подтвердить обмен";
+"exchange.max"             = "Макс";
+"exchange.half"            = "Половина";
+"exchange.min_received"    = "Минимум к получению";
+"exchange.fee"             = "Комиссия сети";
+"exchange.total"           = "Итого";
+
+// MARK: - Market
+"market.title"          = "Рынок";
+"market.top100"         = "Топ-100";
+"market.top1000"        = "Топ-1000";
+"market.top10000"       = "Топ-10000";
+"market.rank"           = "Место";
+"market.price"          = "Цена";
+"market.mcap"           = "Капитализация";
+"market.volume"         = "Объём";
+"market.change"         = "Изменение за 24ч";
+"market.coin"           = "Монета";
+"market.search"         = "Поиск монет...";
+"market.no_data"        = "Нет данных о рынке";
+"market.last_updated"   = "Последнее обновление";
+"market.gainers"        = "Лидеры роста";
+"market.losers"         = "Лидеры падения";
+"market.trending"       = "В тренде";
+"market.new_listings"   = "Новые листинги";
+
+// MARK: - FAQ
+"faq.title"              = "Вопросы и ответы";
+"faq.search"             = "Поиск вопросов...";
+"faq.categories"         = "Категории";
+"faq.no_results"         = "Ничего не найдено";
+"faq.helpful"            = "Было ли это полезно?";
+"faq.yes"                = "Да";
+"faq.no"                 = "Нет";
+"faq.contact_support"    = "Связаться с поддержкой";
+"faq.loading"            = "Загрузка FAQ...";
+"faq.error_load"         = "Ошибка загрузки FAQ";
+"faq.retry"              = "Повторить";
+"faq.category_general"   = "Общее";
+"faq.category_wallet"    = "Кошелёк";
+"faq.category_swap"      = "Обмен";
+"faq.category_security"  = "Безопасность";
+"faq.category_token"     = "Токен";
+
+// MARK: - Common Actions
+"common.ok"        = "OK";
+"common.cancel"    = "Отмена";
+"common.done"      = "Готово";
+"common.error"     = "Ошибка";
+"common.retry"     = "Повторить";
+"common.loading"   = "Загрузка...";
+"common.offline"   = "Нет подключения";
+"common.copy"      = "Копировать";
+"common.share"     = "Поделиться";
+"common.open"      = "Открыть";
+"common.close"     = "Закрыть";
+"common.save"      = "Сохранить";
+"common.delete"    = "Удалить";
+"common.edit"      = "Редактировать";
+"common.back"      = "Назад";
+"common.next"      = "Далее";
+"common.search"    = "Поиск";
+"common.filter"    = "Фильтр";
+"common.sort"      = "Сортировка";
+"common.refresh"   = "Обновить";
+"common.more"      = "Ещё";
+"common.less"      = "Меньше";
+"common.confirm"   = "Подтвердить";
+"common.dismiss"   = "Скрыть";
+"common.continue"  = "Продолжить";
+"common.submit"    = "Отправить";
+"common.send"      = "Отправить";
+"common.receive"   = "Получить";
+"common.success"   = "Успешно";
+"common.failed"    = "Ошибка";
+"common.warning"   = "Предупреждение";
+"common.info"      = "Информация";
+"common.unknown"   = "Неизвестно";
+
+// MARK: - EACO Info
+"eaco.contract"         = "Контракт EACO";
+"eaco.orbmarkets"       = "Посмотреть на OrbMarkets";
+"eaco.charity"          = "Благотворительность EACO";
+"eaco.symbol"           = "EACO";
+"eaco.description"      = "EACO — это токен на базе Solana, управляемый сообществом.";
+"eaco.total_supply"     = "Общее предложение";
+"eaco.holders"          = "Владельцы";
+"eaco.transfers"        = "Переводы";
+"eaco.website"          = "Официальный сайт";
+"eaco.whitepaper"       = "Whitepaper";
+
+// MARK: - Errors
+"error.generic"           = "Что-то пошло не так.";
+"error.invalid_url"     = "Неверный URL.";
+"error.invalid_response" = "Некорректный ответ сервера.";
+"error.no_internet"      = "Нет подключения к интернету.";
+"error.unauthorized"     = "Не авторизован. Проверьте свои данные.";
+"error.rate_limited"     = "Слишком много запросов. Попробуйте позже.";
+"error.server_error"     = "Ошибка сервера (%d). Попробуйте снова.";
+"error.http_error"       = "Ошибка HTTP %d.";
+"error.timeout"         = "Время запроса истекло.";
+"error.parse"           = "Не удалось обработать данные.";
+"error.offline_title"    = "Нет подключения";
+"error.offline_message"  = "Проверьте подключение к интернету и повторите попытку.";
+
+// MARK: - Notifications
+"notif.price_alert"       = "Оповещение о цене";
+"notif.swap_complete"     = "Обмен завершён";
+"notif.deposit"           = "Поступил депозит";
+"notif.market_update"     = "Обновление рынка";
+
+// MARK: - About
+"about.title"             = "О EACOswap";
+"about.version"           = "Версия %@";
+"about.copyright"         = "© 2026 EACO Team. Все права защищены.";
+"about.license"           = "Лицензии с открытым исходным кодом";
+"about.acknowledgements"  = "Благодарности";

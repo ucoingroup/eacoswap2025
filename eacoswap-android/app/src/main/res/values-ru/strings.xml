@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EACOswap</string>
+    <string name="nav_home">Главная</string>
+    <string name="nav_exchange">Обмен</string>
+    <string name="nav_market">Рынок</string>
+    <string name="nav_faq">Вопросы</string>
+    <string name="nav_settings">Настройки</string>
+    <string name="server_url_label">URL Сервера</string>
+    <string name="server_url_hint">http://10.0.2.2:3000</string>
+    <string name="save">Сохранить</string>
+    <string name="theme_label">Тема</string>
+    <string name="apply_theme">Применить Тему</string>
+    <string name="language_label">Язык</string>
+    <string name="apply_language">Применить Язык</string>
+    <string name="about_label">О Приложении</string>
+    <string name="version_text">Версия %1$s</string>
+    <string name="eaco_contract_label">Контракт EACO: %1$s\n(Нажмите для копирования)</string>
+    <string name="welfare_link_text">Общественное Благосостояние EACO 2025 →</string>
+    <string name="clear_cache">Очистить Кэш</string>
+    <string name="clear_cache_title">Очистить Кэш</string>
+    <string name="clear_cache_message">Это очистит все кэшированные данные. Продолжить?</string>
+    <string name="cache_cleared">Кэш очищен</string>
+    <string name="server_url_saved">URL сервера сохранён</string>
+    <string name="copied_to_clipboard">Скопировано в буфер обмена</string>
+    <string name="select_wallet">Выбрать Кошелёк</string>
+    <string name="wallet_connecting">Подключение к %1$s…</string>
+    <string name="wallet_not_installed">%1$s не установлен. Открытие магазина…</string>
+    <string name="share_title">Поделиться</string>
+    <string name="offline_title">Нет Подключения</string>
+    <string name="offline_message">Не удалось подключиться к серверу EACOswap.\nПроверьте подключение и попробуйте снова.</string>
+    <string name="retry">Повторить</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+</resources>

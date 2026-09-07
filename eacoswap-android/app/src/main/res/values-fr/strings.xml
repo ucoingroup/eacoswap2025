@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EACOswap</string>
+    <string name="nav_home">Accueil</string>
+    <string name="nav_exchange">Échange</string>
+    <string name="nav_market">Marché</string>
+    <string name="nav_faq">FAQ</string>
+    <string name="nav_settings">Paramètres</string>
+    <string name="server_url_label">URL du Serveur</string>
+    <string name="server_url_hint">http://10.0.2.2:3000</string>
+    <string name="save">Enregistrer</string>
+    <string name="theme_label">Thème</string>
+    <string name="apply_theme">Appliquer le Thème</string>
+    <string name="language_label">Langue</string>
+    <string name="apply_language">Appliquer la Langue</string>
+    <string name="about_label">À Propos</string>
+    <string name="version_text">Version %1$s</string>
+    <string name="eaco_contract_label">Contrat EACO : %1$s\n(Appuyez pour copier)</string>
+    <string name="welfare_link_text">Bien-être Public EACO 2025 →</string>
+    <string name="clear_cache">Vider le Cache</string>
+    <string name="clear_cache_title">Vider le Cache</string>
+    <string name="clear_cache_message">Cela effacera toutes les données en cache. Continuer ?</string>
+    <string name="cache_cleared">Cache vidé</string>
+    <string name="server_url_saved">URL du serveur enregistrée</string>
+    <string name="copied_to_clipboard">Copié dans le presse-papiers</string>
+    <string name="select_wallet">Choisir un Portefeuille</string>
+    <string name="wallet_connecting">Connexion à %1$s…</string>
+    <string name="wallet_not_installed">%1$s n'est pas installé. Ouverture du magasin…</string>
+    <string name="share_title">Partager</string>
+    <string name="offline_title">Pas de Connexion</string>
+    <string name="offline_message">Impossible de joindre le serveur EACOswap.\nVeuillez vérifier votre connexion et réessayer.</string>
+    <string name="retry">Réessayer</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+</resources>

@@ -1,0 +1,188 @@
+/*
+  Localizable.strings
+  EACOswap
+
+  Base (English)
+  Created by EACO Team on 2026-09-07.
+*/
+
+// MARK: - Tab Names
+"tab.home"       = "Home";
+"tab.exchange"   = "Exchange";
+"tab.market"     = "Market";
+"tab.faq"        = "FAQ";
+"tab.settings"   = "Settings";
+
+// MARK: - Settings
+"settings.title"           = "Settings";
+"settings.language"        = "Language";
+"settings.theme"           = "Theme";
+"settings.server_url"      = "Server URL";
+"settings.about"           = "About";
+"settings.clear_cache"     = "Clear Cache";
+"settings.reset"           = "Reset to Defaults";
+"settings.charity"         = "Charity";
+"settings.version"         = "Version";
+"settings.terms"           = "Terms of Service";
+"settings.privacy"         = "Privacy Policy";
+"settings.rate_app"        = "Rate App";
+"settings.share_app"       = "Share App";
+"settings.notifications"   = "Notifications";
+"settings.biometric"       = "Biometric Lock";
+"settings.appearance"      = "Appearance";
+"settings.data_usage"      = "Data Usage";
+"settings.help"            = "Help & Support";
+
+// MARK: - Theme Names
+"theme.cosmic"  = "Cosmic";
+"theme.army"    = "Army";
+"theme.classic" = "Classic";
+
+// MARK: - Wallet
+"wallet.title"        = "Wallet";
+"wallet.connect"      = "Connect Wallet";
+"wallet.disconnect"   = "Disconnect";
+"wallet.phantom"      = "Phantom";
+"wallet.solflare"     = "Solflare";
+"wallet.backpack"     = "Backpack";
+"wallet.connected"    = "Wallet Connected";
+"wallet.not_connected" = "No Wallet Connected";
+"wallet.address"      = "Address";
+"wallet.balance"      = "Balance";
+"wallet.copy_address" = "Copy Address";
+"wallet.view_explorer" = "View on Explorer";
+"wallet.select_provider" = "Select Wallet";
+
+// MARK: - Exchange
+"exchange.title"           = "Exchange";
+"exchange.from"            = "From";
+"exchange.to"              = "To";
+"exchange.amount"          = "Amount";
+"exchange.get_quote"       = "Get Quote";
+"exchange.slippage"        = "Slippage";
+"exchange.route"           = "Route";
+"exchange.price_impact"    = "Price Impact";
+"exchange.output"          = "Output";
+"exchange.execute_swap"    = "Execute Swap";
+"exchange.select_token"    = "Select Token";
+"exchange.loading"         = "Loading...";
+"exchange.error_title"     = "Exchange Error";
+"exchange.enter_amount"    = "Please enter an amount";
+"exchange.insufficient"    = "Insufficient balance";
+"exchange.confirm"         = "Confirm Swap";
+"exchange.max"             = "Max";
+"exchange.half"            = "Half";
+"exchange.min_received"    = "Minimum Received";
+"exchange.fee"             = "Network Fee";
+"exchange.total"           = "Total";
+
+// MARK: - Market
+"market.title"          = "Market";
+"market.top100"         = "Top 100";
+"market.top1000"        = "Top 1,000";
+"market.top10000"       = "Top 10,000";
+"market.rank"           = "Rank";
+"market.price"          = "Price";
+"market.mcap"           = "Market Cap";
+"market.volume"         = "Volume";
+"market.change"         = "24h Change";
+"market.coin"           = "Coin";
+"market.search"         = "Search coins...";
+"market.no_data"        = "No market data available";
+"market.last_updated"   = "Last updated";
+"market.gainers"        = "Top Gainers";
+"market.losers"         = "Top Losers";
+"market.trending"       = "Trending";
+"market.new_listings"   = "New Listings";
+
+// MARK: - FAQ
+"faq.title"              = "FAQ";
+"faq.search"             = "Search questions...";
+"faq.categories"         = "Categories";
+"faq.no_results"         = "No results found";
+"faq.helpful"            = "Was this helpful?";
+"faq.yes"                = "Yes";
+"faq.no"                 = "No";
+"faq.contact_support"    = "Contact Support";
+"faq.loading"            = "Loading FAQ...";
+"faq.error_load"         = "Failed to load FAQ";
+"faq.retry"              = "Try Again";
+"faq.category_general"   = "General";
+"faq.category_wallet"    = "Wallet";
+"faq.category_swap"      = "Swap";
+"faq.category_security"  = "Security";
+"faq.category_token"     = "Token";
+
+// MARK: - Common Actions
+"common.ok"        = "OK";
+"common.cancel"    = "Cancel";
+"common.done"      = "Done";
+"common.error"     = "Error";
+"common.retry"     = "Retry";
+"common.loading"   = "Loading...";
+"common.offline"   = "You are offline";
+"common.copy"      = "Copy";
+"common.share"     = "Share";
+"common.open"      = "Open";
+"common.close"     = "Close";
+"common.save"      = "Save";
+"common.delete"    = "Delete";
+"common.edit"      = "Edit";
+"common.back"      = "Back";
+"common.next"      = "Next";
+"common.search"    = "Search";
+"common.filter"    = "Filter";
+"common.sort"      = "Sort";
+"common.refresh"   = "Refresh";
+"common.more"      = "More";
+"common.less"      = "Less";
+"common.confirm"   = "Confirm";
+"common.dismiss"   = "Dismiss";
+"common.continue"  = "Continue";
+"common.submit"    = "Submit";
+"common.send"      = "Send";
+"common.receive"   = "Receive";
+"common.success"   = "Success";
+"common.failed"    = "Failed";
+"common.warning"   = "Warning";
+"common.info"      = "Info";
+"common.unknown"   = "Unknown";
+
+// MARK: - EACO Info
+"eaco.contract"         = "EACO Contract";
+"eaco.orbmarkets"       = "View on OrbMarkets";
+"eaco.charity"          = "EACO Charity";
+"eaco.symbol"           = "EACO";
+"eaco.description"      = "EACO is a community-driven token on Solana.";
+"eaco.total_supply"     = "Total Supply";
+"eaco.holders"          = "Holders";
+"eaco.transfers"        = "Transfers";
+"eaco.website"          = "Official Website";
+"eaco.whitepaper"       = "Whitepaper";
+
+// MARK: - Errors
+"error.generic"           = "Something went wrong.";
+"error.invalid_url"     = "Invalid URL.";
+"error.invalid_response" = "Invalid server response.";
+"error.no_internet"      = "No internet connection.";
+"error.unauthorized"     = "Unauthorized. Please check your credentials.";
+"error.rate_limited"     = "Too many requests. Please try again later.";
+"error.server_error"     = "Server error (%d). Please try again.";
+"error.http_error"       = "HTTP error %d.";
+"error.timeout"         = "Request timed out.";
+"error.parse"           = "Failed to parse data.";
+"error.offline_title"    = "You are offline";
+"error.offline_message"  = "Please check your internet connection and try again.";
+
+// MARK: - Notifications
+"notif.price_alert"       = "Price Alert";
+"notif.swap_complete"     = "Swap Complete";
+"notif.deposit"           = "Deposit Received";
+"notif.market_update"     = "Market Update";
+
+// MARK: - About
+"about.title"             = "About EACOswap";
+"about.version"           = "Version %@";
+"about.copyright"         = "© 2026 EACO Team. All rights reserved.";
+"about.license"           = "Open Source Licenses";
+"about.acknowledgements"  = "Acknowledgements";

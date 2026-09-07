@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EACOswap</string>
+    <string name="nav_home">الرئيسية</string>
+    <string name="nav_exchange">تبادل</string>
+    <string name="nav_market">السوق</string>
+    <string name="nav_faq">الأسئلة</string>
+    <string name="nav_settings">الإعدادات</string>
+    <string name="server_url_label">عنوان الخادم</string>
+    <string name="server_url_hint">http://10.0.2.2:3000</string>
+    <string name="save">حفظ</string>
+    <string name="theme_label">السمة</string>
+    <string name="apply_theme">تطبيق السمة</string>
+    <string name="language_label">اللغة</string>
+    <string name="apply_language">تطبيق اللغة</string>
+    <string name="about_label">حول</string>
+    <string name="version_text">الإصدار %1$s</string>
+    <string name="eaco_contract_label">عقد EACO: %1$s\n(انقر للنسخ)</string>
+    <string name="welfare_link_text">الرفاهية العامة EACO 2025 →</string>
+    <string name="clear_cache">مسح ذاكرة التخزين</string>
+    <string name="clear_cache_title">مسح ذاكرة التخزين</string>
+    <string name="clear_cache_message">سيتم مسح جميع البيانات المخزنة. هل تريد المتابعة؟</string>
+    <string name="cache_cleared">تم مسح ذاكرة التخزين</string>
+    <string name="server_url_saved">تم حفظ عنوان الخادم</string>
+    <string name="copied_to_clipboard">تم النسخ إلى الحافظة</string>
+    <string name="select_wallet">اختر المحفظة</string>
+    <string name="wallet_connecting">جاري الاتصال بـ %1$s…</string>
+    <string name="wallet_not_installed">%1$s غير مثبتة. جاري فتح المتجر…</string>
+    <string name="share_title">مشاركة</string>
+    <string name="offline_title">لا يوجد اتصال</string>
+    <string name="offline_message">تعذر الاتصال بخادم EACOswap.\nيرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى.</string>
+    <string name="retry">إعادة المحاولة</string>
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+</resources>

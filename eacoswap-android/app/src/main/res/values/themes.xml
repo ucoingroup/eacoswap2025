@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base theme -->
+    <style name="Theme.EACOswap" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/cosmic_primary</item>
+        <item name="colorPrimaryVariant">@color/cosmic_primary_variant</item>
+        <item name="colorOnPrimary">@color/cosmic_on_primary</item>
+        <item name="colorSecondary">@color/cosmic_secondary</item>
+        <item name="colorOnSecondary">@color/cosmic_on_secondary</item>
+        <item name="android:colorBackground">@color/cosmic_background</item>
+        <item name="colorSurface">@color/cosmic_surface</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="android:statusBarColor">@color/cosmic_background</item>
+        <item name="android:navigationBarColor">@color/cosmic_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <!-- Cosmic Theme (default) -->
+    <style name="Theme.EACOswap.Cosmic" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/cosmic_primary</item>
+        <item name="colorPrimaryVariant">@color/cosmic_primary_variant</item>
+        <item name="colorOnPrimary">@color/cosmic_on_primary</item>
+        <item name="colorSecondary">@color/cosmic_secondary</item>
+        <item name="colorOnSecondary">@color/cosmic_on_secondary</item>
+        <item name="android:colorBackground">@color/cosmic_background</item>
+        <item name="colorSurface">@color/cosmic_surface</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="android:statusBarColor">@color/cosmic_background</item>
+        <item name="android:navigationBarColor">@color/cosmic_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <!-- Army Theme -->
+    <style name="Theme.EACOswap.Army" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/army_primary</item>
+        <item name="colorPrimaryVariant">@color/army_primary_variant</item>
+        <item name="colorOnPrimary">@color/army_on_primary</item>
+        <item name="colorSecondary">@color/army_secondary</item>
+        <item name="colorOnSecondary">@color/army_on_secondary</item>
+        <item name="android:colorBackground">@color/army_background</item>
+        <item name="colorSurface">@color/army_surface</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="android:statusBarColor">@color/army_background</item>
+        <item name="android:navigationBarColor">@color/army_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <!-- Classic Theme -->
+    <style name="Theme.EACOswap.Classic" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/classic_primary</item>
+        <item name="colorPrimaryVariant">@color/classic_primary_variant</item>
+        <item name="colorOnPrimary">@color/classic_on_primary</item>
+        <item name="colorSecondary">@color/classic_secondary</item>
+        <item name="colorOnSecondary">@color/classic_on_secondary</item>
+        <item name="android:colorBackground">@color/classic_background</item>
+        <item name="colorSurface">@color/classic_surface</item>
+        <item name="colorOnSurface">@color/black</item>
+        <item name="android:statusBarColor">@color/classic_background</item>
+        <item name="android:navigationBarColor">@color/classic_background</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+</resources>

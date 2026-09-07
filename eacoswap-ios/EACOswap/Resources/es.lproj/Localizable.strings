@@ -1,0 +1,128 @@
+// Localizable.strings (Spanish)
+// EACOswap
+// Created by EACO Team on 2026-09-07.
+
+// MARK: - Tab Bar
+"tab.home" = "Inicio";
+"tab.exchange" = "Intercambio";
+"tab.market" = "Mercado";
+"tab.faq" = "FAQ";
+"tab.settings" = "Ajustes";
+
+// MARK: - Common
+"common.ok" = "OK";
+"common.cancel" = "Cancelar";
+"common.save" = "Guardar";
+"common.retry" = "Reintentar";
+"common.loading" = "Cargando...";
+"common.error" = "Error";
+"common.success" = "Exitoso";
+"common.done" = "Hecho";
+"common.close" = "Cerrar";
+"common.back" = "Atras";
+"common.next" = "Siguiente";
+"common.search" = "Buscar";
+"common.share" = "Compartir";
+"common.copy" = "Copiar";
+"common.copied" = "Copiado al portapapeles";
+"common.select" = "Seleccionar";
+"common.all" = "Todo";
+
+// MARK: - Errors
+"error.invalid_url" = "URL invalida";
+"error.invalid_response" = "Respuesta del servidor invalida";
+"error.no_internet" = "Sin conexion a Internet. Por favor verifica tu red.";
+"error.unauthorized" = "Acceso no autorizado";
+"error.rate_limited" = "Demasiadas solicitudes. Intenta mas tarde.";
+"error.server_error" = "Error del servidor (codigo %d)";
+"error.http_error" = "Error HTTP %d";
+"error.network_error" = "Error de red: %@";
+"error.decoding_error" = "Error al analizar datos: %@";
+"error.offline_title" = "Estas desconectado";
+"error.offline_message" = "Verifica tu conexion e intenta de nuevo.";
+
+// MARK: - Exchange
+"exchange.from" = "Desde";
+"exchange.to" = "Hacia";
+"exchange.max" = "MAX";
+"exchange.get_quote" = "Obtener Cotizacion";
+"exchange.execute_swap" = "Ejecutar Intercambio";
+"exchange.select_token" = "Seleccionar Token";
+"exchange.enter_amount" = "Por favor introduce una cantidad";
+"exchange.loading" = "Cargando...";
+"exchange.error_title" = "Error de Intercambio";
+"exchange.output" = "Salida";
+"exchange.slippage" = "Deslizamiento";
+"exchange.price_impact" = "Impacto de Precio";
+"exchange.route" = "Ruta";
+
+// MARK: - Market
+"market.top_100" = "Top 100";
+"market.top_1000" = "Top 1000";
+"market.top_10000" = "Top 10000";
+"market.rank" = "Rango";
+"market.token" = "Token";
+"market.price" = "Precio";
+"market.market_cap" = "Capitalizacion";
+"market.volume" = "Volumen (24h)";
+"market.change" = "Cambio (24h)";
+"market.open_orb" = "Abrir en OrbMarkets";
+"market.open_coingecko" = "Abrir en CoinGecko";
+"market.no_data" = "No hay datos disponibles";
+
+// MARK: - FAQ
+"faq.search_placeholder" = "Buscar en FAQ...";
+"faq.category_all" = "Todo";
+"faq.category_general" = "General";
+"faq.category_wallet" = "Billetera";
+"faq.category_trading" = "Trading";
+"faq.category_security" = "Seguridad";
+"faq.category_technical" = "Tecnico";
+"faq.category_tokenomics" = "Tokenomica";
+"faq.no_results" = "No se encontraron resultados";
+
+// MARK: - Settings
+"settings.language" = "Idioma";
+"settings.select_language" = "Seleccionar Idioma";
+"settings.theme" = "Tema";
+"settings.select_theme" = "Seleccionar Tema";
+"settings.server_url" = "URL del Servidor";
+"settings.server_url_desc" = "Introduce la URL del servidor backend";
+"settings.invalid_url" = "URL invalida";
+"settings.invalid_url_message" = "Por favor introduce una URL HTTP o HTTPS valida.";
+"settings.contract" = "Contrato EACO";
+"settings.version" = "Version";
+"settings.welfare" = "Bienestar Publico EACO 2025";
+"settings.links" = "Enlaces Oficiales";
+"settings.clear_cache" = "Borrar Cache";
+"settings.clear_cache_title" = "Borrar Cache?";
+"settings.clear_cache_message" = "Esto eliminara todos los datos y contenido web en cache.";
+"settings.clear" = "Borrar";
+"settings.cache_cleared" = "Cache borrado";
+"settings.reset_defaults" = "Restablecer Valores Predeterminados";
+"settings.reset_title" = "Restablecer Ajustes?";
+"settings.reset_message" = "Esto restaurara todos los ajustes a sus valores predeterminados.";
+"settings.reset" = "Restablecer";
+"settings.copied" = "Copiado!";
+"settings.contract_copied" = "Direccion del contrato copiada al portapapeles";
+"settings.header_language" = "IDIOMA";
+"settings.header_theme" = "TEMA";
+"settings.header_server" = "SERVIDOR";
+"settings.header_about" = "ACERCA DE";
+"settings.header_actions" = "ACCIONES";
+
+// MARK: - Themes
+"theme.cosmic" = "Cosmico";
+"theme.army" = "Militar";
+"theme.classic" = "Clasico";
+
+// MARK: - Wallet
+"wallet.not_installed" = "Aplicacion de billetera no instalada";
+"wallet.not_installed_title" = "Billetera No Encontrada";
+"wallet.not_installed_message" = "%@ no esta instalada. Quieres instalarla o continuar en la web?";
+"wallet.install" = "Instalar";
+"wallet.continue_web" = "Continuar en la Web";
+"wallet.invalid_callback" = "URL de callback de billetera invalida";
+"wallet.connection_rejected" = "Conexion de billetera rechazada";
+"wallet.timeout" = "Tiempo de conexion de billetera agotado";
+"wallet.unknown_error" = "Error de billetera desconocido";
