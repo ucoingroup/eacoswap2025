@@ -218,7 +218,7 @@ footer a { color: var(--accent); text-decoration: none; }
 <header>
   <h1>EACOswap API 规范</h1>
   <p class="subtitle">Solana DEX 导航与 EACO 代币兑换 — 后端接口文档</p>
-  <span class="badge">v1.0.0 | Base URL: /api</span>
+  <span class="badge">v2.0.0 | Base URL: /api</span>
 </header>
 
 <div class="toc">
@@ -231,6 +231,10 @@ footer a { color: var(--accent); text-decoration: none; }
     <li><a href="#errors">5. 错误码</a></li>
     <li><a href="#security">6. 安全规范</a></li>
     <li><a href="#examples">7. 请求示例</a></li>
+    <li><a href="#dex-apis">8. DEX API 集成参考</a></li>
+    <li><a href="#design-philosophy">9. API 设计哲学</a></li>
+    <li><a href="#rate-limits">10. 速率限制与生产建议</a></li>
+    <li><a href="#changelog">11. 版本变更记录</a></li>
   </ul>
 </div>
 
@@ -673,7 +677,7 @@ curl -X GET "http://localhost:3000/api/tokens/market-cap?per_page=100&page=1&vs_
 <span class="key">const</span> { data } = <span class="key">await</span> res.json();  <span class="comment">// data = 代币数组</span>
   </div>
 
-  <h3 class="sub-title">Jupiter 兑换报价 (SOL → EACO)</h3>
+  <h3 class="sub-title">Jupiter 兑换报价 (SOL -&gt; EACO)</h3>
   <div class="code-block">
 <span class="comment">// 输入 1 SOL = 1,000,000,000 lamports</span><br>
 curl -X GET "http://localhost:3000/api/jupiter/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH&amount=1000000000"<br><br>
@@ -702,8 +706,221 @@ curl -X POST http://localhost:3000/api/helius/rpc \<br>
   </div>
 </section>
 
+
+<section class="section" id="dex-apis">
+  <h2 class="section-title">8. DEX API 集成参考</h2>
+  <p style="color:var(--text-secondary); margin-bottom:20px;">
+    EACOswap 不直接暴露底层 DEX 原始接口，而是在后端做统一抽象和代理。以下列出全球前 10 大 Solana DEX 的 API 设计思路，供开发者理解 EACOswap 的封装逻辑和扩展方法。
+  </p>
+
+  <h3 class="sub-title">8.1 DEX API 对比总览</h3>
+  <div style="overflow-x:auto; margin-bottom:30px;">
+  <table class="response-table" style="min-width:800px;">
+    <tr><th>DEX</th><th>API 类型</th><th>认证方式</th><th>核心端点</th><th>EACOswap 集成方式</th></tr>
+    <tr><td><strong>Jupiter</strong></td><td>REST + SDK</td><td>可选 API Key</td><td><code>/quote</code>, <code>/swap</code>, <code>/price</code></td><td>后端代理 + 前端 deeplink</td></tr>
+    <tr><td><strong>Raydium</strong></td><td>REST + SDK</td><td>无需 Key</td><td><code>/v2/main/pool</code>, <code>/v2/ammV3/ammPools</code></td><td>前端直接链接跳转</td></tr>
+    <tr><td><strong>Orca</strong></td><td>REST + SDK</td><td>无需 Key</td><td>Whirlpool SDK 链上调用</td><td>前端直接链接跳转</td></tr>
+    <tr><td><strong>Meteora</strong></td><td>REST + SDK</td><td>无需 Key</td><td>Dynamic AMM SDK</td><td>前端直接链接跳转</td></tr>
+    <tr><td><strong>Phoenix</strong></td><td>On-chain + SDK</td><td>无需 Key</td><td>链上订单簿直接读取</td><td>前端直接链接跳转</td></tr>
+    <tr><td><strong>Lifinity</strong></td><td>REST + SDK</td><td>无需 Key</td><td>Proactive Market Maker SDK</td><td>前端直接链接跳转</td></tr>
+    <tr><td><strong>Drift</strong></td><td>REST + SDK</td><td>可选 API Key</td><td>Perp/Spot 交易 API</td><td>前端直接链接跳转</td></tr>
+    <tr><td><strong>Zeta Markets</strong></td><td>On-chain + SDK</td><td>无需 Key</td><td>期权/永续合约链上操作</td><td>前端直接链接跳转</td></tr>
+    <tr><td><strong>Crema Finance</strong></td><td>REST + SDK</td><td>无需 Key</td><td>Concentrated Liquidity API</td><td>前端直接链接跳转</td></tr>
+    <tr><td><strong>Saros Finance</strong></td><td>REST + SDK</td><td>无需 Key</td><td>Super App API</td><td>前端直接链接跳转</td></tr>
+  </table>
+  </div>
+
+  <h3 class="sub-title">8.2 Jupiter v6 API 深度解析</h3>
+  <div class="note">
+    <p><strong>Jupiter</strong> 是 Solana 上最重要的 DEX 聚合器，EACOswap 的核心兑换功能依赖 Jupiter API。Jupiter v6 提供 Quote -&gt; Swap 两段式架构。</p>
+  </div>
+
+  <h4 style="color:var(--accent); margin:20px 0 10px; font-size:1rem;">Jupiter 官方端点（EACOswap 代理前）</h4>
+  <div class="code-block">
+<span class="comment">// 1. 获取报价 (GET)</span><br>
+https://quote-api.jup.ag/v6/quote?inputMint=So111...&amp;outputMint=Dqfoy...&amp;amount=1000000&amp;slippageBps=50<br><br>
+<span class="comment">// 2. 组装交易 (POST)</span><br>
+https://quote-api.jup.ag/v6/swap<br>
+<span class="key">{</span><br>
+  <span class="key">"quoteResponse"</span>: { ... },  <span class="comment">// 上一步返回的完整 quote</span><br>
+  <span class="key">"userPublicKey"</span>: <span class="string">"WalletAddress"</span>,<br>
+  <span class="key">"wrapAndUnwrapSol"</span>: <span class="boolean">true</span>,<br>
+  <span class="key">"prioritizationFeeLamports"</span>: <span class="number">10000</span>  <span class="comment">// 优先费</span><br>
+<span class="key">}</span><br><br>
+<span class="comment">// 3. 价格 API (GET)</span><br>
+https://price.jup.ag/v6/price?ids=SOL,EACO,USDC
+  </div>
+
+  <h4 style="color:var(--accent); margin:20px 0 10px; font-size:1rem;">EACOswap 的封装逻辑</h4>
+  <div class="code-block">
+<span class="comment">// EACOswap 后端代理层 -- 统一响应格式</span><br>
+<span class="comment">// 前端请求: GET /api/jupiter/quote?inputMint=...&amp;outputMint=...&amp;amount=...</span><br>
+<span class="comment">// 后端转发到 Jupiter v6，再包装为统一格式返回</span><br><br>
+<span class="key">const</span> jupiterQuote = <span class="key">await</span> fetch(<br>
+  <span class="string">`https://quote-api.jup.ag/v6/quote?${params}`</span>,<br>
+  { headers: { <span class="key">'Authorization'</span>: <span class="string">`Bearer ${JUPITER_API_KEY}`</span> } }  <span class="comment">// 可选</span><br>
+);<br><br>
+<span class="comment">// 返回前端: { success: true, data: { outAmount, priceImpactPct, routePlan, ... } }</span>
+  </div>
+
+  <h3 class="sub-title">8.3 Raydium API 设计参考</h3>
+  <div class="code-block">
+<span class="comment">// Raydium AMM V4 Pool Info</span><br>
+GET https://api.raydium.io/v2/main/pool<br><br>
+<span class="comment">// Raydium CPMM (Concentrated Product Market Maker)</span><br>
+GET https://api.raydium.io/v2/ammV3/ammPools<br><br>
+<span class="comment">// 特点: 链上计算为主，API 仅提供 Pool 元数据，实际交易通过链上指令完成</span><br>
+<span class="comment">// EACOswap 策略: 前端 deeplink 到 Raydium 页面，不代理交易</span>
+  </div>
+
+  <h3 class="sub-title">8.4 Orca Whirlpool SDK 设计</h3>
+  <div class="code-block">
+<span class="comment">// Orca 不依赖 REST API，而是通过 NPM SDK 直接与链上交互</span><br>
+<span class="key">import</span> { WhirlpoolContext, swapQuoteByInputToken } <span class="key">from</span> <span class="string">'@orca-so/whirlpools-sdk'</span>;<br><br>
+<span class="comment">// EACOswap 策略: 用户点击 Orca 卡片 -&gt; 打开 https://orca.so?tokenIn=SOL&amp;tokenOut=EACO</span><br>
+<span class="comment">// 参数通过 URL query 传递，由 Orca 前端解析</span>
+  </div>
+
+  <h3 class="sub-title">8.5 CoinGecko vs Birdeye 价格数据策略</h3>
+  <div style="overflow-x:auto; margin-bottom:20px;">
+  <table class="response-table" style="min-width:700px;">
+    <tr><th>维度</th><th>CoinGecko</th><th>Birdeye</th></tr>
+    <tr><td>数据源</td><td>中心化交易所 + 链上聚合</td><td>纯链上实时数据</td></tr>
+    <tr><td>延迟</td><td>1-5 分钟</td><td>实时（秒级）</td></tr>
+    <tr><td>Solana SPL 覆盖</td><td>主流代币完整</td><td>长尾代币更全面</td></tr>
+    <tr><td>免费额度</td><td>generous（30 calls/min）</td><td>有限（需 Key）</td></tr>
+    <tr><td>EACOswap 用途</td><td>市值排行、基础价格</td><td>实时价格、交易信号</td></tr>
+    <tr><td>降级策略</td><td>兜底方案</td><td>优先方案（需 Key）</td></tr>
+  </table>
+  </div>
+
+  <h3 class="sub-title">8.6 Helius RPC vs Solana Public RPC</h3>
+  <div class="code-block">
+<span class="comment">// Solana Public RPC（免费，限速）</span><br>
+https://api.mainnet-beta.solana.com<br><br>
+<span class="comment">// Helius RPC（需 Key，增强功能）</span><br>
+https://mainnet.helius-rpc.com/?api-key=YOUR_KEY<br><br>
+<span class="comment">// Helius 增强能力:</span><br>
+<span class="comment">// - getTokenAccounts (批量查询)</span><br>
+<span class="comment">// - DAS (Digital Asset Standard) API -- NFT/SPT 资产查询</span><br>
+<span class="comment">// - Enhanced API -- 解析交易、账户历史</span><br>
+<span class="comment">// - WebSocket 订阅 -- 实时账户/交易通知</span><br><br>
+<span class="comment">// EACOswap: Helius 配置则优先使用，否则降级到 Public RPC</span>
+  </div>
+</section>
+
+<section class="section" id="design-philosophy">
+  <h2 class="section-title">9. API 设计哲学</h2>
+
+  <h3 class="sub-title">9.1 统一封装原则</h3>
+  <ul style="color:var(--text-secondary); margin-left:20px; line-height:2;">
+    <li><strong>屏蔽差异</strong>：前端不关心数据来自 CoinGecko 还是 Birdeye，只调用 <code>/api/birdeye/price</code>，后端自动降级</li>
+    <li><strong>统一格式</strong>：所有响应包装为 <code>{ success, data, error }</code>，前端处理逻辑一致</li>
+    <li><strong>安全代理</strong>：API Key 仅在后端，前端不暴露任何第三方凭证</li>
+    <li><strong>缓存层</strong>：高频数据（价格）缓存 30-60s，低频数据（市值）缓存 5 分钟</li>
+  </ul>
+
+  <h3 class="sub-title">9.2 分层架构</h3>
+  <div class="code-block">
+<span class="comment">// +-------------------------------------------+</span><br>
+<span class="comment">// |  前端 (Web/Android/iOS/Telegram)           |</span><br>
+<span class="comment">// |  -- 只认识 EACOswap API                   |</span><br>
+<span class="comment">// +---------------------+---------------------+</span><br>
+<span class="comment">//                       |  HTTPS / JSON</span><br>
+<span class="comment">// +---------------------v---------------------+</span><br>
+<span class="comment">// |  EACOswap 后端 (Node.js/Express)          |</span><br>
+<span class="comment">// |  -- 统一封装、缓存、限流、安全            |</span><br>
+<span class="comment">// +---------------------+---------------------+</span><br>
+<span class="comment">//                      |  HTTP + API Key</span><br>
+<span class="comment">//         +-------------+-------------+</span><br>
+<span class="comment">//         v             v             v</span><br>
+<span class="comment">//     CoinGecko     Helius       Birdeye</span><br>
+<span class="comment">//     Jupiter       Raydium      Orca ...</span>
+  </div>
+
+  <h3 class="sub-title">9.3 错误降级策略</h3>
+  <div class="code-block">
+<span class="comment">// 价格查询降级链路:</span><br>
+<span class="comment">// 1. Birdeye API (最实时, 需 Key) -&gt; 成功?</span><br>
+<span class="comment">//    +- 是: 返回 Birdeye 数据, 缓存 30s</span><br>
+<span class="comment">//    +- 否: 继续</span><br>
+<span class="comment">// 2. CoinGecko API (免费, 有延迟) -&gt; 成功?</span><br>
+<span class="comment">//    +- 是: 返回 CoinGecko 数据, 缓存 60s</span><br>
+<span class="comment">//    +- 否: 继续</span><br>
+<span class="comment">// 3. Jupiter Price API (免费, 仅支持部分代币) -&gt; 成功?</span><br>
+<span class="comment">//    +- 是: 返回 Jupiter 数据</span><br>
+<span class="comment">//    +- 否: 返回 { success: false, error: "Price unavailable" }</span>
+  </div>
+
+  <h3 class="sub-title">9.4 扩展新 DEX 的方法</h3>
+  <div class="code-block">
+<span class="comment">// 假设要集成新的 DEX "FooSwap":</span><br><br>
+<span class="comment">// Step 1: 在 backend/routes/api.js 添加新端点</span><br>
+router.get(<span class="string">'/fooswap/quote'</span>, <span class="key">async</span> (req, res) =&gt; {<br>
+  <span class="key">const</span> result = <span class="key">await</span> proxyRequest(<span class="string">`https://api.fooswap.io/quote?${query}`</span>);<br>
+  res.json(result);<br>
+});<br><br>
+<span class="comment">// Step 2: 前端 constants.js 添加 DEX 信息</span><br>
+<span class="key">{</span> id: <span class="string">'fooswap'</span>, name: <span class="string">'FooSwap'</span>, url: <span class="string">'https://fooswap.io'</span> <span class="key">}</span><br><br>
+<span class="comment">// Step 3: 无需修改其他端代码，前端自动渲染新卡片</span>
+  </div>
+</section>
+
+<section class="section" id="rate-limits">
+  <h2 class="section-title">10. 速率限制与生产建议</h2>
+
+  <h3 class="sub-title">10.1 各上游服务商限制</h3>
+  <div style="overflow-x:auto; margin-bottom:20px;">
+  <table class="response-table" style="min-width:700px;">
+    <tr><th>服务商</th><th>免费 tier</th><th>付费 tier</th><th>限制维度</th></tr>
+    <tr><td>CoinGecko</td><td>10-30 calls/min</td><td>500 calls/min ($129/mo)</td><td>IP + Key</td></tr>
+    <tr><td>Helius</td><td>无免费 tier</td><td>从 $49/mo 起</td><td>Key only</td></tr>
+    <tr><td>Birdeye</td><td>有限试用</td><td>按调用量计费</td><td>Key only</td></tr>
+    <tr><td>Jupiter</td><td>generous 免费</td><td>更高限流</td><td>可选 Key</td></tr>
+  </table>
+  </div>
+
+  <h3 class="sub-title">10.2 EACOswap 后端限流配置</h3>
+  <div class="code-block">
+<span class="comment">// backend/.env 生产环境推荐</span><br>
+RATE_LIMIT_PER_MINUTE=120        <span class="comment">// 单 IP 每分钟最大请求</span><br>
+CACHE_TTL=60                     <span class="comment">// 默认缓存 60 秒</span><br>
+HELIUS_API_KEY=your_key          <span class="comment">// Helius 加速 RPC</span><br>
+BIRDEYE_API_KEY=your_key         <span class="comment">// Birdeye 实时价格</span><br>
+JUPITER_API_KEY=your_key         <span class="comment">// Jupiter 更高限流</span><br>
+CORS_ORIGINS=https://eacoswap.io,https://t.me  <span class="comment">// 生产限制域名</span>
+  </div>
+
+  <h3 class="sub-title">10.3 缓存策略矩阵</h3>
+  <div style="overflow-x:auto; margin-bottom:20px;">
+  <table class="response-table" style="min-width:700px;">
+    <tr><th>数据类型</th><th>缓存时长</th><th>刷新触发</th><th>数据源</th></tr>
+    <tr><td>SOL 价格</td><td>60 秒</td><td>定时 + 手动刷新</td><td>CoinGecko</td></tr>
+    <tr><td>代币价格</td><td>30 秒</td><td>页面加载</td><td>Birdeye -&gt; CoinGecko</td></tr>
+    <tr><td>市值排行</td><td>300 秒</td><td>下拉刷新</td><td>CoinGecko</td></tr>
+    <tr><td>Jupiter 报价</td><td>15 秒</td><td>实时获取</td><td>Jupiter v6</td></tr>
+    <tr><td>钱包资产</td><td>120 秒</td><td>下拉刷新</td><td>Helius DAS</td></tr>
+    <tr><td>持有者数量</td><td>300 秒</td><td>手动刷新</td><td>Helius RPC</td></tr>
+  </table>
+  </div>
+</section>
+
+<section class="section" id="changelog">
+  <h2 class="section-title">11. 版本变更记录</h2>
+  <table class="response-table">
+    <tr><th>版本</th><th>日期</th><th>变更内容</th></tr>
+    <tr><td>v1.0.0</td><td>2026-09-08</td><td>初始 API 规范：10 个端点、统一响应格式、6 语言、3 主题、DEX 集成参考</td></tr>
+    <tr><td>v2.0.0</td><td>2026-09-08</td><td>新增 Section 8-11：DEX API 集成参考（10 大 DEX 对比表、Jupiter v6 深度解析、Raydium/Orca 设计模式、CoinGecko vs Birdeye 策略）、API 设计哲学（分层架构、错误降级策略、扩展新 DEX 方法）、速率限制与生产建议（上游服务商限制、后端限流配置、缓存策略矩阵）</td></tr>
+  </table>
+
+  <div class="note" style="margin-top:20px;">
+    <p><strong>未来规划</strong>：WebSocket 实时价格推送、多链支持（ETH/BSC）、EACO 质押 API、NFT 资产查询。</p>
+  </div>
+</section>
+
+
 <footer>
-  <p>EACOswap API v1.0.0 | <a href="https://github.com/ucoingroup/eacoswap2025" target="_blank">GitHub</a> | <a href="https://orbmarkets.io/token/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH" target="_blank">OrbMarkets</a></p>
+  <p>EACOswap API v2.0.0 | <a href="https://github.com/ucoingroup/eacoswap2025" target="_blank">GitHub</a> | <a href="https://orbmarkets.io/token/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH" target="_blank">OrbMarkets</a></p>
   <p style="margin-top:8px; font-size:.8rem; opacity:.6;">eaco europe group 内部测试用，安全第一，仅供参考</p>
 </footer>
 
