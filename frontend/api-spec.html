@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EACOswap API 规范文档</title>
+<style>
+:root {
+  --bg-primary: #0a1628;
+  --bg-secondary: #0d2137;
+  --bg-card: #112240;
+  --accent: #64ffda;
+  --accent-hover: #4dd0b0;
+  --text-primary: #e6f1ff;
+  --text-secondary: #8892b0;
+  --text-muted: #5c6b7f;
+  --border: #1d3557;
+  --code-bg: #0d1b2a;
+  --success: #4caf50;
+  --warning: #ff9800;
+  --error: #f44336;
+  --get: #61affe;
+  --post: #49cc90;
+  --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+[data-theme="army"] {
+  --bg-primary: #1b2a1b;
+  --bg-secondary: #2d4a2d;
+  --bg-card: #2a3a2a;
+  --accent: #c3b091;
+  --accent-hover: #a89870;
+  --text-primary: #f0f0e6;
+  --text-secondary: #8b9a6b;
+  --text-muted: #6a7a5a;
+  --border: #4a5d4a;
+  --code-bg: #1a2a1a;
+  --get: #7cb342;
+  --post: #8bc34a;
+}
+
+[data-theme="classic"] {
+  --bg-primary: #f5f0e8;
+  --bg-secondary: #ebe5d9;
+  --bg-card: #fff;
+  --accent: #8b0000;
+  --accent-hover: #a50000;
+  --text-primary: #2c1810;
+  --text-secondary: #6b5b4f;
+  --text-muted: #9a8a7a;
+  --border: #d4c4a8;
+  --code-bg: #f0ebe0;
+  --get: #1565c0;
+  --post: #2e7d32;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.7;
+  transition: background .3s, color .3s;
+}
+.container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+header { text-align: center; margin-bottom: 50px; padding: 30px 0; border-bottom: 2px solid var(--border); }
+header h1 { font-size: 2.5rem; color: var(--accent); margin-bottom: 10px; letter-spacing: -1px; }
+header .subtitle { color: var(--text-secondary); font-size: 1.1rem; }
+header .badge {
+  display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: .85rem;
+  background: var(--bg-card); border: 1px solid var(--border); color: var(--accent); margin-top: 10px;
+}
+
+.theme-switcher {
+  position: fixed; top: 20px; right: 20px; display: flex; gap: 8px; z-index: 100;
+}
+.theme-btn {
+  width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border);
+  cursor: pointer; transition: transform .2s, box-shadow .2s; background: transparent;
+}
+.theme-btn:hover { transform: scale(1.15); }
+.theme-btn.active { box-shadow: 0 0 0 2px var(--accent); }
+.theme-btn[data-theme="cosmic"] { background: #0a1628; border-color: #64ffda; }
+.theme-btn[data-theme="army"] { background: #1b2a1b; border-color: #c3b091; }
+.theme-btn[data-theme="classic"] { background: #f5f0e8; border-color: #8b0000; }
+
+.toc {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 25px; margin-bottom: 40px;
+}
+.toc h2 { color: var(--accent); font-size: 1.3rem; margin-bottom: 15px; }
+.toc ul { list-style: none; columns: 2; }
+.toc li { margin-bottom: 6px; }
+.toc a { color: var(--text-secondary); text-decoration: none; transition: color .2s; }
+.toc a:hover { color: var(--accent); }
+
+.section { margin-bottom: 50px; }
+.section-title {
+  font-size: 1.8rem; color: var(--accent); margin-bottom: 25px; padding-bottom: 10px;
+  border-bottom: 2px solid var(--border);
+}
+
+.endpoint {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+  margin-bottom: 30px; overflow: hidden; transition: border-color .2s;
+}
+.endpoint:hover { border-color: var(--accent); }
+
+.endpoint-header {
+  display: flex; align-items: center; gap: 12px; padding: 20px 25px;
+  background: var(--bg-secondary); border-bottom: 1px solid var(--border);
+}
+.method {
+  display: inline-block; padding: 5px 14px; border-radius: 6px; font-size: .85rem;
+  font-weight: 700; font-family: var(--font-mono); color: #fff; text-transform: uppercase;
+}
+.method.get { background: var(--get); }
+.method.post { background: var(--post); }
+.path {
+  font-family: var(--font-mono); font-size: 1.1rem; color: var(--text-primary);
+  word-break: break-all;
+}
+.description { padding: 15px 25px; color: var(--text-secondary); font-size: .95rem; }
+
+.endpoint-body { padding: 0 25px 25px; }
+.sub-title {
+  font-size: 1rem; color: var(--accent); margin: 20px 0 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.sub-title::before {
+  content: ''; display: inline-block; width: 4px; height: 16px;
+  background: var(--accent); border-radius: 2px;
+}
+
+.params-table, .response-table {
+  width: 100%; border-collapse: collapse; font-size: .9rem;
+  background: var(--code-bg); border-radius: 8px; overflow: hidden;
+}
+.params-table th, .response-table th {
+  background: var(--bg-secondary); padding: 12px 15px;
+  text-align: left; font-weight: 600; color: var(--accent); border-bottom: 1px solid var(--border);
+}
+.params-table td, .response-table td {
+  padding: 10px 15px; border-bottom: 1px solid var(--border); color: var(--text-primary);
+}
+.params-table tr:last-child td, .response-table tr:last-child td { border-bottom: none; }
+.required { color: var(--error); font-weight: 600; }
+.optional { color: var(--warning); }
+.type { font-family: var(--font-mono); font-size: .85rem; color: var(--accent); }
+
+.code-block {
+  background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 18px 20px; overflow-x: auto; font-family: var(--font-mono); font-size: .85rem;
+  line-height: 1.6; color: var(--text-primary);
+}
+.code-block .key { color: var(--accent); }
+.code-block .string { color: var(--success); }
+.code-block .number { color: #ff6b6b; }
+.code-block .boolean { color: #ffd93d; }
+.code-block .null { color: var(--text-muted); }
+.code-block .comment { color: var(--text-muted); font-style: italic; }
+
+.status-badge {
+  display: inline-block; padding: 3px 10px; border-radius: 4px; font-size: .8rem;
+  font-weight: 600; margin-right: 8px;
+}
+.status-200 { background: rgba(76,175,80,.15); color: var(--success); border: 1px solid var(--success); }
+.status-400 { background: rgba(244,67,54,.15); color: var(--error); border: 1px solid var(--error); }
+.status-503 { background: rgba(255,152,0,.15); color: var(--warning); border: 1px solid var(--warning); }
+
+.constants-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
+}
+.constant-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 20px;
+}
+.constant-card h4 { color: var(--accent); margin-bottom: 10px; font-size: 1rem; }
+.constant-card .value {
+  font-family: var(--font-mono); font-size: .85rem; background: var(--code-bg);
+  padding: 8px 12px; border-radius: 6px; word-break: break-all; color: var(--text-primary);
+}
+.constant-card .link { margin-top: 8px; }
+.constant-card a { color: var(--accent); text-decoration: none; font-size: .85rem; }
+.constant-card a:hover { text-decoration: underline; }
+
+.note {
+  background: rgba(100,255,218,.08); border-left: 4px solid var(--accent);
+  padding: 15px 20px; border-radius: 0 8px 8px 0; margin: 20px 0;
+}
+.note p { color: var(--text-secondary); font-size: .9rem; }
+
+footer {
+  text-align: center; padding: 30px 0; margin-top: 50px;
+  border-top: 2px solid var(--border); color: var(--text-muted); font-size: .85rem;
+}
+footer a { color: var(--accent); text-decoration: none; }
+
+@media (max-width: 768px) {
+  .toc ul { columns: 1; }
+  .endpoint-header { flex-wrap: wrap; }
+  .path { font-size: .9rem; }
+  header h1 { font-size: 1.8rem; }
+  .constants-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body data-theme="cosmic">
+
+<div class="theme-switcher">
+  <button class="theme-btn active" data-theme="cosmic" title="宇宙蓝 Cosmic" onclick="setTheme('cosmic')"></button>
+  <button class="theme-btn" data-theme="army" title="军绿 Army" onclick="setTheme('army')"></button>
+  <button class="theme-btn" data-theme="classic" title="米黄古典 Classic" onclick="setTheme('classic')"></button>
+</div>
+
+<div class="container">
+
+<header>
+  <h1>EACOswap API 规范</h1>
+  <p class="subtitle">Solana DEX 导航与 EACO 代币兑换 — 后端接口文档</p>
+  <span class="badge">v1.0.0 | Base URL: /api</span>
+</header>
+
+<div class="toc">
+  <h2>目录</h2>
+  <ul>
+    <li><a href="#overview">1. 概述</a></li>
+    <li><a href="#response-format">2. 统一响应格式</a></li>
+    <li><a href="#constants">3. 核心常量</a></li>
+    <li><a href="#endpoints">4. API 端点</a></li>
+    <li><a href="#errors">5. 错误码</a></li>
+    <li><a href="#security">6. 安全规范</a></li>
+    <li><a href="#examples">7. 请求示例</a></li>
+  </ul>
+</div>
+
+<section class="section" id="overview">
+  <h2 class="section-title">1. 概述</h2>
+  <p style="color:var(--text-secondary); margin-bottom:15px;">
+    EACOswap 后端采用 Node.js + Express 构建，作为 Solana 数据提供商（CoinGecko / Helius / Birdeye / Jupiter）的安全代理层。
+    API Key 仅存储于服务端环境变量，前端绝不暴露。
+  </p>
+  <div class="constants-grid">
+    <div class="constant-card">
+      <h4>Base URL</h4>
+      <div class="value">http://localhost:3000/api</div>
+    </div>
+    <div class="constant-card">
+      <h4>Content-Type</h4>
+      <div class="value">application/json</div>
+    </div>
+    <div class="constant-card">
+      <h4>响应格式</h4>
+      <div class="value">JSON (统一封装)</div>
+    </div>
+    <div class="constant-card">
+      <h4>CORS</h4>
+      <div class="value">可配置 (默认 *)</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="response-format">
+  <h2 class="section-title">2. 统一响应格式</h2>
+  <div class="note">
+    <p><strong>所有 API 返回统一结构</strong>：前端必须读取 <code>data.data</code> 或 <code>data</code> 字段，不能直接取根级数据。</p>
+  </div>
+  <h3 class="sub-title">成功响应</h3>
+  <div class="code-block">
+<span class="key">{</span><br>
+  <span class="key">"success"</span>: <span class="boolean">true</span>,<br>
+  <span class="key">"data"</span>: { ... }  <span class="comment">// 具体业务数据</span><br>
+<span class="key">}</span>
+  </div>
+  <h3 class="sub-title">失败响应</h3>
+  <div class="code-block">
+<span class="key">{</span><br>
+  <span class="key">"success"</span>: <span class="boolean">false</span>,<br>
+  <span class="key">"error"</span>: <span class="string">"错误描述信息"</span><br>
+<span class="key">}</span>
+  </div>
+</section>
+
+<section class="section" id="constants">
+  <h2 class="section-title">3. 核心常量</h2>
+  <div class="constants-grid">
+    <div class="constant-card">
+      <h4>EACO 合约地址</h4>
+      <div class="value">DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH</div>
+      <div class="link"><a href="https://orbmarkets.io/token/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH" target="_blank">OrbMarkets ↗</a></div>
+    </div>
+    <div class="constant-card">
+      <h4>SOL 合约地址</h4>
+      <div class="value">So11111111111111111111111111111111111111112</div>
+    </div>
+    <div class="constant-card">
+      <h4>USDT 合约地址</h4>
+      <div class="value">Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB</div>
+      <div class="link"><a href="https://orbmarkets.io/token/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB" target="_blank">OrbMarkets ↗</a></div>
+    </div>
+    <div class="constant-card">
+      <h4>USDC 合约地址</h4>
+      <div class="value">EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</div>
+      <div class="link"><a href="https://orbmarkets.io/token/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" target="_blank">OrbMarkets ↗</a></div>
+    </div>
+    <div class="constant-card">
+      <h4>wETH 合约地址</h4>
+      <div class="value">7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs</div>
+      <div class="link"><a href="https://orbmarkets.io/token/7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs" target="_blank">OrbMarkets ↗</a></div>
+    </div>
+    <div class="constant-card">
+      <h4>wBTC 合约地址</h4>
+      <div class="value">3NZ9JMVBmGAqocybic2c7LQCJScmgsAZ6vQqTDzcqmJh</div>
+      <div class="link"><a href="https://orbmarkets.io/token/3NZ9JMVBmGAqocybic2c7LQCJScmgsAZ6vQqTDzcqmJh" target="_blank">OrbMarkets ↗</a></div>
+    </div>
+    <div class="constant-card">
+      <h4>wBNB 合约地址</h4>
+      <div class="value">9gP2kCy3wA1ctvYWQk75guqXuHfrEomqydHLtcTCqiLa</div>
+      <div class="link"><a href="https://orbmarkets.io/token/9gP2kCy3wA1ctvYWQk75guqXuHfrEomqydHLtcTCqiLa" target="_blank">OrbMarkets ↗</a></div>
+    </div>
+    <div class="constant-card">
+      <h4>TRX 合约地址</h4>
+      <div class="value">GbbesPbaYh5uiAZSYNXTc7w9jty1rpg3P9L4JeN4LkKc</div>
+      <div class="link"><a href="https://orbmarkets.io/token/GbbesPbaYh5uiAZSYNXTc7w9jty1rpg3P9L4JeN4LkKc" target="_blank">OrbMarkets ↗</a></div>
+    </div>
+    <div class="constant-card">
+      <h4>eCNH 合约地址</h4>
+      <div class="value">7GQnqthWKa5v2GqXYWhmgWZY5mCRrniwK3Xuinm9GKw5</div>
+      <div class="link"><a href="https://orbmarkets.io/token/7GQnqthWKa5v2GqXYWhmgWZY5mCRrniwK3Xuinm9GKw5" target="_blank">OrbMarkets ↗</a></div>
+    </div>
+  </div>
+
+  <h3 class="sub-title" style="margin-top:30px;">10 大 DEX 列表</h3>
+  <div class="code-block">
+<span class="comment">// DEX_LIST</span><br>
+<span class="key">[</span><br>
+  <span class="string">"Jupiter"</span>,     <span class="comment">// https://jup.ag       — Best price routing aggregator</span><br>
+  <span class="string">"Raydium"</span>,    <span class="comment">// https://raydium.io   — AMM + CLMM liquidity</span><br>
+  <span class="string">"Orca"</span>,       <span class="comment">// https://orca.so      — Concentrated liquidity Whirlpool</span><br>
+  <span class="string">"Meteora"</span>,    <span class="comment">// https://meteora.ag   — Dynamic liquidity marketplace</span><br>
+  <span class="string">"Phoenix"</span>,    <span class="comment">// https://phoenix.trade — Central limit orderbook</span><br>
+  <span class="string">"Lifinity"</span>,   <span class="comment">// https://lifinity.io  — Proactive market maker</span><br>
+  <span class="string">"Drift"</span>,      <span class="comment">// https://drift.trade  — Perpetuals + spot DEX</span><br>
+  <span class="string">"Zeta"</span>,       <span class="comment">// https://zeta.markets — Options + perps DEX</span><br>
+  <span class="string">"Crema"</span>,      <span class="comment">// https://crema.finance — Concentrated liquidity DEX</span><br>
+  <span class="string">"Saros"</span>       <span class="comment">// https://saros.finance — Super app DEX</span><br>
+<span class="key">]</span>
+  </div>
+
+  <h3 class="sub-title">公益链接</h3>
+  <div class="constant-card">
+    <div class="value"><a href="https://ucoingroup.github.io/eacoweb3-2026/eaco-charity2025.html" target="_blank" style="color:var(--accent);">https://ucoingroup.github.io/eacoweb3-2026/eaco-charity2025.html</a></div>
+  </div>
+</section>
+
+<section class="section" id="endpoints">
+  <h2 class="section-title">4. API 端点</h2>
+
+  <!-- 1. Health -->
+  <div class="endpoint" id="health">
+    <div class="endpoint-header">
+      <span class="method get">GET</span>
+      <span class="path">/api/health</span>
+    </div>
+    <div class="description">健康检查 — 返回服务状态及依赖服务可用性</div>
+    <div class="endpoint-body">
+      <h3 class="sub-title">响应</h3>
+      <div class="code-block">
+<span class="key">{</span><br>
+  <span class="key">"status"</span>: <span class="string">"ok"</span>,<br>
+  <span class="key">"timestamp"</span>: <span class="string">"2026-09-08T13:33:46.000Z"</span>,<br>
+  <span class="key">"services"</span>: <span class="key">{</span><br>
+    <span class="key">"coingecko"</span>: <span class="boolean">true</span>,<br>
+    <span class="key">"helius"</span>: <span class="boolean">true</span>,    <span class="comment">// 是否配置了 HELIUS_API_KEY</span><br>
+    <span class="key">"birdeye"</span>: <span class="boolean">false</span>,   <span class="comment">// 是否配置了 BIRDEYE_API_KEY</span><br>
+    <span class="key">"jupiter"</span>: <span class="boolean">true</span><br>
+  <span class="key">}</span>,<br>
+  <span class="key">"uptime"</span>: <span class="number">3600</span><br>
+<span class="key">}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Config -->
+  <div class="endpoint" id="config">
+    <div class="endpoint-header">
+      <span class="method get">GET</span>
+      <span class="path">/api/config</span>
+    </div>
+    <div class="description">服务端配置信息 — 安全暴露，不含实际 Key</div>
+    <div class="endpoint-body">
+      <div class="code-block">
+<span class="key">{</span><br>
+  <span class="key">"heliusConfigured"</span>: <span class="boolean">true</span>,<br>
+  <span class="key">"birdeyeConfigured"</span>: <span class="boolean">false</span>,<br>
+  <span class="key">"cacheTtl"</span>: <span class="number">60</span>,<br>
+  <span class="key">"version"</span>: <span class="string">"1.0.0"</span><br>
+<span class="key">}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. SOL Price -->
+  <div class="endpoint" id="sol-price">
+    <div class="endpoint-header">
+      <span class="method get">GET</span>
+      <span class="path">/api/sol-price</span>
+    </div>
+    <div class="description">SOL 实时价格 — 来源 CoinGecko（免费，无需 Key），缓存 60 秒</div>
+    <div class="endpoint-body">
+      <h3 class="sub-title">响应</h3>
+      <div class="code-block">
+<span class="key">{</span><br>
+  <span class="key">"success"</span>: <span class="boolean">true</span>,<br>
+  <span class="key">"data"</span>: <span class="key">{</span><br>
+    <span class="key">"solana"</span>: <span class="key">{</span><br>
+      <span class="key">"usd"</span>: <span class="number">145.32</span>,<br>
+      <span class="key">"usd_market_cap"</span>: <span class="number">65400000000</span>,<br>
+      <span class="key">"usd_24h_vol"</span>: <span class="number">2100000000</span>,<br>
+      <span class="key">"usd_24h_change"</span>: <span class="number">2.15</span><br>
+    <span class="key">}</span><br>
+  <span class="key">}</span><br>
+<span class="key">}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Market Cap -->
+  <div class="endpoint" id="market-cap">
+    <div class="endpoint-header">
+      <span class="method get">GET</span>
+      <span class="path">/api/tokens/market-cap</span>
+    </div>
+    <div class="description">Solana 生态代币市值排行 — 来源 CoinGecko，缓存 5 分钟</div>
+    <div class="endpoint-body">
+      <h3 class="sub-title">请求参数</h3>
+      <table class="params-table">
+        <tr><th>参数</th><th>类型</th><th>必填</th><th>默认值</th><th>说明</th></tr>
+        <tr><td>per_page</td><td class="type">number</td><td class="optional">否</td><td>100</td><td>每页数量，最大 250</td></tr>
+        <tr><td>page</td><td class="type">number</td><td class="optional">否</td><td>1</td><td>页码，从 1 开始</td></tr>
+        <tr><td>vs_currency</td><td class="type">string</td><td class="optional">否</td><td>usd</td><td>计价货币（usd / cny / eur）</td></tr>
+      </table>
+      <h3 class="sub-title">响应</h3>
+      <div class="code-block">
+<span class="key">{</span><br>
+  <span class="key">"success"</span>: <span class="boolean">true</span>,<br>
+  <span class="key">"data"</span>: <span class="key">[</span><br>
+    <span class="key">{</span><br>
+      <span class="key">"id"</span>: <span class="string">"solana"</span>,<br>
+      <span class="key">"symbol"</span>: <span class="string">"sol"</span>,<br>
+      <span class="key">"name"</span>: <span class="string">"Solana"</span>,<br>
+      <span class="key">"current_price"</span>: <span class="number">145.32</span>,<br>
+      <span class="key">"market_cap"</span>: <span class="number">65400000000</span>,<br>
+      <span class="key">"total_volume"</span>: <span class="number">2100000000</span>,<br>
+      <span class="key">"price_change_percentage_24h"</span>: <span class="number">2.15</span>,<br>
+      <span class="key">"price_change_percentage_7d"</span>: <span class="number">-5.2</span>,<br>
+      <span class="key">"price_change_percentage_30d"</span>: <span class="number">12.8</span><br>
+    <span class="key">}</span><br>
+  <span class="key">]</span><br>
+<span class="key">}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Helius RPC -->
+  <div class="endpoint" id="helius-rpc">
+    <div class="endpoint-header">
+      <span class="method post">POST</span>
+      <span class="path">/api/helius/rpc</span>
+    </div>
+    <div class="description">Helius RPC 代理 — 转发 Solana JSON-RPC 请求（需 HELIUS_API_KEY）</div>
+    <div class="endpoint-body">
+      <h3 class="sub-title">请求体</h3>
+      <div class="code-block">
+<span class="key">{</span><br>
+  <span class="key">"jsonrpc"</span>: <span class="string">"2.0"</span>,<br>
+  <span class="key">"id"</span>: <span class="number">1</span>,<br>
+  <span class="key">"method"</span>: <span class="string">"getBalance"</span>,<br>
+  <span class="key">"params"</span>: <span class="key">[</span><span class="string">"DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH"</span><span class="key">]</span><br>
+<span class="key">}</span>
+      </div>
+      <h3 class="sub-title">响应</h3>
+      <div class="code-block">
+<span class="key">{</span><br>
+  <span class="key">"success"</span>: <span class="boolean">true</span>,<br>
+  <span class="key">"data"</span>: <span class="key">{</span><br>
+    <span class="key">"jsonrpc"</span>: <span class="string">"2.0"</span>,<br>
+    <span class="key">"id"</span>: <span class="number">1</span>,<br>
+    <span class="key">"result"</span>: <span class="key">{</span><br>
+      <span class="key">"value"</span>: <span class="number">1000000000</span><br>
+    <span class="key">}</span><br>
+  <span class="key">}</span><br>
+<span class="key">}</span>
+      </div>
+      <div class="note">
+        <p>未配置 HELIUS_API_KEY 时返回 <span class="status-badge status-503">503</span> <code>{ success: false, error: "Helius API not configured" }</code></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Helius DAS -->
+  <div class="endpoint" id="helius-das">
+    <div class="endpoint-header">
+      <span class="method get">GET</span>
+      <span class="path">/api/helius/das/assets-by-owner</span>
+    </div>
+    <div class="description">查询指定钱包地址的代币资产列表 — Helius DAS API（需 HELIUS_API_KEY）</div>
+    <div class="endpoint-body">
+      <h3 class="sub-title">请求参数</h3>
+      <table class="params-table">
+        <tr><th>参数</th><th>类型</th><th>必填</th><th>说明</th></tr>
+        <tr><td>owner</td><td class="type">string</td><td class="required">是</td><td>Solana 钱包地址 (Base58)</td></tr>
+      </table>
+      <div class="note">
+        <p>缓存 2 分钟，适合频繁刷新的资产面板</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Token Accounts -->
+  <div class="endpoint" id="token-accounts">
+    <div class="endpoint-header">
+      <span class="method get">GET</span>
+      <span class="path">/api/helius/token-accounts</span>
+    </div>
+    <div class="description">查询代币持有者数量 — 通过 getProgramAccounts 统计（需 HELIUS_API_KEY）</div>
+    <div class="endpoint-body">
+      <h3 class="sub-title">请求参数</h3>
+      <table class="params-table">
+        <tr><th>参数</th><th>类型</th><th>必填</th><th>说明</th></tr>
+        <tr><td>mint</td><td class="type">string</td><td class="required">是</td><td>代币合约地址</td></tr>
+      </table>
+      <h3 class="sub-title">响应</h3>
+      <div class="code-block">
+<span class="key">{</span><br>
+  <span class="key">"success"</span>: <span class="boolean">true</span>,<br>
+  <span class="key">"data"</span>: <span class="key">{</span><br>
+    <span class="key">"jsonrpc"</span>: <span class="string">"2.0"</span>,<br>
+    <span class="key">"result"</span>: <span class="key">[</span>...<span class="key">]</span>,<br>
+    <span class="key">"holderCount"</span>: <span class="number">15234</span>  <span class="comment">// 后端自动统计</span><br>
+  <span class="key">}</span><br>
+<span class="key">}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. Birdeye Token -->
+  <div class="endpoint" id="birdeye-token">
+    <div class="endpoint-header">
+      <span class="method get">GET</span>
+      <span class="path">/api/birdeye/token/:address</span>
+    </div>
+    <div class="description">Birdeye 代币详情 — 深度数据、社交媒体、标签（需 BIRDEYE_API_KEY）</div>
+    <div class="endpoint-body">
+      <h3 class="sub-title">路径参数</h3>
+      <table class="params-table">
+        <tr><th>参数</th><th>类型</th><th>必填</th><th>说明</th></tr>
+        <tr><td>address</td><td class="type">string</td><td class="required">是</td><td>代币合约地址</td></tr>
+      </table>
+      <div class="note">
+        <p>未配置 BIRDEYE_API_KEY 时返回 <span class="status-badge status-503">503</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. Birdeye Price -->
+  <div class="endpoint" id="birdeye-price">
+    <div class="endpoint-header">
+      <span class="method get">GET</span>
+      <span class="path">/api/birdeye/price/:address</span>
+    </div>
+    <div class="description">代币实时价格 — 优先 Birdeye，无 Key 时自动降级到 CoinGecko</div>
+    <div class="endpoint-body">
+      <h3 class="sub-title">路径参数</h3>
+      <table class="params-table">
+        <tr><th>参数</th><th>类型</th><th>必填</th><th>说明</th></tr>
+        <tr><td>address</td><td class="type">string</td><td class="required">是</td><td>代币合约地址</td></tr>
+      </table>
+      <h3 class="sub-title">降级策略</h3>
+      <ol style="color:var(--text-secondary); margin-left:20px; font-size:.9rem;">
+        <li>若配置了 BIRDEYE_KEY，优先调用 Birdeye API（缓存 30 秒）</li>
+        <li>若 Birdeye 失败或无 Key，自动降级到 CoinGecko token_price</li>
+        <li>CoinGecko 缓存 60 秒</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- 10. Jupiter Quote -->
+  <div class="endpoint" id="jupiter-quote">
+    <div class="endpoint-header">
+      <span class="method get">GET</span>
+      <span class="path">/api/jupiter/quote</span>
+    </div>
+    <div class="description">Jupiter v6 兑换报价 — 最优路径、滑点、价格影响（免费，缓存 15 秒）</div>
+    <div class="endpoint-body">
+      <h3 class="sub-title">请求参数</h3>
+      <table class="params-table">
+        <tr><th>参数</th><th>类型</th><th>必填</th><th>默认值</th><th>说明</th></tr>
+        <tr><td>inputMint</td><td class="type">string</td><td class="optional">否</td><td>SOL</td><td>输入代币合约地址</td></tr>
+        <tr><td>outputMint</td><td class="type">string</td><td class="required">是</td><td>—</td><td>输出代币合约地址</td></tr>
+        <tr><td>amount</td><td class="type">number</td><td class="required">是</td><td>—</td><td>输入数量（lamports / raw units）</td></tr>
+      </table>
+      <h3 class="sub-title">响应</h3>
+      <div class="code-block">
+<span class="key">{</span><br>
+  <span class="key">"success"</span>: <span class="boolean">true</span>,<br>
+  <span class="key">"data"</span>: <span class="key">{</span><br>
+    <span class="key">"inputMint"</span>: <span class="string">"So11111111111111111111111111111111111111112"</span>,<br>
+    <span class="key">"outputMint"</span>: <span class="string">"DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH"</span>,<br>
+    <span class="key">"outAmount"</span>: <span class="string">"1000000000"</span>,          <span class="comment">// 输出数量 (raw)</span><br>
+    <span class="key">"outAmountWithSlippage"</span>: <span class="string">"995000000"</span>, <span class="comment">// 含滑点输出</span><br>
+    <span class="key">"priceImpactPct"</span>: <span class="string">"0.25"</span>,         <span class="comment">// 价格影响 %</span><br>
+    <span class="key">"routePlan"</span>: <span class="key">[</span>...<span class="key">]</span>,             <span class="comment">// 路由步骤</span><br>
+    <span class="key">"swapMode"</span>: <span class="string">"ExactIn"</span>,<br>
+    <span class="key">"slippageBps"</span>: <span class="number">50</span>              <span class="comment">// 滑点基点 (0.5%)</span><br>
+  <span class="key">}</span><br>
+<span class="key">}</span>
+      </div>
+      <div class="note">
+        <p>报价有效期极短（约 15 秒），获取后需立即执行交易。仅预览路由，实际兑换需调用 Jupiter API 获取 transaction。</p>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<section class="section" id="errors">
+  <h2 class="section-title">5. 错误码</h2>
+  <table class="response-table">
+    <tr><th>HTTP 状态</th><th>场景</th><th>示例</th></tr>
+    <tr><td><span class="status-badge status-200">200</span></td><td>请求成功</td><td><code>{ success: true, data: {...} }</code></td></tr>
+    <tr><td><span class="status-badge status-400">400</span></td><td>参数缺失/无效</td><td><code>{ success: false, error: "Missing outputMint parameter" }</code></td></tr>
+    <tr><td><span class="status-badge status-503">503</span></td><td>上游服务未配置</td><td><code>{ success: false, error: "Helius API not configured" }</code></td></tr>
+    <tr><td><span class="status-badge status-400">404</span></td><td>API 端点不存在</td><td><code>{ success: false, error: "API endpoint not found" }</code></td></tr>
+    <tr><td><span class="status-badge status-400">429</span></td><td>速率限制触发</td><td><code>{ success: false, error: "Too many requests" }</code></td></tr>
+    <tr><td><span class="status-badge status-400">500</span></td><td>服务器内部错误</td><td><code>{ success: false, error: "Internal server error" }</code></td></tr>
+  </table>
+</section>
+
+<section class="section" id="security">
+  <h2 class="section-title">6. 安全规范</h2>
+  <div class="note">
+    <p><strong>API Key 管理</strong>：Helius / Birdeye Key 仅存在于后端 <code>.env</code>，禁止暴露给前端。</p>
+  </div>
+  <ul style="color:var(--text-secondary); margin-left:20px; line-height:2;">
+    <li><strong>CORS</strong>：生产环境配置 <code>CORS_ORIGINS</code> 为具体域名，禁用 <code>*</code></li>
+    <li><strong>Rate Limit</strong>：默认 60 req/min，生产可按需调整</li>
+    <li><strong>Helmet</strong>：启用 CSP、XSS 过滤、HSTS 等安全头</li>
+    <li><strong>超时控制</strong>：所有上游请求 15 秒超时，防止挂起</li>
+    <li><strong>缓存策略</strong>：价格 60s、市值 300s、报价 15s、资产 120s</li>
+    <li><strong>错误脱敏</strong>：生产环境不暴露内部错误详情</li>
+  </ul>
+</section>
+
+<section class="section" id="examples">
+  <h2 class="section-title">7. 请求示例</h2>
+  <h3 class="sub-title">获取 SOL 价格</h3>
+  <div class="code-block">
+<span class="comment">// cURL</span><br>
+curl -X GET http://localhost:3000/api/sol-price<br><br>
+<span class="comment">// JavaScript (fetch)</span><br>
+<span class="key">const</span> res = <span class="key">await</span> fetch(<span class="string">'/api/sol-price'</span>);<br>
+<span class="key">const</span> data = <span class="key">await</span> res.json();<br>
+console.log(data.data.solana.usd);  <span class="comment">// 145.32</span>
+  </div>
+
+  <h3 class="sub-title">获取代币市值排行 (Top 100)</h3>
+  <div class="code-block">
+<span class="comment">// cURL</span><br>
+curl -X GET "http://localhost:3000/api/tokens/market-cap?per_page=100&page=1&vs_currency=usd"<br><br>
+<span class="comment">// JavaScript</span><br>
+<span class="key">const</span> res = <span class="key">await</span> fetch(<span class="string">'/api/tokens/market-cap?per_page=100'</span>);<br>
+<span class="key">const</span> { data } = <span class="key">await</span> res.json();  <span class="comment">// data = 代币数组</span>
+  </div>
+
+  <h3 class="sub-title">Jupiter 兑换报价 (SOL → EACO)</h3>
+  <div class="code-block">
+<span class="comment">// 输入 1 SOL = 1,000,000,000 lamports</span><br>
+curl -X GET "http://localhost:3000/api/jupiter/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH&amount=1000000000"<br><br>
+<span class="comment">// JavaScript</span><br>
+<span class="key">const</span> params = <span class="key">new</span> URLSearchParams({<br>
+  inputMint: <span class="string">'So11111111111111111111111111111111111111112'</span>,<br>
+  outputMint: <span class="string">'DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH'</span>,<br>
+  amount: <span class="string">'1000000000'</span><br>
+});<br>
+<span class="key">const</span> res = <span class="key">await</span> fetch(<span class="string">`/api/jupiter/quote?${params}`</span>);<br>
+<span class="key">const</span> { data } = <span class="key">await</span> res.json();
+  </div>
+
+  <h3 class="sub-title">查询代币持有者数量</h3>
+  <div class="code-block">
+<span class="comment">// EACO 持有者数量</span><br>
+curl -X GET "http://localhost:3000/api/helius/token-accounts?mint=DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH"
+  </div>
+
+  <h3 class="sub-title">Helius RPC 代理 (获取余额)</h3>
+  <div class="code-block">
+<span class="comment">// POST body</span><br>
+curl -X POST http://localhost:3000/api/helius/rpc \<br>
+  -H <span class="string">"Content-Type: application/json"</span> \<br>
+  -d <span class="string">'{"jsonrpc":"2.0","id":1,"method":"getBalance","params":["WalletAddress"]}'</span>
+  </div>
+</section>
+
+<footer>
+  <p>EACOswap API v1.0.0 | <a href="https://github.com/ucoingroup/eacoswap2025" target="_blank">GitHub</a> | <a href="https://orbmarkets.io/token/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH" target="_blank">OrbMarkets</a></p>
+  <p style="margin-top:8px; font-size:.8rem; opacity:.6;">eaco europe group 内部测试用，安全第一，仅供参考</p>
+</footer>
+
+</div>
+
+<script>
+function setTheme(theme) {
+  document.body.setAttribute('data-theme', theme);
+  document.querySelectorAll('.theme-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.theme === theme);
+  });
+  localStorage.setItem('eaco-api-theme', theme);
+}
+const saved = localStorage.getItem('eaco-api-theme') || 'cosmic';
+setTheme(saved);
+</script>
+</body>
+</html>
