@@ -203,6 +203,18 @@ footer a { color: var(--accent); text-decoration: none; }
   header h1 { font-size: 1.8rem; }
   .constants-grid { grid-template-columns: 1fr; }
 }
+
+/* Language Switcher */
+.lang-switcher { position: fixed; top: 60px; right: 20px; display: flex; gap: 6px; z-index: 100; flex-direction: column; align-items: flex-end; }
+.lang-btn { padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-secondary); cursor: pointer; font-size: .75rem; transition: all .2s; }
+.lang-btn:hover { color: var(--accent); border-color: var(--accent); }
+.lang-btn.active { background: var(--accent); color: var(--bg-primary); border-color: var(--accent); font-weight: 600; }
+body[data-lang="ar"] { direction: rtl; }
+body[data-lang="ar"] .container { text-align: right; }
+body[data-lang="ar"] .toc ul { columns: 1; }
+body[data-lang="ar"] .endpoint-header { flex-direction: row-reverse; }
+body[data-lang="ar"] .constants-grid { direction: rtl; }
+
 </style>
 </head>
 <body data-theme="cosmic">
@@ -215,31 +227,41 @@ footer a { color: var(--accent); text-decoration: none; }
 
 <div class="container">
 
+<div class="lang-switcher">
+  <button class="lang-btn active" data-lang="zh" onclick="setLang('zh')">华语</button>
+  <button class="lang-btn" data-lang="en" onclick="setLang('en')">English</button>
+  <button class="lang-btn" data-lang="es" onclick="setLang('es')">Español</button>
+  <button class="lang-btn" data-lang="fr" onclick="setLang('fr')">Français</button>
+  <button class="lang-btn" data-lang="ru" onclick="setLang('ru')">Русский</button>
+  <button class="lang-btn" data-lang="ar" onclick="setLang('ar')">العربية</button>
+</div>
+
+
 <header>
-  <h1>EACOswap API 规范</h1>
-  <p class="subtitle">Solana DEX 导航与 EACO 代币兑换 — 后端接口文档</p>
+  <h1 data-i18n="page.title">EACOswap API 规范</h1>
+  <p class="subtitle" data-i18n="page.subtitle">Solana DEX 导航与 EACO 代币兑换 — 后端接口文档</p>
   <span class="badge">v2.0.0 | Base URL: /api</span>
 </header>
 
 <div class="toc">
-  <h2>目录</h2>
+  <h2 data-i18n="toc.title">目录</h2>
   <ul>
-    <li><a href="#overview">1. 概述</a></li>
-    <li><a href="#response-format">2. 统一响应格式</a></li>
-    <li><a href="#constants">3. 核心常量</a></li>
-    <li><a href="#endpoints">4. API 端点</a></li>
-    <li><a href="#errors">5. 错误码</a></li>
-    <li><a href="#security">6. 安全规范</a></li>
-    <li><a href="#examples">7. 请求示例</a></li>
-    <li><a href="#dex-apis">8. DEX API 集成参考</a></li>
-    <li><a href="#design-philosophy">9. API 设计哲学</a></li>
-    <li><a href="#rate-limits">10. 速率限制与生产建议</a></li>
-    <li><a href="#changelog">11. 版本变更记录</a></li>
+    <li><a href="#overview" data-i18n="toc.overview">1. 概述</a></li>
+    <li><a href="#response-format" data-i18n="toc.responseFormat">2. 统一响应格式</a></li>
+    <li><a href="#constants" data-i18n="toc.constants">3. 核心常量</a></li>
+    <li><a href="#endpoints" data-i18n="toc.endpoints">4. API 端点</a></li>
+    <li><a href="#errors" data-i18n="toc.errors">5. 错误码</a></li>
+    <li><a href="#security" data-i18n="toc.security">6. 安全规范</a></li>
+    <li><a href="#examples" data-i18n="toc.examples">7. 请求示例</a></li>
+    <li><a href="#dex-apis" data-i18n="toc.dexApis">8. DEX API 集成参考</a></li>
+    <li><a href="#design-philosophy" data-i18n="toc.designPhilosophy">9. API 设计哲学</a></li>
+    <li><a href="#rate-limits" data-i18n="toc.rateLimits">10. 速率限制与生产建议</a></li>
+    <li><a href="#changelog" data-i18n="toc.changelog">11. 版本变更记录</a></li>
   </ul>
 </div>
 
 <section class="section" id="overview">
-  <h2 class="section-title">1. 概述</h2>
+  <h2 class="section-title" data-i18n="section.overview">1. 概述</h2>
   <p style="color:var(--text-secondary); margin-bottom:15px;">
     EACOswap 后端采用 Node.js + Express 构建，作为 Solana 数据提供商（CoinGecko / Helius / Birdeye / Jupiter）的安全代理层。
     API Key 仅存储于服务端环境变量，前端绝不暴露。
@@ -265,7 +287,7 @@ footer a { color: var(--accent); text-decoration: none; }
 </section>
 
 <section class="section" id="response-format">
-  <h2 class="section-title">2. 统一响应格式</h2>
+  <h2 class="section-title" data-i18n="section.responseFormat">2. 统一响应格式</h2>
   <div class="note">
     <p><strong>所有 API 返回统一结构</strong>：前端必须读取 <code>data.data</code> 或 <code>data</code> 字段，不能直接取根级数据。</p>
   </div>
@@ -286,7 +308,7 @@ footer a { color: var(--accent); text-decoration: none; }
 </section>
 
 <section class="section" id="constants">
-  <h2 class="section-title">3. 核心常量</h2>
+  <h2 class="section-title" data-i18n="section.constants">3. 核心常量</h2>
   <div class="constants-grid">
     <div class="constant-card">
       <h4>EACO 合约地址</h4>
@@ -358,7 +380,7 @@ footer a { color: var(--accent); text-decoration: none; }
 </section>
 
 <section class="section" id="endpoints">
-  <h2 class="section-title">4. API 端点</h2>
+  <h2 class="section-title" data-i18n="section.endpoints">4. API 端点</h2>
 
   <!-- 1. Health -->
   <div class="endpoint" id="health">
@@ -629,7 +651,7 @@ footer a { color: var(--accent); text-decoration: none; }
 </section>
 
 <section class="section" id="errors">
-  <h2 class="section-title">5. 错误码</h2>
+  <h2 class="section-title" data-i18n="section.errors">5. 错误码</h2>
   <table class="response-table">
     <tr><th>HTTP 状态</th><th>场景</th><th>示例</th></tr>
     <tr><td><span class="status-badge status-200">200</span></td><td>请求成功</td><td><code>{ success: true, data: {...} }</code></td></tr>
@@ -642,7 +664,7 @@ footer a { color: var(--accent); text-decoration: none; }
 </section>
 
 <section class="section" id="security">
-  <h2 class="section-title">6. 安全规范</h2>
+  <h2 class="section-title" data-i18n="section.security">6. 安全规范</h2>
   <div class="note">
     <p><strong>API Key 管理</strong>：Helius / Birdeye Key 仅存在于后端 <code>.env</code>，禁止暴露给前端。</p>
   </div>
@@ -657,7 +679,7 @@ footer a { color: var(--accent); text-decoration: none; }
 </section>
 
 <section class="section" id="examples">
-  <h2 class="section-title">7. 请求示例</h2>
+  <h2 class="section-title" data-i18n="section.examples">7. 请求示例</h2>
   <h3 class="sub-title">获取 SOL 价格</h3>
   <div class="code-block">
 <span class="comment">// cURL</span><br>
@@ -708,7 +730,7 @@ curl -X POST http://localhost:3000/api/helius/rpc \<br>
 
 
 <section class="section" id="dex-apis">
-  <h2 class="section-title">8. DEX API 集成参考</h2>
+  <h2 class="section-title" data-i18n="section.dexApis">8. DEX API 集成参考</h2>
   <p style="color:var(--text-secondary); margin-bottom:20px;">
     EACOswap 不直接暴露底层 DEX 原始接口，而是在后端做统一抽象和代理。以下列出全球前 10 大 Solana DEX 的 API 设计思路，供开发者理解 EACOswap 的封装逻辑和扩展方法。
   </p>
@@ -810,7 +832,7 @@ https://mainnet.helius-rpc.com/?api-key=YOUR_KEY<br><br>
 </section>
 
 <section class="section" id="design-philosophy">
-  <h2 class="section-title">9. API 设计哲学</h2>
+  <h2 class="section-title" data-i18n="section.designPhilosophy">9. API 设计哲学</h2>
 
   <h3 class="sub-title">9.1 统一封装原则</h3>
   <ul style="color:var(--text-secondary); margin-left:20px; line-height:2;">
@@ -867,7 +889,7 @@ router.get(<span class="string">'/fooswap/quote'</span>, <span class="key">async
 </section>
 
 <section class="section" id="rate-limits">
-  <h2 class="section-title">10. 速率限制与生产建议</h2>
+  <h2 class="section-title" data-i18n="section.rateLimits">10. 速率限制与生产建议</h2>
 
   <h3 class="sub-title">10.1 各上游服务商限制</h3>
   <div style="overflow-x:auto; margin-bottom:20px;">
@@ -906,7 +928,7 @@ CORS_ORIGINS=https://eacoswap.io,https://t.me  <span class="comment">// 生产�
 </section>
 
 <section class="section" id="changelog">
-  <h2 class="section-title">11. 版本变更记录</h2>
+  <h2 class="section-title" data-i18n="section.changelog">11. 版本变更记录</h2>
   <table class="response-table">
     <tr><th>版本</th><th>日期</th><th>变更内容</th></tr>
     <tr><td>v1.0.0</td><td>2026-09-08</td><td>初始 API 规范：10 个端点、统一响应格式、6 语言、3 主题、DEX 集成参考</td></tr>
@@ -937,5 +959,190 @@ function setTheme(theme) {
 const saved = localStorage.getItem('eaco-api-theme') || 'cosmic';
 setTheme(saved);
 </script>
+
+<script>
+const i18n = {
+  zh: {
+    "page.title": "EACOswap API 规范",
+    "page.subtitle": "Solana DEX 导航与 EACO 代币兑换 — 后端接口文档",
+    "toc.title": "目录",
+    "toc.overview": "1. 概述",
+    "toc.responseFormat": "2. 统一响应格式",
+    "toc.constants": "3. 核心常量",
+    "toc.endpoints": "4. API 端点",
+    "toc.errors": "5. 错误码",
+    "toc.security": "6. 安全规范",
+    "toc.examples": "7. 请求示例",
+    "toc.dexApis": "8. DEX API 集成参考",
+    "toc.designPhilosophy": "9. API 设计哲学",
+    "toc.rateLimits": "10. 速率限制与生产建议",
+    "toc.changelog": "11. 版本变更记录",
+    "section.overview": "1. 概述",
+    "section.responseFormat": "2. 统一响应格式",
+    "section.constants": "3. 核心常量",
+    "section.endpoints": "4. API 端点",
+    "section.errors": "5. 错误码",
+    "section.security": "6. 安全规范",
+    "section.examples": "7. 请求示例",
+    "section.dexApis": "8. DEX API 集成参考",
+    "section.designPhilosophy": "9. API 设计哲学",
+    "section.rateLimits": "10. 速率限制与生产建议",
+    "section.changelog": "11. 版本变更记录"
+  },
+  en: {
+    "page.title": "EACOswap API Specification",
+    "page.subtitle": "Solana DEX Navigation & EACO Token Swap — Backend API Docs",
+    "toc.title": "Table of Contents",
+    "toc.overview": "1. Overview",
+    "toc.responseFormat": "2. Unified Response Format",
+    "toc.constants": "3. Core Constants",
+    "toc.endpoints": "4. API Endpoints",
+    "toc.errors": "5. Error Codes",
+    "toc.security": "6. Security Guidelines",
+    "toc.examples": "7. Request Examples",
+    "toc.dexApis": "8. DEX API Integration Reference",
+    "toc.designPhilosophy": "9. API Design Philosophy",
+    "toc.rateLimits": "10. Rate Limits & Production Tips",
+    "toc.changelog": "11. Changelog",
+    "section.overview": "1. Overview",
+    "section.responseFormat": "2. Unified Response Format",
+    "section.constants": "3. Core Constants",
+    "section.endpoints": "4. API Endpoints",
+    "section.errors": "5. Error Codes",
+    "section.security": "6. Security Guidelines",
+    "section.examples": "7. Request Examples",
+    "section.dexApis": "8. DEX API Integration Reference",
+    "section.designPhilosophy": "9. API Design Philosophy",
+    "section.rateLimits": "10. Rate Limits & Production Tips",
+    "section.changelog": "11. Changelog"
+  },
+  es: {
+    "page.title": "Especificación API de EACOswap",
+    "page.subtitle": "Navegación DEX de Solana y Swap de Token EACO — Documentación API Backend",
+    "toc.title": "Tabla de Contenidos",
+    "toc.overview": "1. Visión General",
+    "toc.responseFormat": "2. Formato de Respuesta Unificado",
+    "toc.constants": "3. Constantes Principales",
+    "toc.endpoints": "4. Endpoints API",
+    "toc.errors": "5. Códigos de Error",
+    "toc.security": "6. Directrices de Seguridad",
+    "toc.examples": "7. Ejemplos de Solicitud",
+    "toc.dexApis": "8. Referencia de Integración API DEX",
+    "toc.designPhilosophy": "9. Filosofía de Diseño API",
+    "toc.rateLimits": "10. Límites de Velocidad y Consejos de Producción",
+    "toc.changelog": "11. Registro de Cambios",
+    "section.overview": "1. Visión General",
+    "section.responseFormat": "2. Formato de Respuesta Unificado",
+    "section.constants": "3. Constantes Principales",
+    "section.endpoints": "4. Endpoints API",
+    "section.errors": "5. Códigos de Error",
+    "section.security": "6. Directrices de Seguridad",
+    "section.examples": "7. Ejemplos de Solicitud",
+    "section.dexApis": "8. Referencia de Integración API DEX",
+    "section.designPhilosophy": "9. Filosofía de Diseño API",
+    "section.rateLimits": "10. Límites de Velocidad y Consejos de Producción",
+    "section.changelog": "11. Registro de Cambios"
+  },
+  fr: {
+    "page.title": "Spécification API EACOswap",
+    "page.subtitle": "Navigation DEX Solana et Échange de Token EACO — Documentation API Backend",
+    "toc.title": "Table des Matières",
+    "toc.overview": "1. Aperçu",
+    "toc.responseFormat": "2. Format de Réponse Unifié",
+    "toc.constants": "3. Constantes Principales",
+    "toc.endpoints": "4. Points de Terminaison API",
+    "toc.errors": "5. Codes d'Erreur",
+    "toc.security": "6. Consignes de Sécurité",
+    "toc.examples": "7. Exemples de Requête",
+    "toc.dexApis": "8. Référence d'Intégration API DEX",
+    "toc.designPhilosophy": "9. Philosophie de Conception API",
+    "toc.rateLimits": "10. Limites de Débit et Conseils de Production",
+    "toc.changelog": "11. Journal des Modifications",
+    "section.overview": "1. Aperçu",
+    "section.responseFormat": "2. Format de Réponse Unifié",
+    "section.constants": "3. Constantes Principales",
+    "section.endpoints": "4. Points de Terminaison API",
+    "section.errors": "5. Codes d'Erreur",
+    "section.security": "6. Consignes de Sécurité",
+    "section.examples": "7. Exemples de Requête",
+    "section.dexApis": "8. Référence d'Intégration API DEX",
+    "section.designPhilosophy": "9. Philosophie de Conception API",
+    "section.rateLimits": "10. Limites de Débit et Conseils de Production",
+    "section.changelog": "11. Journal des Modifications"
+  },
+  ru: {
+    "page.title": "Спецификация API EACOswap",
+    "page.subtitle": "Навигация DEX Solana и Обмен Токеном EACO — Документация Backend API",
+    "toc.title": "Содержание",
+    "toc.overview": "1. Обзор",
+    "toc.responseFormat": "2. Унифицированный Формат Ответа",
+    "toc.constants": "3. Основные Константы",
+    "toc.endpoints": "4. Конечные Точки API",
+    "toc.errors": "5. Коды Ошибок",
+    "toc.security": "6. Руководство по Безопасности",
+    "toc.examples": "7. Примеры Запросов",
+    "toc.dexApis": "8. Справочник по Интеграции API DEX",
+    "toc.designPhilosophy": "9. Философия Проектирования API",
+    "toc.rateLimits": "10. Ограничения Скорости и Рекомендации для Продакшена",
+    "toc.changelog": "11. История Изменений",
+    "section.overview": "1. Обзор",
+    "section.responseFormat": "2. Унифицированный Формат Ответа",
+    "section.constants": "3. Основные Константы",
+    "section.endpoints": "4. Конечные Точки API",
+    "section.errors": "5. Коды Ошибок",
+    "section.security": "6. Руководство по Безопасности",
+    "section.examples": "7. Примеры Запросов",
+    "section.dexApis": "8. Справочник по Интеграции API DEX",
+    "section.designPhilosophy": "9. Философия Проектирования API",
+    "section.rateLimits": "10. Ограничения Скорости и Рекомендации для Продакшена",
+    "section.changelog": "11. История Изменений"
+  },
+  ar: {
+    "page.title": "مواصفات API الخاصة بـ EACOswap",
+    "page.subtitle": "تنقل DEX على Solana وتبادل رمز EACO — وثائق API الخلفية",
+    "toc.title": "جدول المحتويات",
+    "toc.overview": "1. نظرة عامة",
+    "toc.responseFormat": "2. تنسيق الاستجابة الموحد",
+    "toc.constants": "3. الثوابت الأساسية",
+    "toc.endpoints": "4. نقاط النهاية API",
+    "toc.errors": "5. رموز الخطأ",
+    "toc.security": "6. إرشادات الأمان",
+    "toc.examples": "7. أمثلة الطلبات",
+    "toc.dexApis": "8. مرجع تكامل API لـ DEX",
+    "toc.designPhilosophy": "9. فلسفة تصميم API",
+    "toc.rateLimits": "10. حدود المعدل ونصائح الإنتاج",
+    "toc.changelog": "11. سجل التغييرات",
+    "section.overview": "1. نظرة عامة",
+    "section.responseFormat": "2. تنسيق الاستجابة الموحد",
+    "section.constants": "3. الثوابت الأساسية",
+    "section.endpoints": "4. نقاط النهاية API",
+    "section.errors": "5. رموز الخطأ",
+    "section.security": "6. إرشادات الأمان",
+    "section.examples": "7. أمثلة الطلبات",
+    "section.dexApis": "8. مرجع تكامل API لـ DEX",
+    "section.designPhilosophy": "9. فلسفة تصميم API",
+    "section.rateLimits": "10. حدود المعدل ونصائح الإنتاج",
+    "section.changelog": "11. سجل التغييرات"
+  }
+};
+
+function setLang(lang) {
+  document.body.setAttribute('data-lang', lang);
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  localStorage.setItem('eaco-api-lang', lang);
+
+  const dict = i18n[lang] || i18n['zh'];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key]) el.textContent = dict[key];
+  });
+}
+
+const savedLang = localStorage.getItem('eaco-api-lang') || 'zh';
+setLang(savedLang);
+</script>
+
 </body>
 </html>
