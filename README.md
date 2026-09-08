@@ -1,6 +1,24 @@
 # EACOswap Pro - Solana DEX Navigation & EACO Exchange Hub
 
-> Programmer-grade, production-ready web app for navigating Solana DEXs and exchanging EACO token.
+> Programmer-grade, production-ready multi-platform ecosystem for navigating Solana DEXs and exchanging EACO token.
+> 
+> **四端矩阵**: Web + Android + iOS + Telegram Mini App — 统一后端，多平台覆盖。
+
+📖 **项目总览**: [EACOSWAP_MATRIX.md](EACOSWAP_MATRIX.md) — 完整的四端矩阵架构、统一数据契约和快速启动指南。
+
+## Four-End Matrix 四端矩阵
+
+| 端 | 技术栈 | 文件数 | 核心功能 |
+|---|---|---|---|
+| **Web** | HTML5 + CSS3 + Vanilla JS | 7 | DEX导航、兑换、市值排行、6语言、3主题、PWA |
+| **Android** | Kotlin + WebView 混合 | 37 | 原生App、钱包deeplink、5Tab、离线页面 |
+| **iOS** | Swift + WKWebView 混合 | 48 | 原生App、Universal Links、RTL支持、5Tab |
+| **Telegram** | React + Vite + TMA SDK + Bot API | 55 | Mini App、Bot命令、TonConnect、深度链接 |
+| **共享后端** | Node.js Express | 6 | API代理、Helius/CoinGecko/Birdeye/Jupiter |
+
+**总文件数**: 157+（不含 node_modules）
+
+---
 
 ## Quick Start
 
@@ -244,7 +262,7 @@ curl http://localhost:3000/api/health
 | Code | Language | RTL |
 |------|----------|-----|
 | `en` | English | No |
-| `zh` | Chinese (Hanyu) | No |
+| `zh` | 华语 (Huáyǔ) | No |
 | `es` | Spanish | No |
 | `ar` | Arabic | Yes |
 | `fr` | French | No |
@@ -341,9 +359,99 @@ docker compose up -d
 
 ---
 
+## Mobile Apps 移动应用
+
+### Android App
+
+位于 `eacoswap-android/` 目录，完整 Kotlin + WebView 混合方案。
+
+```bash
+cd eacoswap-android
+# Android Studio: File -> Open -> 选择 eacoswap-android 目录
+# 或命令行:
+./gradlew assembleDebug
+```
+
+**功能**: 5 Tab导航（首页/兑换/行情/FAQ/设置）、钱包连接（Phantom/Solflare/Backpack deeplink）、6语言、3主题、离线页面、PWA兼容。
+
+**详见**: [eacoswap-android/README_ANDROID.md](eacoswap-android/README_ANDROID.md)
+
+### iOS App
+
+位于 `eacoswap-ios/` 目录，完整 Swift + WKWebView 混合方案。
+
+```bash
+cd eacoswap-ios
+open EACOswap.xcodeproj
+# Xcode 中 ⌘+R 运行
+```
+
+**功能**: 5 Tab导航、钱包连接（Universal Links）、RTL阿拉伯语支持、6语言、3主题、离线页面、原生性能。
+
+**详见**: [eacoswap-ios/README_IOS.md](eacoswap-ios/README_IOS.md)
+
+---
+
+## Telegram Mini App
+
+位于 `telegram-bot/`（Bot后端）和 `telegram-miniapp/`（前端）目录。
+
+### Bot 后端启动
+
+```bash
+cd telegram-bot
+cp .env.example .env
+# 编辑 .env: BOT_TOKEN=your_bot_token, WEBAPP_URL=your_webapp_url
+npm install
+
+# 长轮询模式（开发）
+node bot.js
+
+# WebHook 模式（生产）
+node webhook.js
+```
+
+### Mini App 前端构建
+
+```bash
+cd telegram-miniapp
+cp .env.example .env
+# 编辑 .env: VITE_BACKEND_URL=https://your-backend.com
+npm install
+npm run build
+# 部署 dist/ 目录到 CDN 或静态托管
+```
+
+**BotFather 配置**:
+1. `/newbot` 创建 Bot，获取 Token
+2. `/mybots` -> 选择 Bot -> Bot Settings -> Menu Button -> Configure menu button
+3. 设置 Menu Button URL 为你的 WebApp 托管地址
+4. `/setcommands` 设置命令列表
+
+**功能**: TMA SDK v8+ 集成、TonConnect 2.0 + WalletConnect、5 Tab、100 FAQ、6语言、3主题、深度链接启动、原生交互（Haptic/BackButton/MainButton）。
+
+**详见**: 
+- [telegram-bot/README_BOT.md](telegram-bot/README_BOT.md)
+- [telegram-miniapp/README_TMA.md](telegram-miniapp/README_TMA.md)
+
+---
+
 ## Static Version
 
 A standalone single-file HTML version (no backend required) is available as `eacoswap.html` in the parent directory. It uses CoinGecko free API directly and falls back to Solana public RPC when Helius key is not provided.
+
+---
+
+## GitHub Repository
+
+- **仓库**: https://github.com/ucoingroup/eacoswap2025
+- **分支**: main
+- **提交历史**: 
+  - `84590fe` — Telegram Mini App (Bot + Frontend)
+  - `dc8095e` — Android + iOS App
+  - `14123a4` — 部署文档 eacoswap2025.md
+  - `1ffca89` — FAQ 100问答 + Docker
+  - `384c0dc` — 初始全栈工程
 
 ---
 
@@ -355,3 +463,7 @@ Open source. EACO token is a community project on Solana blockchain.
 
 - EACO on OrbMarkets: [orbmarkets.io/token/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH](https://orbmarkets.io/token/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH)
 - EACO Charity 2025: [ucoingroup.github.io/eacoweb3-2026/eaco-charity2025.html](https://ucoingroup.github.io/eacoweb3-2026/eaco-charity2025.html)
+
+---
+
+> ⚠️ **声明**：本项目由 eaco europe group 内部测试使用。**安全第一，仅供参考。** 所有代码、配置和部署文档均为技术研究和学习用途，不构成任何投资建议。使用本系统产生的任何后果由使用者自行承担。
