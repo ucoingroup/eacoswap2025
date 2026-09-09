@@ -263,6 +263,7 @@ footer a { color: var(--accent); text-decoration: none; }
     <li><a href="#design-philosophy" data-i18n="toc.designPhilosophy">9. API 设计哲学</a></li>
     <li><a href="#rate-limits" data-i18n="toc.rateLimits">10. 速率限制与生产建议</a></li>
     <li><a href="#changelog" data-i18n="toc.changelog">11. 版本变更记录</a></li>
+    <li><a href="#solana-v1" data-i18n="toc.solanaV1">12. Solana v1 交易升级参考</a></li>
   </ul>
 </div>
 
@@ -941,11 +942,65 @@ CORS_ORIGINS=https://eacoswap.io,https://t.me  <span class="comment">// 生产�
     <tr><td>v2.0.0</td><td>2026-09-08</td><td>新增 Section 8-11：DEX API 集成参考（10 大 DEX 对比表、Jupiter v6 深度解析、Raydium/Orca 设计模式、CoinGecko vs Birdeye 策略）、API 设计哲学（分层架构、错误降级策略、扩展新 DEX 方法）、速率限制与生产建议（上游服务商限制、后端限流配置、缓存策略矩阵）</td></tr>
     <tr><td>v2.3.0</td><td>2026-09-08</td><td data-i18n="changelog.v230">统一语言/主题切换器样式与 index.html / faq.html 一致</td></tr>
     <tr><td>v2.3.0</td><td>2026-09-08</td><td data-i18n="changelog.v220">完善6语言国际化，所有UI文本支持翻译</td></tr>
+    <tr><td>v2.4.0</td><td>2026-09-09</td><td>更新 SOL/EACO 参考价格（SOL $126, EACO/SOL pool ≈ 119047）；新增汇率栏目10大货币+SOL；添加 Solana v1 交易升级记录（Helius 参考）</td></tr>
   </table>
 
   <div class="note" style="margin-top:20px;">
     <p data-i18n="section.changelog.note.1"><strong>未来规划</strong>：WebSocket 实时价格推送、多链支持（ETH/BSC）、EACO 质押 API、NFT 资产查询。</p>
   </div>
+</section>
+
+<!-- Section 12: Solana v1 Transaction Upgrade Reference -->
+<section class="section" id="solana-v1">
+  <h2 class="section-title" data-i18n="section.solanaV1">12. Solana v1 交易升级参考</h2>
+  <p data-i18n="section.solanaV1.desc.1" style="color:var(--text-secondary); margin-bottom:15px;">
+    Solana Mainnet 已于 Epoch 1032（2026-09-10 ~06:45 UTC）激活 Transaction v1。v1 将交易大小上限从 1,232 字节提升至 4,096 字节，支持原生资源配置（Compute Budget、Priority Fee）。如果你的应用读取、索引或发送交易，必须升级到支持 v1 的 SDK 版本。
+  </p>
+
+  <h3 class="sub-title" data-i18n="section.solanaV1.subtitle.1">12.1 最小支持版本（Helius 参考）</h3>
+  <div style="overflow-x:auto; margin-bottom:20px;">
+  <table class="response-table" style="min-width:700px;">
+    <tr><th data-i18n="table.solanaV1.header.component">组件</th><th data-i18n="table.solanaV1.header.minV1">v1 最低版本</th><th data-i18n="table.solanaV1.header.latest">最新版（2026-09-08）</th></tr>
+    <tr><td>Helius JS/TS <code>helius-laserstream</code> (npm)</td><td>0.8.3</td><td>0.8.5</td></tr>
+    <tr><td>Helius Rust <code>helius-laserstream</code> (crates.io)</td><td>0.6.3</td><td>0.6.4</td></tr>
+    <tr><td>Helius Rust <code>laserstream-core-proto</code></td><td>11.2.0</td><td>11.3.0</td></tr>
+    <tr><td>Helius Go (laserstream repo, go/ module)</td><td>tag v0.8.3 (go/v0.1.5)</td><td>v0.8.5 / main</td></tr>
+    <tr><td>Upstream <code>yellowstone-grpc-proto</code></td><td>12.6.0</td><td>12.7.0</td></tr>
+    <tr><td>Upstream <code>yellowstone-grpc-client</code></td><td>13.4.0</td><td>13.5.0</td></tr>
+    <tr><td>Upstream <code>yellowstone-grpc-geyser</code> converters</td><td>15.1.1</td><td>15.2.1</td></tr>
+    <tr><td><code>solana-message</code></td><td>4.1.1</td><td>4.5.0 (upstream pins 4.4.1)</td></tr>
+    <tr><td><code>solana-transaction</code></td><td>4.1.6</td><td>4.3.0</td></tr>
+    <tr><td><code>solana-transaction-status</code></td><td>4.1.2</td><td>4.2.2 (upstream pin)</td></tr>
+  </table>
+  </div>
+
+  <h3 class="sub-title" data-i18n="section.solanaV1.subtitle.2">12.2 RPC 调用注意事项</h3>
+  <div class="note" style="margin-bottom:15px;">
+    <p data-i18n="section.solanaV1.note.1"><strong>关键警告</strong>：如果 <code>getBlock</code> / <code>getTransaction</code> / <code>getTransactionsForAddress</code> 未设置 <code>maxSupportedTransactionVersion: 1</code>，当区块中包含任意 v1 交易时，整个调用会失败（所有交易都不会返回）。</p>
+  </div>
+  <div class="code-block" style="margin-bottom:15px;">
+<span class="comment">// 正确：请求时声明支持 v1</span><br>
+const block = await connection.getBlock(slot, {<br>
+&nbsp;&nbsp;maxSupportedTransactionVersion: 1,<br>
+});<br><br>
+<span class="comment">// 错误：未声明版本，遇到 v1 交易时整块失败</span><br>
+const block = await connection.getBlock(slot); <span class="comment">// ❌ 可能返回 null</span>
+  </div>
+
+  <h3 class="sub-title" data-i18n="section.solanaV1.subtitle.3">12.3 推荐阅读</h3>
+  <ul style="margin-left:20px; color:var(--text-secondary);">
+    <li><a href="https://www.helius.dev/blog/solana-transaction-versions" target="_blank" rel="noopener">Solana Transaction Versioning: Legacy, v0 and v1</a> — 理解三种交易格式的 wire format 差异</li>
+    <li><a href="https://www.helius.dev/blog/agave-4-2-migration-checklist" target="_blank" rel="noopener">Agave 4.2: The Migration Checklist</a> — 完整迁移检查清单与 breaking changes 清单</li>
+    <li><a href="https://github.com/solana-foundation/solana-improvement-documents/blob/main/proposals/0296-larger-transactions.md" target="_blank" rel="noopener">SIMD-0296</a> — 4,096 字节交易大小提案</li>
+    <li><a href="https://github.com/solana-foundation/solana-improvement-documents/blob/main/proposals/0385-transaction-v1.md" target="_blank" rel="noopener">SIMD-0385</a> — Transaction v1 完整规范</li>
+  </ul>
+
+  <h3 class="sub-title" data-i18n="section.solanaV1.subtitle.4">12.4 对 EACOswap 的影响</h3>
+  <ul style="margin-left:20px; color:var(--text-secondary);">
+    <li data-i18n="section.solanaV1.impact.1"><strong>后端</strong>：Helius RPC 代理端点 <code>/api/helius/rpc</code> 已升级，代理请求时自动附加 <code>maxSupportedTransactionVersion: 1</code></li>
+    <li data-i18n="section.solanaV1.impact.2"><strong>前端</strong>： Jupiter 报价和交易签名使用 v0 格式，不受影响；如未来支持 v1 大交易，需升级 <code>@solana/web3.js</code> 至 v3+</li>
+    <li data-i18n="section.solanaV1.impact.3"><strong>监控</strong>：Helius 版本号已记录在上方表格，后端 Docker 镜像基于 <code>node:20-alpine</code>，SDK 升级通过 <code>npm update</code> 完成</li>
+  </ul>
 </section>
 
 
@@ -1102,7 +1157,21 @@ const i18n = {
     "changelog.v220": "完善6语言国际化，所有UI文本支持翻译",
     "section.endpoints.birdeyePrice.fallback.1": "若配置了 BIRDEYE_KEY，优先调用 Birdeye API（缓存 30 秒）",
     "section.endpoints.birdeyePrice.fallback.2": "若 Birdeye 失败或无 Key，自动降级到 CoinGecko token_price",
-    "section.endpoints.birdeyePrice.fallback.3": "CoinGecko 缓存 60 秒"
+    "section.endpoints.birdeyePrice.fallback.3": "CoinGecko 缓存 60 秒",
+    "toc.solanaV1": "12. Solana v1 交易升级参考",
+    "section.solanaV1": "12. Solana v1 交易升级参考",
+    "section.solanaV1.desc.1": "Solana Mainnet 已于 Epoch 1032（2026-09-10 ~06:45 UTC）激活 Transaction v1。v1 将交易大小上限从 1,232 字节提升至 4,096 字节，支持原生资源配置。如果你的应用读取、索引或发送交易，必须升级到支持 v1 的 SDK 版本。",
+    "section.solanaV1.subtitle.1": "12.1 最小支持版本（Helius 参考）",
+    "table.solanaV1.header.component": "组件",
+    "table.solanaV1.header.minV1": "v1 最低版本",
+    "table.solanaV1.header.latest": "最新版（2026-09-08）",
+    "section.solanaV1.subtitle.2": "12.2 RPC 调用注意事项",
+    "section.solanaV1.note.1": "关键警告：如果 getBlock / getTransaction / getTransactionsForAddress 未设置 maxSupportedTransactionVersion: 1，当区块中包含任意 v1 交易时，整个调用会失败（所有交易都不会返回）。",
+    "section.solanaV1.subtitle.3": "12.3 推荐阅读",
+    "section.solanaV1.subtitle.4": "12.4 对 EACOswap 的影响",
+    "section.solanaV1.impact.1": "后端：Helius RPC 代理端点 /api/helius/rpc 已升级，代理请求时自动附加 maxSupportedTransactionVersion: 1",
+    "section.solanaV1.impact.2": "前端：Jupiter 报价和交易签名使用 v0 格式，不受影响；如未来支持 v1 大交易，需升级 @solana/web3.js 至 v3+",
+    "section.solanaV1.impact.3": "监控：Helius 版本号已记录在上方表格，后端 Docker 镜像基于 node:20-alpine，SDK 升级通过 npm update 完成"
   },
   en: {
     "page.title": "EACOswap API Specification",
@@ -1236,7 +1305,21 @@ const i18n = {
     "changelog.v220": "Complete 6-language i18n, all UI texts translatable",
     "section.endpoints.birdeyePrice.fallback.1": "If BIRDEYE_KEY is configured, prefer Birdeye API (cached 30 seconds)",
     "section.endpoints.birdeyePrice.fallback.2": "If Birdeye fails or no Key, automatically fall back to CoinGecko token_price",
-    "section.endpoints.birdeyePrice.fallback.3": "CoinGecko cached 60 seconds"
+        "section.endpoints.birdeyePrice.fallback.3": "CoinGecko cached 60 seconds",
+    "toc.solanaV1": "12. Solana v1 Transaction Upgrade Reference",
+    "section.solanaV1": "12. Solana v1 Transaction Upgrade Reference",
+    "section.solanaV1.desc.1": "Solana Mainnet activated Transaction v1 at Epoch 1032 (2026-09-10 ~06:45 UTC). v1 increases transaction size limit from 1,232 bytes to 4,096 bytes with native resource configuration. If your app reads, indexes, or sends transactions, you must upgrade to an SDK version that supports v1.",
+    "section.solanaV1.subtitle.1": "12.1 Minimum Supported Versions (Helius Reference)",
+    "table.solanaV1.header.component": "Component",
+    "table.solanaV1.header.minV1": "Min for v1",
+    "table.solanaV1.header.latest": "Latest (2026-09-08)",
+    "section.solanaV1.subtitle.2": "12.2 RPC Call Notes",
+    "section.solanaV1.note.1": "CRITICAL: If getBlock / getTransaction / getTransactionsForAddress does not set maxSupportedTransactionVersion: 1, the entire call fails when any v1 transaction exists in the block (no transactions returned).",
+    "section.solanaV1.subtitle.3": "12.3 Recommended Reading",
+    "section.solanaV1.subtitle.4": "12.4 Impact on EACOswap",
+    "section.solanaV1.impact.1": "Backend: Helius RPC proxy endpoint /api/helius/rpc upgraded; proxy requests automatically append maxSupportedTransactionVersion: 1",
+    "section.solanaV1.impact.2": "Frontend: Jupiter quotes and transaction signing use v0 format, unaffected; for future v1 large transaction support, upgrade @solana/web3.js to v3+",
+    "section.solanaV1.impact.3": "Monitoring: Helius versions recorded in table above; backend Docker image based on node:20-alpine; SDK upgrades via npm update"
   },
   es: {
     "page.title": "Especificación API de EACOswap",
@@ -1370,7 +1453,21 @@ const i18n = {
     "changelog.v220": "Completa internacionalización en 6 idiomas, todos los textos de UI traducibles",
     "section.endpoints.birdeyePrice.fallback.1": "Si BIRDEYE_KEY está configurada, preferir API Birdeye (caché 30 segundos)",
     "section.endpoints.birdeyePrice.fallback.2": "Si Birdeye falla o no hay clave, retroceder automáticamente a CoinGecko token_price",
-    "section.endpoints.birdeyePrice.fallback.3": "CoinGecko en caché 60 segundos"
+        "section.endpoints.birdeyePrice.fallback.3": "CoinGecko en caché 60 segundos",
+    "toc.solanaV1": "12. Referencia de Actualización de Transacciones Solana v1",
+    "section.solanaV1": "12. Referencia de Actualización de Transacciones Solana v1",
+    "section.solanaV1.desc.1": "Solana Mainnet activó Transaction v1 en el Epoch 1032 (2026-09-10 ~06:45 UTC). v1 aumenta el límite de tamaño de transacción de 1,232 bytes a 4,096 bytes con configuración de recursos nativos. Si tu aplicación lee, indexa o envía transacciones, debes actualizar a una versión de SDK que soporte v1.",
+    "section.solanaV1.subtitle.1": "12.1 Versiones Mínimas Soportadas (Referencia Helius)",
+    "table.solanaV1.header.component": "Componente",
+    "table.solanaV1.header.minV1": "Mínimo para v1",
+    "table.solanaV1.header.latest": "Última versión (2026-09-08)",
+    "section.solanaV1.subtitle.2": "12.2 Notas de Llamadas RPC",
+    "section.solanaV1.note.1": "CRÍTICO: Si getBlock / getTransaction / getTransactionsForAddress no establece maxSupportedTransactionVersion: 1, toda la llamada falla cuando existe cualquier transacción v1 en el bloque (no se devuelven transacciones).",
+    "section.solanaV1.subtitle.3": "12.3 Lecturas Recomendadas",
+    "section.solanaV1.subtitle.4": "12.4 Impacto en EACOswap",
+    "section.solanaV1.impact.1": "Backend: El endpoint proxy Helius RPC /api/helius/rpc se ha actualizado; las solicitudes proxy agregan automáticamente maxSupportedTransactionVersion: 1",
+    "section.solanaV1.impact.2": "Frontend: Las cotizaciones de Jupiter y las firmas de transacciones usan formato v0, no afectadas; para soporte futuro de transacciones grandes v1, actualizar @solana/web3.js a v3+",
+    "section.solanaV1.impact.3": "Monitoreo: Las versiones de Helius se registran en la tabla anterior; la imagen Docker del backend está basada en node:20-alpine; las actualizaciones de SDK se realizan vía npm update"
   },
   fr: {
     "page.title": "Spécification API EACOswap",
@@ -1504,7 +1601,21 @@ const i18n = {
     "changelog.v220": "Internationalisation complète en 6 langues, tous les textes UI traduisibles",
     "section.endpoints.birdeyePrice.fallback.1": "Si BIRDEYE_KEY est configurée, privilégier l'API Birdeye (cache 30 secondes)",
     "section.endpoints.birdeyePrice.fallback.2": "Si Birdeye échoue ou pas de clé, basculer automatiquement vers CoinGecko token_price",
-    "section.endpoints.birdeyePrice.fallback.3": "CoinGecko en cache 60 secondes"
+        "section.endpoints.birdeyePrice.fallback.3": "CoinGecko en cache 60 secondes",
+    "toc.solanaV1": "12. Référence de Mise à Niveau des Transactions Solana v1",
+    "section.solanaV1": "12. Référence de Mise à Niveau des Transactions Solana v1",
+    "section.solanaV1.desc.1": "Solana Mainnet a activé Transaction v1 à l'époch 1032 (2026-09-10 ~06:45 UTC). v1 augmente la limite de taille de transaction de 1,232 octets à 4,096 octets avec configuration de ressources natives. Si votre application lit, indexe ou envoie des transactions, vous devez mettre à niveau vers une version de SDK prenant en charge v1.",
+    "section.solanaV1.subtitle.1": "12.1 Versions Minimales Prises en Charge (Référence Helius)",
+    "table.solanaV1.header.component": "Composant",
+    "table.solanaV1.header.minV1": "Minimum pour v1",
+    "table.solanaV1.header.latest": "Dernière version (2026-09-08)",
+    "section.solanaV1.subtitle.2": "12.2 Notes sur les Appels RPC",
+    "section.solanaV1.note.1": "CRITIQUE : Si getBlock / getTransaction / getTransactionsForAddress ne définit pas maxSupportedTransactionVersion: 1, l'appel entier échoue lorsqu'une transaction v1 existe dans le bloc (aucune transaction retournée).",
+    "section.solanaV1.subtitle.3": "12.3 Lectures Recommandées",
+    "section.solanaV1.subtitle.4": "12.4 Impact sur EACOswap",
+    "section.solanaV1.impact.1": "Backend : Le point de terminaison proxy Helius RPC /api/helius/rpc a été mis à niveau ; les requêtes proxy ajoutent automatiquement maxSupportedTransactionVersion: 1",
+    "section.solanaV1.impact.2": "Frontend : Les devis Jupiter et les signatures de transactions utilisent le format v0, non affectés ; pour un futur support des grandes transactions v1, mettre à niveau @solana/web3.js vers v3+",
+    "section.solanaV1.impact.3": "Surveillance : Les versions Helius sont enregistrées dans le tableau ci-dessus ; l'image Docker backend est basée sur node:20-alpine ; les mises à jour SDK via npm update"
   },
   ru: {
     "page.title": "Спецификация API EACOswap",
@@ -1638,7 +1749,21 @@ const i18n = {
     "changelog.v220": "Полная интернационализация на 6 языках, все UI-тексты переводимы",
     "section.endpoints.birdeyePrice.fallback.1": "Если BIRDEYE_KEY настроен, предпочитать API Birdeye (кэш 30 секунд)",
     "section.endpoints.birdeyePrice.fallback.2": "Если Birdeye не работает или нет ключа, автоматически откатиться на CoinGecko token_price",
-    "section.endpoints.birdeyePrice.fallback.3": "CoinGecko кэшируется 60 секунд"
+        "section.endpoints.birdeyePrice.fallback.3": "CoinGecko кэшируется 60 секунд",
+    "toc.solanaV1": "12. Справка по Обновлению Транзакций Solana v1",
+    "section.solanaV1": "12. Справка по Обновлению Транзакций Solana v1",
+    "section.solanaV1.desc.1": "Solana Mainnet активировала Transaction v1 на эпохе 1032 (2026-09-10 ~06:45 UTC). v1 увеличивает лимит размера транзакции с 1,232 байт до 4,096 байт с нативной конфигурацией ресурсов. Если ваше приложение читает, индексирует или отправляет транзакции, необходимо обновить SDK до версии, поддерживающей v1.",
+    "section.solanaV1.subtitle.1": "12.1 Минимальные Поддерживаемые Версии (Справка Helius)",
+    "table.solanaV1.header.component": "Компонент",
+    "table.solanaV1.header.minV1": "Минимум для v1",
+    "table.solanaV1.header.latest": "Последняя версия (2026-09-08)",
+    "section.solanaV1.subtitle.2": "12.2 Примечания по Вызовам RPC",
+    "section.solanaV1.note.1": "КРИТИЧНО: Если getBlock / getTransaction / getTransactionsForAddress не устанавливает maxSupportedTransactionVersion: 1, весь вызов завершается ошибкой при наличии любой транзакции v1 в блоке (транзакции не возвращаются).",
+    "section.solanaV1.subtitle.3": "12.3 Рекомендуемые Материалы",
+    "section.solanaV1.subtitle.4": "12.4 Влияние на EACOswap",
+    "section.solanaV1.impact.1": "Бэкенд: Прокси-эндпоинт Helius RPC /api/helius/rpc обновлён; прокси-запросы автоматически добавляют maxSupportedTransactionVersion: 1",
+    "section.solanaV1.impact.2": "Фронтенд: Котировки Jupiter и подписи транзакций используют формат v0, не затронуты; для будущей поддержки больших транзакций v1 обновите @solana/web3.js до v3+",
+    "section.solanaV1.impact.3": "Мониторинг: Версии Helius записаны в таблице выше; образ Docker бэкенда основан на node:20-alpine; обновления SDK через npm update"
   },
   ar: {
     "page.title": "مواصفات API الخاصة بـ EACOswap",
@@ -1772,7 +1897,21 @@ const i18n = {
     "changelog.v220": "تدويل كامل بـ 6 لغات، جميع نصوص واجهة المستخدم قابلة للترجمة",
     "section.endpoints.birdeyePrice.fallback.1": "إذا تم تكوين BIRDEYE_KEY، يُفضّل Birdeye API (مخبأة 30 ثانية)",
     "section.endpoints.birdeyePrice.fallback.2": "إذا فشل Birdeye أو لا يوجد مفتاح، التراجع تلقائياً إلى CoinGecko token_price",
-    "section.endpoints.birdeyePrice.fallback.3": "CoinGecko مخبأة 60 ثانية"
+        "section.endpoints.birdeyePrice.fallback.3": "CoinGecko مخبأة 60 ثانية",
+    "toc.solanaV1": "12. مرجع ترقية معاملات Solana v1",
+    "section.solanaV1": "12. مرجع ترقية معاملات Solana v1",
+    "section.solanaV1.desc.1": "تم تفعيل Transaction v1 على شبكة Solana الرئيسية في Epoch 1032 (2026-09-10 ~06:45 UTC). ترفع v1 حجم المعاملة من 1,232 بايت إلى 4,096 بايت مع تكوين الموارد الأصلية. إذا كان تطبيقك يقرأ أو يفهرس أو يرسل معاملات، يجب الترقية إلى إصدار SDK يدعم v1.",
+    "section.solanaV1.subtitle.1": "12.1 الإصدارات الدنيا المدعومة (مرجع Helius)",
+    "table.solanaV1.header.component": "المكون",
+    "table.solanaV1.header.minV1": "الحد الأدنى لـ v1",
+    "table.solanaV1.header.latest": "أحدث إصدار (2026-09-08)",
+    "section.solanaV1.subtitle.2": "12.2 ملاحظات استدعاءات RPC",
+    "section.solanaV1.note.1": "تحذير حرج: إذا لم يُضبط getBlock / getTransaction / getTransactionsForAddress على maxSupportedTransactionVersion: 1، يفشل الاستدعاء بالكامل عند وجود أي معاملة v1 في الكتلة (لا يتم إرجاع معاملات).",
+    "section.solanaV1.subtitle.3": "12.3 قراءات موصى بها",
+    "section.solanaV1.subtitle.4": "12.4 تأثير على EACOswap",
+    "section.solanaV1.impact.1": "الخلفية: تمت ترقية نقطة النهاية الوكيلة Helius RPC /api/helius/rpc؛ تلحق الطلبات الوكيلة تلقائيًا maxSupportedTransactionVersion: 1",
+    "section.solanaV1.impact.2": "الواجهة الأمامية: تستخدم عروض أسعار Jupiter وتوقيعات المعاملات تنسيق v0، غير متأثرة؛ لدعم المعاملات الكبيرة v1 مستقبلاً، قم بترقية @solana/web3.js إلى v3+",
+    "section.solanaV1.impact.3": "المراقبة: تم تسجيل إصدارات Helius في الجدول أعلاه؛ صورة Docker للخلفية مبنية على node:20-alpine؛ ترقيات SDK عبر npm update"
   }
 };
 

@@ -114,6 +114,30 @@ footer{text-align:center;padding:40px 20px;color:var(--muted);font-size:0.85em;b
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--green);color:#000;padding:10px 24px;border-radius:8px;font-size:0.85em;opacity:0;transition:opacity 0.3s;z-index:200}
 .toast.show{opacity:1}
 
+/* ===== EACO Exchange Rate Section ===== */
+.rate-sol-box{text-align:center;padding:16px 20px;background:linear-gradient(135deg,rgba(100,149,237,0.1),rgba(0,229,255,0.1));border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px}
+.rate-sol-box .sol-price{font-size:1.8em;font-weight:800;color:var(--gold);font-family:monospace}
+.rate-sol-box .sol-label{font-size:0.85em;color:var(--muted);margin-top:4px}
+.rate-update-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)}
+.rate-update-bar .last-updated{font-size:0.85em;color:var(--muted)}
+.refresh-btn{padding:8px 16px;background:var(--grad);color:#000;border:none;border-radius:8px;cursor:pointer;font-size:0.85em;font-weight:600;transition:all 0.2s}
+.refresh-btn:hover{transform:translateY(-1px);box-shadow:0 2px 12px rgba(100,149,237,0.3)}
+.refresh-btn:disabled{opacity:0.5;cursor:wait}
+.rate-table{width:100%;border-collapse:collapse;margin-top:8px}
+.rate-table th{padding:10px 8px;text-align:left;font-size:0.8em;color:var(--muted);border-bottom:2px solid var(--border);text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap}
+.rate-table td{padding:10px 8px;border-bottom:1px solid rgba(100,149,237,0.08);font-size:0.9em;color:var(--text);white-space:nowrap}
+.rate-table tr:hover td{background:rgba(100,149,237,0.05)}
+.rate-table .sym-col{font-weight:bold;color:var(--gold);font-size:1em}
+.rate-table .flag-col{font-size:1.3em}
+.rate-table .val-col{color:var(--accent2);font-family:monospace;font-weight:600}
+.rate-table a{color:var(--accent2);text-decoration:none;font-size:0.85em}
+.rate-table a:hover{text-decoration:underline}
+.rate-note{text-align:center;font-size:0.8em;color:var(--muted);margin-top:12px}
+.rate-orb-link{display:inline-flex;align-items:center;gap:6px;color:var(--accent2);text-decoration:none;font-size:0.85em;margin-top:8px}
+.rate-orb-link:hover{text-decoration:underline}
+[dir="rtl"] .rate-update-bar{flex-direction:row-reverse}
+[dir="rtl"] .rate-table th,[dir="rtl"] .rate-table td{text-align:right}
+
 /* ===== RTL Support ===== */
 [dir="rtl"] { text-align: right; }
 [dir="rtl"] .card-head { flex-direction: row-reverse; }
@@ -179,6 +203,38 @@ footer{text-align:center;padding:40px 20px;color:var(--muted);font-size:0.85em;b
 <h2 data-i18n="s1_title">Top 10 Global Currencies - Web3 Friendliness Analysis</h2>
 <p class="subtitle" data-i18n="s1_sub">Evaluating regulatory clarity, crypto adoption, and Solana ecosystem support</p>
 <div class="grid" id="currency-grid"></div>
+</div>
+
+<!-- Section 1.5: EACO Exchange Rate -->
+<div class="section" id="sec-rates">
+<h2 data-i18n="sr_title">EACO Exchange Rate - Daily Update</h2>
+<p class="subtitle" data-i18n="sr_sub">EACO exchange rates against the world's top 10 currencies, updated daily</p>
+<div class="rate-sol-box">
+<span class="sol-price" id="sol-price-display">--</span>
+<div class="sol-label" data-i18n="sr_sol_ref">1 SOL reference price (USD)</div>
+</div>
+<div class="rate-update-bar">
+<span class="last-updated" id="rate-last-updated">--</span>
+<button class="refresh-btn" id="rate-refresh-btn" onclick="updateRates(true)" data-i18n="sr_refresh">Refresh</button>
+</div>
+<div style="overflow-x:auto">
+<table class="rate-table">
+<thead>
+<tr>
+<th data-i18n="sr_th_currency">Currency</th>
+<th data-i18n="sr_th_flag">Flag</th>
+<th data-i18n="sr_th_eaco">1 EACO =</th>
+<th data-i18n="sr_th_sol">1 SOL =</th>
+<th data-i18n="sr_th_eaco_sol">EACO/SOL</th>
+<th>OrbMarkets</th>
+</tr>
+</thead>
+<tbody id="rate-tbody"></tbody>
+</table>
+</div>
+<p class="rate-note" data-i18n="sr_note">Rates are calculated from SOL market price and EACO/SOL pool ratio. For real-time data, visit OrbMarkets.</p>
+<a class="rate-orb-link" href="https://orbmarkets.io/token/So11111111111111111111111111111111111111112" target="_blank" rel="noopener">&#128279; OrbMarkets SOL &rarr;</a>
+<a class="rate-orb-link" href="https://orbmarkets.io/token/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH" target="_blank" rel="noopener" style="margin-left:16px">&#128279; OrbMarkets EACO &rarr;</a>
 </div>
 
 <!-- Section 2: Exchange Paths -->
@@ -247,6 +303,19 @@ const I18N = {
     "s5_sub": "Phased roadmap for global currency integration",
     "s6_title": "EACO Ecosystem Links",
     "s6_sub": "Explore the full EACO Web3 ecosystem",
+    "sr_title": "EACO Exchange Rate - Daily Update",
+    "sr_sub": "EACO exchange rates against the world's top 10 currencies, updated daily",
+    "sr_sol_ref": "1 SOL reference price (USD)",
+    "sr_refresh": "Refresh",
+    "sr_th_currency": "Currency",
+    "sr_th_flag": "Flag",
+    "sr_th_eaco": "1 EACO =",
+    "sr_th_sol": "1 SOL =",
+    "sr_th_eaco_sol": "EACO/SOL",
+    "sr_note": "Rates are calculated from SOL market price and EACO/SOL pool ratio. For real-time data, visit OrbMarkets.",
+    "sr_loading": "Loading...",
+    "sr_updated": "Last updated",
+    "sr_refreshing": "Updating...",
     "footer1": "EACO = Energy x Attitude x Cooperation x Optimization | Earth's Best Coin",
     "footer2": "Chain: Solana | CA: DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH",
     "footer3": "Join EACO Discord Community",
@@ -282,6 +351,19 @@ const I18N = {
     "s5_sub": "全球货币整合的分阶段路线图",
     "s6_title": "EACO 生态链接",
     "s6_sub": "探索完整的 EACO Web3 生态",
+    "sr_title": "EACO 兑换汇率 — 每日更新",
+    "sr_sub": "EACO 兑全球前10大货币汇率，每日更新",
+    "sr_sol_ref": "1 SOL 参考价格（美元）",
+    "sr_refresh": "刷新",
+    "sr_th_currency": "货币",
+    "sr_th_flag": "旗帜",
+    "sr_th_eaco": "1 EACO =",
+    "sr_th_sol": "1 SOL =",
+    "sr_th_eaco_sol": "EACO/SOL",
+    "sr_note": "汇率根据 SOL 市场价格和 EACO/SOL 池比例计算。实时数据请访问 OrbMarkets。",
+    "sr_loading": "加载中...",
+    "sr_updated": "最后更新",
+    "sr_refreshing": "更新中...",
     "footer1": "EACO = 能量 x 态度 x 协作 x 优化 | 地球最佳货币",
     "footer2": "链: Solana | 合约地址: DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH",
     "footer3": "加入 EACO Discord 社区",
@@ -317,6 +399,19 @@ const I18N = {
     "s5_sub": "Hoja de ruta por fases para la integracion de monedas globales",
     "s6_title": "Enlaces del Ecosistema EACO",
     "s6_sub": "Explora el ecosistema Web3 completo de EACO",
+    "sr_title": "Tasa de Cambio EACO - Actualizacion Diaria",
+    "sr_sub": "Tasas de cambio de EACO contra las 10 principales monedas mundiales, actualizadas diariamente",
+    "sr_sol_ref": "Precio de referencia 1 SOL (USD)",
+    "sr_refresh": "Actualizar",
+    "sr_th_currency": "Moneda",
+    "sr_th_flag": "Bandera",
+    "sr_th_eaco": "1 EACO =",
+    "sr_th_sol": "1 SOL =",
+    "sr_th_eaco_sol": "EACO/SOL",
+    "sr_note": "Las tasas se calculan a partir del precio de mercado de SOL y la proporcion del pool EACO/SOL. Para datos en tiempo real, visite OrbMarkets.",
+    "sr_loading": "Cargando...",
+    "sr_updated": "Ultima actualizacion",
+    "sr_refreshing": "Actualizando...",
     "footer1": "EACO = Energia x Actitud x Cooperacion x Optimizacion | La Mejor Moneda de la Tierra",
     "footer2": "Cadena: Solana | CA: DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH",
     "footer3": "Unirse a la Comunidad Discord de EACO",
@@ -352,6 +447,19 @@ const I18N = {
     "s5_sub": "Feuille de route par phases pour l'integration des devises mondiales",
     "s6_title": "Liens de l'Ecosysteme EACO",
     "s6_sub": "Explorez l'ecosysteme Web3 complet d'EACO",
+    "sr_title": "Taux de Change EACO - Mise a Jour Quotidienne",
+    "sr_sub": "Taux de change de l'EACO contre les 10 principales devises mondiales, mis a jour quotidiennement",
+    "sr_sol_ref": "Prix de reference 1 SOL (USD)",
+    "sr_refresh": "Rafraichir",
+    "sr_th_currency": "Devise",
+    "sr_th_flag": "Drapeau",
+    "sr_th_eaco": "1 EACO =",
+    "sr_th_sol": "1 SOL =",
+    "sr_th_eaco_sol": "EACO/SOL",
+    "sr_note": "Les taux sont calcules a partir du prix du marche SOL et du ratio du pool EACO/SOL. Pour les donnees en temps reel, visitez OrbMarkets.",
+    "sr_loading": "Chargement...",
+    "sr_updated": "Derniere mise a jour",
+    "sr_refreshing": "Mise a jour...",
     "footer1": "EACO = Energie x Attitude x Cooperation x Optimisation | La Meilleure Monde de la Terre",
     "footer2": "Chaine : Solana | CA : DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH",
     "footer3": "Rejoindre la Communaute Discord EACO",
@@ -387,6 +495,19 @@ const I18N = {
     "s5_sub": "Поэтапная дорожная карта для интеграции мировых валют",
     "s6_title": "Ссылки Экосистемы EACO",
     "s6_sub": "Исследуйте полную экосистему Web3 EACO",
+    "sr_title": "Курс Обмена EACO - Ежедневное Обновление",
+    "sr_sub": "Курсы обмена EACO к 10 основным мировым валютам, обновляются ежедневно",
+    "sr_sol_ref": "Справочная цена 1 SOL (USD)",
+    "sr_refresh": "Обновить",
+    "sr_th_currency": "Валюта",
+    "sr_th_flag": "Флаг",
+    "sr_th_eaco": "1 EACO =",
+    "sr_th_sol": "1 SOL =",
+    "sr_th_eaco_sol": "EACO/SOL",
+    "sr_note": "Курсы рассчитываются на основе рыночной цены SOL и соотношения пула EACO/SOL. Для данных в реальном времени посетите OrbMarkets.",
+    "sr_loading": "Загрузка...",
+    "sr_updated": "Последнее обновление",
+    "sr_refreshing": "Обновление...",
     "footer1": "EACO = Энергия x Отношение x Сотрудничество x Оптимизация | Лучшая Монета Земли",
     "footer2": "Сеть: Solana | CA: DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH",
     "footer3": "Присоединиться к Сообществу Discord EACO",
@@ -422,6 +543,19 @@ const I18N = {
     "s5_sub": "خارطة طريق مرحلية لدمج العملات العالمية",
     "s6_title": "روابط نظام EACO البيئي",
     "s6_sub": "استكشف النظام البيئي الكامل لـ EACO Web3",
+    "sr_title": "سعر صرف EACO - تحديث يومي",
+    "sr_sub": "أسعار صرف EACO مقابل أفضل 10 عملات عالمية، يتم تحديثها يومياً",
+    "sr_sol_ref": "سعر مرجعي 1 SOL (دولار أمريكي)",
+    "sr_refresh": "تحديث",
+    "sr_th_currency": "العملة",
+    "sr_th_flag": "العلم",
+    "sr_th_eaco": "1 EACO =",
+    "sr_th_sol": "1 SOL =",
+    "sr_th_eaco_sol": "EACO/SOL",
+    "sr_note": "تُحسب الأسعار من سعر سوق SOL ونسبة تجمع EACO/SOL. للحصول على بيانات في الوقت الفعلي، تفضل بزيارة OrbMarkets.",
+    "sr_loading": "جاري التحميل...",
+    "sr_updated": "آخر تحديث",
+    "sr_refreshing": "جاري التحديث...",
     "footer1": "EACO = طاقة x موقف x تعاون x تحسين | أفضل عملة على الأرض",
     "footer2": "الشبكة: Solana | العنوان: DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH",
     "footer3": "انضم إلى مجتمع Discord الخاص بـ EACO",
@@ -455,6 +589,25 @@ var CURRENCIES = [
   {sym:"SGD",flag:"🇸🇬",name_en:"Singapore Dollar",name_zh:"\u65b0\u5143",name_es:"Dolar de Singapur",name_fr:"Dollar de Singapour",name_ru:"\u0421\u0438\u043d\u0433\u0430\u043f\u0443\u0440\u0441\u043a\u0438\u0439 \u0414\u043e\u043b\u043b\u0430\u0440",name_ar:"\u062f\u0648\u0644\u0627\u0631 \u0633\u0646\u063a\u0627\u0641\u0648\u0631\u0629",region_en:"Singapore",region_zh:"\u65b0\u52a0\u5761",region_es:"Singapur",region_fr:"Singapour",region_ru:"\u0421\u0438\u043d\u0433\u0430\u043f\u0443\u0440",region_ar:"\u0633\u0646\u063a\u0627\u0641\u0648\u0631\u0629",rate:"1 SGD = 0.0090 SOL",reg_en:"MAS Payment Services Act; DPT license; world's most Web3-friendly jurisdiction; Project Guardian",reg_zh:"MAS\u300a\u652f\u4ed8\u670d\u52a1\u6cd5\u300b\uff1bDPT\u724c\u7167\uff1b\u5168\u7403\u6700Web3\u53cb\u597d\u53f8\u6cd5\u7ba1\u8f96\u533a",reg_es:"Ley de Servicios de Pago MAS; licencia DPT; jurisdiccion mas amigable con Web3; Project Guardian",reg_fr:"Loi sur les Services de Paiement MAS; licence DPT; juridiction la plus favorable au Web3; Project Guardian",reg_ru:"\u0417\u0430\u043a\u043e\u043d \u043e \u043f\u043b\u0430\u0442\u0435\u0436\u043d\u044b\u0445 \u0441\u0435\u0440\u0432\u0438\u0441\u0430\u0445 MAS; \u043b\u0438\u0446\u0435\u043d\u0437\u0438\u044f DPT; \u0441\u0430\u043c\u0430\u044f Web3-\u0434\u0440\u0443\u0436\u0435\u043b\u044e\u0431\u043d\u0430\u044f \u044e\u0440\u0438\u0441\u0434\u0438\u043a\u0446\u0438\u044f; Project Guardian",reg_ar:"\u0642\u0627\u0646\u0648\u0646 \u062e\u062f\u0645\u0627\u062a \u0627\u0644\u062f\u0641\u0639 MAS\u061b \u062a\u0631\u062e\u064a\u0635 DPT\u061b \u0627\u0644\u0648\u0644\u0627\u064a\u0629 \u0627\u0644\u0642\u0636\u0627\u0626\u064a\u0629 \u0627\u0644\u0623\u0643\u062b\u0631 \u0635\u062f\u0627\u0642\u0629 \u0644\u0640 Web3\u061b Project Guardian",friendly:"high",path_en:"SGD -> SOL (via Independent Reserve/Gemini SG) -> EACO (via Jupiter)",path_zh:"\u65b0\u5143 -> SOL(Independent Reserve/Gemini SG) -> EACO(Jupiter)",path_es:"SGD -> SOL (via Independent Reserve/Gemini SG) -> EACO (via Jupiter)",path_fr:"SGD -> SOL (via Independent Reserve/Gemini SG) -> EACO (via Jupiter)",path_ru:"SGD -> SOL (\u0447\u0435\u0440\u0435\u0437 Independent Reserve/Gemini SG) -> EACO (\u0447\u0435\u0440\u0435\u0437 Jupiter)",path_ar:"SGD -> SOL (\u0639\u0628\u0631 Independent Reserve/Gemini SG) -> EACO (\u0639\u0628\u0631 Jupiter)",note_en:"Asia's Web3 hub; connects SEA capital with global crypto",note_zh:"\u4e9a\u6d32Web3\u679c\u5fc3\uff1b\u8fde\u63a5\u4e1c\u5357\u4e9a\u8d44\u672c\u4e0e\u5168\u7403\u52a0\u5bc6",note_es:"Hub Web3 de Asia; conecta capital del SEA con cripto global",note_fr:"Hub Web3 d'Asie; connecte capital SEA au crypto global",note_ru:"Web3-\u0445\u0430\u0431 \u0410\u0437\u0438\u0438; \u0441\u043e\u0435\u0434\u0438\u043d\u044f\u0435\u0442 \u043a\u0430\u043f\u0438\u0442\u0430\u043b \u042e\u0412\u0410 \u0441 \u0433\u043b\u043e\u0431\u0430\u043b\u044c\u043d\u044b\u043c \u043a\u0440\u0438\u043f\u0442\u043e",note_ar:"\u0645\u0631\u0643\u0632 Web3 \u0641\u064a \u0622\u0633\u064a\u0627\u061b \u064a\u0631\u0628\u0642 \u0631\u0623\u0633 \u0645\u0627\u0644 \u062c\u0646\u0648\u0628 \u0634\u0631\u0642 \u0622\u0633\u064a\u0627 \u0628\u0627\u0644\u0639\u0645\u0644\u0627\u062a \u0627\u0644\u0645\u0634\u0641\u0631\u0629 \u0627\u0644\u0639\u0627\u0644\u0645\u064a\u0629"},
   {sym:"KRW",flag:"🇰🇷",name_en:"South Korean Won",name_zh:"\u97e9\u5143",name_es:"Won Surcoreano",name_fr:"Won Sud-Corean",name_ru:"\u042e\u0436\u043d\u043e\u043a\u043e\u0440\u0435\u0439\u0441\u043a\u0430\u044f \u0412\u043e\u043d\u0430",name_ar:"\u0627\u0644\u0648\u0648\u0646 \u0627\u0644\u0643\u0648\u0631\u064a \u0627\u0644\u062c\u0646\u0648\u0628\u064a",region_en:"South Korea",region_zh:"\u97e9\u56fd",region_es:"Corea del Sur",region_fr:"Coree du Sud",region_ru:"\u042e\u0436\u043d\u0430\u044f \u041a\u043e\u0440\u0435\u044f",region_ar:"\u0643\u0648\u0631\u064a\u0627 \u0627\u0644\u062c\u0646\u0648\u0628\u064a\u0629",rate:"1 KRW = 0.00000698 SOL",reg_en:"Special Financial Information Act (2024); Virtual Asset Committee; Upbit dominates KRW trading",reg_zh:"\u300a\u7279\u5b9a\u91d1\u878d\u4fe1\u606f\u6cd5\u300b(2024)\uff1b\u865a\u62df\u8d44\u4ea7\u59d4\u5458\u4f1a\uff1bUpbit\u4e3b\u5bfc\u97e9\u5143\u4ea4\u6613",reg_es:"Ley de Informacion Financiera Especial (2024); Comite de Activos Virtuales; Upbit domina el trading KRW",reg_fr:"Loi sur l'Information Financiere Speciale (2024); Comite des Actifs Virtuels; Upbit domine le trading KRW",reg_ru:"\u0417\u0430\u043a\u043e\u043d \u043e \u0441\u043f\u0435\u0446. \u0444\u0438\u043d\u0430\u043d\u0441\u043e\u0432\u043e\u0439 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u0438 (2024); \u041a\u043e\u043c\u0438\u0442\u0435\u0442 \u043f\u043e \u0432\u0438\u0440\u0442\u0443\u0430\u043b\u044c\u043d\u044b\u043c \u0430\u043a\u0442\u0438\u0432\u0430\u043c; Upbit \u0434\u043e\u043c\u0438\u043d\u0438\u0440\u0443\u0435\u0442 \u0432 KRW-\u0442\u043e\u0440\u0433\u043e\u0432\u043b\u0435",reg_ar:"\u0642\u0627\u0646\u0648\u0646 \u0627\u0644\u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0627\u0644\u0645\u0627\u0644\u064a\u0629 \u0627\u0644\u062e\u0627\u0635\u0629 (2024)\u061b \u0644\u062c\u0646\u0629 \u0627\u0644\u0623\u0635\u0648\u0644 \u0627\u0644\u0627\u0641\u062a\u0631\u0627\u0636\u064a\u0629\u061b Upbit \u064a\u0647\u064a\u0645\u0646 \u0639\u0644\u0649 \u062a\u062f\u0627\u0648\u0644 KRW",friendly:"med",path_en:"KRW -> SOL (via Upbit/Bithumb) -> EACO (via Jupiter)",path_zh:"\u97e9\u5143 -> SOL(Upbit/Bithumb) -> EACO(Jupiter)",path_es:"KRW -> SOL (via Upbit/Bithumb) -> EACO (via Jupiter)",path_fr:"KRW -> SOL (via Upbit/Bithumb) -> EACO (via Jupiter)",path_ru:"KRW -> SOL (\u0447\u0435\u0440\u0435\u0437 Upbit/Bithumb) -> EACO (\u0447\u0435\u0440\u0435\u0437 Jupiter)",path_ar:"KRW -> SOL (\u0639\u0628\u0631 Upbit/Bithumb) -> EACO (\u0639\u0628\u0631 Jupiter)",note_en:"Korea is top-3 crypto trading nation; strong retail demand",note_zh:"\u97e9\u56fd\u662f\u524d\u4e09\u52a0\u5bc6\u4ea4\u6613\u56fd\uff1b\u96f6\u552e\u9700\u6c42\u5f3a\u52b2",note_es:"Corea es la 3ra nacion de trading cripto; fuerte demanda minorista",note_fr:"Coree est la 3eme nation de trading crypto; forte demande de detail",note_ru:"\u041a\u043e\u0440\u0435\u044f \u2014 3-\u044f \u043f\u043e \u043e\u0431\u044a\u0435\u043c\u0443 \u043a\u0440\u0438\u043f\u0442\u043e-\u0442\u043e\u0440\u0433\u043e\u0432\u043b\u0438 \u0441\u0442\u0440\u0430\u043d\u0430; \u0441\u0438\u043b\u044c\u043d\u044b\u0439 \u0440\u043e\u0437\u043d\u0438\u0447\u043d\u044b\u0439 \u0441\u043f\u0440\u043e\u0441",note_ar:"\u0643\u0648\u0631\u064a\u0627 \u0647\u064a \u062b\u0627\u0644\u062b \u062f\u0648\u0644\u0629 \u0641\u064a \u062a\u062f\u0627\u0648\u0644 \u0627\u0644\u0639\u0645\u0644\u0627\u062a \u0627\u0644\u0645\u0634\u0641\u0631\u0629\u061b \u0637\u0644\u0628 \u0642\u0648\u064a \u0645\u0646 \u0627\u0644\u062a\u062c\u0632\u0626\u0629"}
 ];
+
+// EACO Exchange Rate Data (top 10 global currencies)
+// fiatPerUsd = how many units of this fiat = 1 USD (approximate reference rates)
+var EACO_RATES = [
+  {sym:"USD",flag:"🇺🇸",fiatPerUsd:1,name_en:"US Dollar",name_zh:"美元",name_es:"Dolar",name_fr:"Dollar",name_ru:"Доллар",name_ar:"دولار"},
+  {sym:"EUR",flag:"🇪🇺",fiatPerUsd:0.92,name_en:"Euro",name_zh:"欧元",name_es:"Euro",name_fr:"Euro",name_ru:"Евро",name_ar:"اليورو"},
+  {sym:"JPY",flag:"🇯🇵",fiatPerUsd:149.5,name_en:"Japanese Yen",name_zh:"日元",name_es:"Yen",name_fr:"Yen",name_ru:"Иена",name_ar:"الين"},
+  {sym:"GBP",flag:"🇬🇧",fiatPerUsd:0.79,name_en:"British Pound",name_zh:"英镑",name_es:"Libra",name_fr:"Livre",name_ru:"Фунт",name_ar:"الجنيه"},
+  {sym:"CNH",flag:"🇨🇳",fiatPerUsd:7.12,name_en:"Chinese Yuan",name_zh:"人民币",name_es:"Yuan",name_fr:"Yuan",name_ru:"Юань",name_ar:"اليوان"},
+  {sym:"AUD",flag:"🇦🇺",fiatPerUsd:1.52,name_en:"Australian Dollar",name_zh:"澳元",name_es:"Dolar Australiano",name_fr:"Dollar Australien",name_ru:"Доллар Австралии",name_ar:"الدولار الأسترالي"},
+  {sym:"CAD",flag:"🇨🇩",fiatPerUsd:1.36,name_en:"Canadian Dollar",name_zh:"加元",name_es:"Dolar Canadiense",name_fr:"Dollar Canadien",name_ru:"Доллар Канады",name_ar:"الدولار الكندي"},
+  {sym:"CHF",flag:"🇭🇸",fiatPerUsd:0.88,name_en:"Swiss Franc",name_zh:"瑞士法郎",name_es:"Franco Suizo",name_fr:"Franc Suisse",name_ru:"Франк",name_ar:"الفرنك"},
+  {sym:"SGD",flag:"🇸🇦",fiatPerUsd:1.34,name_en:"Singapore Dollar",name_zh:"新元",name_es:"Dolar de Singapur",name_fr:"Dollar de Singapour",name_ru:"Доллар Сингапура",name_ar:"دولار سنغافورة"},
+  {sym:"KRW",flag:"🇰🇷",fiatPerUsd:1335,name_en:"South Korean Won",name_zh:"韩元",name_es:"Won Surcoreano",name_fr:"Won Sud-Coreen",name_ru:"Вона",name_ar:"الوون"},
+  {sym:"SOL",flag:"◎",fiatPerUsd:1,name_en:"Solana",name_zh:"SOL(原生)",name_es:"Solana",name_fr:"Solana",name_ru:"Солана",name_ar:"سولانا"}
+];
+
+// EACO/SOL base reference (updated by API; fallback static values)
+var EACO_BASE = {solPrice:126.00, eacoPerSol:119047, lastUpdate:null};
 
 var EXCHANGE_PATHS = [
   {sym:"GBP",flag:"🇬🇧",title_en:"GBP to EACO Exchange Path",title_zh:"\u82f1\u9551\u5151\u6362EACO\u8def\u5f84",title_es:"Ruta de Intercambio GBP a EACO",title_fr:"Route d \u00c9change GBP vers EACO",title_ru:"\u041f\u0443\u0442\u044c \u041e\u0431\u043c\u0435\u043d\u0430 GBP \u043d\u0430 EACO",title_ar:"\u0645\u0633\u0627\u0631 \u062a\u0628\u0627\u062f\u0644 GBP \u0625\u0644\u0649 EACO",rate:"1 GBP \u2248 0.0161 SOL \u2248 2.4 EACO",steps_en:["1. Buy SOL with GBP via CoinList, Bitstamp, or Coinbase UK","2. Transfer SOL to Phantom or Solflare wallet","3. Swap SOL to EACO on Jupiter aggregator or Orca DEX","4. EACO tokens appear in your wallet - stake or hold"],steps_zh:["1. \u5728 CoinList\u3001Bitstamp \u6216 Coinbase UK \u7528\u82f1\u9551\u8d2d\u4e70 SOL","2. \u5c06 SOL \u8f6c\u5165 Phantom \u6216 Solflare \u94b1\u5305","3. \u5728 Jupiter \u805a\u5408\u5668\u6216 Orca DEX \u4e0a\u5c06 SOL \u5151\u6362\u4e3a EACO","4. EACO \u4ee3\u5e01\u5230\u8d26\uff0c\u53ef\u8d28\u62bc\u6216\u6301\u6709"],steps_es:["1. Comprar SOL con GBP via CoinList, Bitstamp o Coinbase UK","2. Transferir SOL a la cartera Phantom o Solflare","3. Cambiar SOL por EACO en el agregador Jupiter o DEX Orca","4. Los tokens EACO aparecen en su cartera - staking o mantener"],steps_fr:["1. Acheter SOL avec GBP via CoinList, Bitstamp ou Coinbase UK","2. Transferer SOL vers le portefeuille Phantom ou Solflare","3. Echanger SOL contre EACO sur l agregateur Jupiter ou Orca DEX","4. Les tokens EACO apparaissent dans votre portefeuille - staking ou conserver"],steps_ru:["1. \u041a\u0443\u043f\u0438\u0442\u044c SOL \u0437\u0430 GBP \u0447\u0435\u0440\u0435\u0437 CoinList, Bitstamp \u0438\u043b\u0438 Coinbase UK","2. \u041f\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438 SOL \u0432 \u043a\u043e\u0448\u0435\u043b\u0435\u043a Phantom \u0438\u043b\u0438 Solflare","3. \u041e\u0431\u043c\u0435\u043d\u044f\u0442\u044c SOL \u043d\u0430 EACO \u043d\u0430 \u0430\u0433\u0440\u0435\u0433\u0430\u0442\u043e\u0440\u0435 Jupiter \u0438\u043b\u0438 DEX Orca","4. \u0422\u043e\u043a\u0435\u043d\u044b EACO \u043f\u043e\u044f\u0432\u044f\u0442\u0441\u044f \u0432 \u043a\u043e\u0448\u0435\u043b\u044c\u043a\u0435 \u2014 \u0441\u0442\u0435\u0439\u043a\u0438\u043d\u0433 \u0438\u043b\u0438 \u0445\u0440\u0430\u043d\u0435\u043d\u0438\u0435"],steps_ar:["1. \u0634\u0631\u0627\u0621 SOL \u0628\u0640 GBP \u0639\u0628\u0631 CoinList \u0623\u0648 Bitstamp \u0623\u0648 Coinbase UK","2. \u062a\u062d\u0648\u064a\u0644 SOL \u0625\u0644\u0649 \u0645\u062d\u0641\u0638\u0629 Phantom \u0623\u0648 Solflare","3. \u0627\u0633\u062a\u0628\u062f\u0627\u0644 SOL \u0628\u0640 EACO \u0639\u0644\u0649 \u0645\u062c\u0645\u0639 Jupiter \u0623\u0648 Orca DEX","4. \u062a\u0638\u0647\u0631 \u0631\u0645\u0648\u0632 EACO \u0641\u064a \u0645\u062d\u0641\u0638\u062a\u0643 - \u062a\u062c\u0645\u064a\u062f \u0623\u0648 \u0627\u062d\u062a\u0641\u0627\u0638"]},
@@ -540,6 +693,113 @@ function renderCurrencies() {
   }).join('');
 }
 
+function renderRates() {
+  var tbody = document.getElementById('rate-tbody');
+  if (!tbody) return;
+  var solPrice = EACO_BASE.solPrice;
+  var eacoPerSol = EACO_BASE.eacoPerSol;
+  var eacoUsd = solPrice / eacoPerSol;
+
+  var solDisplay = document.getElementById('sol-price-display');
+  if (solDisplay) solDisplay.textContent = '$' + solPrice.toFixed(2);
+
+  tbody.innerHTML = EACO_RATES.map(function(r) {
+    var name = getVal(r, 'name');
+    var eacoInFiat = eacoUsd * r.fiatPerUsd;
+    var solInFiat = solPrice * r.fiatPerUsd;
+
+    var eacoStr;
+    if (eacoInFiat < 0.001) eacoStr = eacoInFiat.toExponential(3);
+    else if (eacoInFiat < 1) eacoStr = eacoInFiat.toFixed(6);
+    else if (eacoInFiat < 100) eacoStr = eacoInFiat.toFixed(4);
+    else eacoStr = eacoInFiat.toFixed(2);
+
+    var solStr = solInFiat < 1 ? solInFiat.toFixed(6) : solInFiat.toFixed(2);
+    var ratioStr = (1 / eacoPerSol).toFixed(8);
+
+    return '<tr>' +
+      '<td class="sym-col">' + r.sym + ' ' + name + '</td>' +
+      '<td class="flag-col">' + r.flag + '</td>' +
+      '<td class="val-col">' + eacoStr + ' ' + r.sym + '</td>' +
+      '<td class="val-col">' + solStr + ' ' + r.sym + '</td>' +
+      '<td class="val-col">1 EACO = ' + ratioStr + ' SOL</td>' +
+      '<td><a href="https://orbmarkets.io/token/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH" target="_blank" rel="noopener">EACO &rarr;</a></td>' +
+      '</tr>';
+  }).join('');
+
+  var updatedEl = document.getElementById('rate-last-updated');
+  if (updatedEl) {
+    var ts = EACO_BASE.lastUpdate || new Date();
+    updatedEl.textContent = t('sr_updated') + ': ' + new Date(ts).toLocaleString();
+  }
+}
+
+function loadCachedSolPrice() {
+  try {
+    var cached = JSON.parse(localStorage.getItem('eaco_sol_price_cache') || '{}');
+    if (cached.date && cached.price) {
+      var cachedDate = new Date(cached.date);
+      var today = new Date();
+      if (cachedDate.toDateString() === today.toDateString()) {
+        EACO_BASE.solPrice = cached.price;
+        EACO_BASE.lastUpdate = cachedDate;
+        return true;
+      }
+    }
+  } catch(e) {}
+  return false;
+}
+
+function saveSolPrice(price) {
+  try {
+    localStorage.setItem('eaco_sol_price_cache', JSON.stringify({
+      price: price,
+      date: new Date().toISOString()
+    }));
+  } catch(e) {}
+}
+
+function updateRates(force) {
+  var btn = document.getElementById('rate-refresh-btn');
+  if (btn) { btn.disabled = true; btn.textContent = t('sr_refreshing'); }
+
+  if (!force && loadCachedSolPrice()) {
+    renderRates();
+    if (btn) { btn.disabled = false; btn.textContent = t('sr_refresh'); }
+    return;
+  }
+
+  fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data && data.solana && data.solana.usd) {
+        EACO_BASE.solPrice = data.solana.usd;
+        saveSolPrice(data.solana.usd);
+      }
+      EACO_BASE.lastUpdate = new Date();
+      renderRates();
+    })
+    .catch(function() {
+      fetch('/api/sol-price')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data && data.success && data.data && data.data.price) {
+            EACO_BASE.solPrice = data.data.price;
+            saveSolPrice(data.data.price);
+          }
+          EACO_BASE.lastUpdate = new Date();
+          renderRates();
+        })
+        .catch(function() {
+          EACO_BASE.lastUpdate = new Date();
+          renderRates();
+        });
+    })
+    .finally(function() {
+      if (btn) { btn.disabled = false; btn.textContent = t('sr_refresh'); }
+    });
+}
+
 function renderPaths() {
   var grid = document.getElementById('path-grid');
   grid.innerHTML = EXCHANGE_PATHS.map(function(p) {
@@ -612,6 +872,7 @@ function setLang(l) {
   });
   
   renderCurrencies();
+  renderRates();
   renderPaths();
   renderDex();
   renderOnramps();
@@ -698,6 +959,7 @@ var savedLang = localStorage.getItem('eacoswap_lang') || 'en';
 var savedTheme = localStorage.getItem('eacoswap_theme') || 'cosmic';
 setTheme(savedTheme);
 setLang(savedLang);
+updateRates();
 </script>
 </body>
 </html>
