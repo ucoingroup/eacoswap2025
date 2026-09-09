@@ -1,7 +1,7 @@
 {
   "name": "EACOswap - Solana DEX Navigation Hub",
   "short_name": "EACOswap",
-  "description": "Navigate top 10 Solana DEXs, exchange EACO for SOL, USDT, USDC, wBNB, TRX, wETH, wBTC, eCNH. Multi-language, multi-theme PWA.",
+  "description": "Navigate top 10 Solana DEXs, exchange EACO for SOL, USDT, USDC, wBNB, TRX, wETH, wBTC, eCNH. Multi-language, multi-theme PWA with real-time market data.",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#0a0e27",
@@ -38,6 +38,17 @@
       "name": "Market Cap Rankings",
       "url": "./#mcap",
       "description": "SOL chain token market cap rankings"
+    },
+    {
+      "name": "Exchange Analysis",
+      "url": "./eaco-exchange-analysis2025.html",
+      "description": "EACO exchange rates against global currencies"
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://ucoingroup.github.io/eacoswap2025/"
     }
   ]
 }

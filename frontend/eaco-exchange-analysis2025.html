@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title data-i18n="title">EACO + SOL Global Exchange Analysis</title>
+<link rel="manifest" href="manifest.json">
 <style>
 /* ===== Theme Variables (unified with index.html) ===== */
 :root {
@@ -293,6 +294,10 @@ footer{text-align:center;padding:40px 20px;color:var(--muted);font-size:0.85em;b
 <p data-i18n="footer2" style="margin-top:8px">Chain: Solana | CA: DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH</p>
 <p style="margin-top:8px"><a href="https://discord.gg/bWCDME9Pkc" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none" data-i18n="footer3">Join EACO Discord Community</a></p>
 <p style="margin-top:8px"><a href="index.html" style="color:var(--accent);text-decoration:none" data-i18n="back_home">&#8592; Back to EACOswap Home</a></p>
+<p style="margin-top:8px">
+  <a href="faq.html" style="color:var(--accent);text-decoration:none" data-i18n="nav_faq">FAQ</a> | 
+  <a href="api-spec.html" style="color:var(--accent);text-decoration:none" data-i18n="nav_api_spec">API Spec</a>
+</p>
 <p style="margin-top:16px"><a href="https://ucoingroup.github.io/eacoweb3-2026/eaco-charity2025.html" target="_blank" rel="noopener" style="color:var(--accent2);text-decoration:none" data-i18n="charity_link">EACO Charity 2025 &#10084;</a></p>
 </footer>
 </div>
@@ -350,6 +355,8 @@ const I18N = {
     "theme_classic": "Classic",
     "back_home": "\u2190 Back to EACOswap Home",
     "charity_link": "EACO Charity 2025 \u2665",
+    "nav_faq": "常见问题",
+    "nav_api_spec": "API文档",
   },
   zh: {
     "title": "EACO + SOL 全球兑换行情分析",
@@ -399,6 +406,8 @@ const I18N = {
     "theme_classic": "米黄古典 Classic",
     "back_home": "← 返回 EACOswap 首页",
     "charity_link": "EACO 公益 2025 ♥",
+    "nav_faq": "Preguntas Frecuentes",
+    "nav_api_spec": "API Documentacion",
   },
   es: {
     "title": "Analisis Global de Intercambio EACO + SOL",
@@ -448,6 +457,8 @@ const I18N = {
     "theme_classic": "Beige Clasico",
     "back_home": "\u2190 Volver a EACOswap",
     "charity_link": "EACO Caridad 2025 \u2665",
+    "nav_faq": "Preguntas Frecuentes",
+    "nav_api_spec": "API Documentacion",
   },
   fr: {
     "title": "Analyse Globale des Echanges EACO + SOL",
@@ -497,104 +508,8 @@ const I18N = {
     "theme_classic": "Beige Classique",
     "back_home": "\u2190 Retour a l Accueil EACOswap",
     "charity_link": "EACO Charite 2025 \u2665",
-  },
-  ru: {
-    "title": "Глобальный Анализ Обмена EACO + SOL",
-    "subtitle": "Анализ дружественных к Web3 фиатных валют среди топ-10 мировых валют и путей обмена EACO+SOL",
-    "ca_label": "Адрес Контракта EACO (Solana):",
-    "orb_text": "Просмотр данных токена EACO в реальном времени на OrbMarkets:",
-    "s1_title": "Топ-10 Мировых Валют - Анализ Дружественности к Web3",
-    "s1_sub": "Оценка регуляторной ясности, принятия криптовалют и поддержки экосистемы Solana",
-    "s2_title": "Пути Обмена EACO + SOL",
-    "s2_sub": "Подробные пошаговые маршруты обмена для ключевых валют",
-    "s3_title": "Экосистема DEX Solana",
-    "s3_sub": "Ведущие децентрализованные биржи для торговли EACO + SOL",
-    "s4_title": "Каналы Ввода/Вывода Фиата",
-    "s4_sub": "Шлюзы, соединяющие фиатные валюты с экосистемой Solana",
-    "s5_title": "Стратегия Развития Обмена EACO + SOL",
-    "s5_sub": "Поэтапная дорожная карта для интеграции мировых валют",
-    "s6_title": "Ссылки Экосистемы EACO",
-    "s6_sub": "Исследуйте полную экосистему Web3 EACO",
-    "sr_title": "Курс Обмена EACO - Ежедневное Обновление",
-    "sr_sub": "Курсы обмена EACO к 10 основным мировым валютам, обновляются ежедневно",
-    "sr_sol_ref": "Справочная цена 1 SOL (USD)",
-    "sr_eaco_ref": "Справочная цена 1 EACO (USD)",
-    "sr_refresh": "Обновить",
-    "sr_th_currency": "Валюта",
-    "sr_th_flag": "Флаг",
-    "sr_th_eaco": "1 EACO =",
-    "sr_th_sol": "1 SOL =",
-    "sr_th_eaco_sol": "Курс Обмена",
-    "sr_note": "Цены из OrbMarkets + CoinGecko. Цена SOL обновляется автоматически; цена EACO из соотношения пула (1 SOL = 2,953,614 EACO). Для данных в реальном времени посетите OrbMarkets.",
-    "sr_loading": "Загрузка...",
-    "sr_updated": "Последнее обновление",
-    "sr_refreshing": "Обновление...",
-    "footer1": "EACO = Энергия x Отношение x Сотрудничество x Оптимизация | Лучшая Монета Земли",
-    "footer2": "Сеть: Solana | CA: DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH",
-    "footer3": "Присоединиться к Сообществу Discord EACO",
-    "f_high": "Высокий",
-    "f_med": "Средний",
-    "f_low": "Ограниченный",
-    "lbl_region": "Регион",
-    "lbl_rate": "Справочный Курс",
-    "lbl_reg": "Регуляторная Рамка",
-    "lbl_path": "Путь Обмена",
-    "lbl_note": "Примечание",
-    "toast_copied": "Адрес контракта скопирован!",
-    "theme_cosmic": "Космический Синий",
-    "theme_army": "Армейский Зеленый",
-    "theme_classic": "Классический Бежевый",
-    "back_home": "\u2190 \u041d\u0430 \u0413\u043b\u0430\u0432\u043d\u0443\u044e EACOswap",
-    "charity_link": "EACO \u0411\u043b\u0430\u0433\u043e\u0442\u0432\u043e\u0440\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c 2025 \u2665",
-  },
-  ar: {
-    "title": "تحليل عالمي لتبادل EACO + SOL",
-    "subtitle": "تحليل العملات الورقية الصديقة للويب3 بين أفضل 10 عملات عالمية ومسارات تبادل EACO+SOL",
-    "ca_label": "عنوان عقد EACO (Solana):",
-    "orb_text": "عرض بيانات رمز EACO في الوقت الفعلي على OrbMarkets:",
-    "s1_title": "أفضل 10 عملات عالمية - تحليل مدى التوافق مع الويب3",
-    "s1_sub": "تقييم الوضوح التنظيمي، وتبني العملات المشفرة، ودعم نظام Solana البيئي",
-    "s2_title": "مسارات تبادل EACO + SOL",
-    "s2_sub": "مسارات تبادل مفصلة خطوة بخطوة للعملات الرئيسية",
-    "s3_title": "نظام DEX الخاص بـ Solana",
-    "s3_sub": "أفضل البورصات اللامركزية لتداول EACO + SOL",
-    "s4_title": "قنوات إيداع/سحب العملات الورقية",
-    "s4_sub": "بوابات ربط العملات الورقية بنظام Solana البيئي",
-    "s5_title": "استراتيجية تطوير تبادل EACO + SOL",
-    "s5_sub": "خارطة طريق مرحلية لدمج العملات العالمية",
-    "s6_title": "روابط نظام EACO البيئي",
-    "s6_sub": "استكشف النظام البيئي الكامل لـ EACO Web3",
-    "sr_title": "سعر صرف EACO - تحديث يومي",
-    "sr_sub": "أسعار صرف EACO مقابل أفضل 10 عملات عالمية، يتم تحديثها يومياً",
-    "sr_sol_ref": "سعر مرجعي 1 SOL (دولار أمريكي)",
-    "sr_eaco_ref": "سعر مرجعي 1 EACO (دولار أمريكي)",
-    "sr_refresh": "تحديث",
-    "sr_th_currency": "العملة",
-    "sr_th_flag": "العلم",
-    "sr_th_eaco": "1 EACO =",
-    "sr_th_sol": "1 SOL =",
-    "sr_th_eaco_sol": "نسبة الصرف",
-    "sr_note": "الأسعار من OrbMarkets + CoinGecko. سعر SOL يتحدث تلقائيا؛ سعر EACO من نسبة التجمع (1 SOL = 2,953,614 EACO). للحصول على بيانات في الوقت الفعلي، تفضل بزيارة OrbMarkets.",
-    "sr_loading": "جاري التحميل...",
-    "sr_updated": "آخر تحديث",
-    "sr_refreshing": "جاري التحديث...",
-    "footer1": "EACO = طاقة x موقف x تعاون x تحسين | أفضل عملة على الأرض",
-    "footer2": "الشبكة: Solana | العنوان: DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH",
-    "footer3": "انضم إلى مجتمع Discord الخاص بـ EACO",
-    "f_high": "مرتفع",
-    "f_med": "متوسط",
-    "f_low": "محدود",
-    "lbl_region": "المنطقة",
-    "lbl_rate": "سعر المرجع",
-    "lbl_reg": "الإطار التنظيمي",
-    "lbl_path": "مسار التبادل",
-    "lbl_note": "ملاحظة",
-    "toast_copied": "تم نسخ عنوان العقد!",
-    "theme_cosmic": "كوزميك أزرق",
-    "theme_army": "أخضر عسكري",
-    "theme_classic": "بيج كلاسيكي",
-    "back_home": "← العودة إلى الرئيسية EACOswap",
-    "charity_link": "EACO خيرية 2025 ♥",
+    "nav_faq": "FAQ",
+    "nav_api_spec": "Spec API",
   },
 };
 
@@ -1062,6 +977,17 @@ var savedTheme = localStorage.getItem('eacoswap_theme') || 'cosmic';
 setTheme(savedTheme);
 setLang(savedLang);
 updateRates();
+
+// Register Service Worker for PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').then(function(registration) {
+      console.log('Analysis SW registered: ', registration.scope);
+    }, function(err) {
+      console.log('Analysis SW registration failed: ', err);
+    });
+  });
+}
 </script>
 </body>
 </html>

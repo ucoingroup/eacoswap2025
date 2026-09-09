@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EACOswap API 规范文档</title>
+<link rel="manifest" href="manifest.json">
 <style>
 :root {
   --bg-primary: #0a1628;
@@ -1006,6 +1007,12 @@ const block = await connection.getBlock(slot); <span class="comment">// ❌ 可�
 
 <footer>
   <p data-i18n="footer.main">EACOswap API v2.3.0 | <a href="https://github.com/ucoingroup/eacoswap2025" target="_blank">GitHub</a> | <a href="https://orbmarkets.io/token/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH" target="_blank">OrbMarkets</a> | <a href="https://discord.gg/bWCDME9Pkc" target="_blank">Discord</a></p>
+  <p style="margin-top:8px">
+    <a href="index.html" style="color:var(--accent);text-decoration:none" data-i18n="footer.nav.home">Home</a> | 
+    <a href="faq.html" style="color:var(--accent);text-decoration:none" data-i18n="footer.nav.faq">FAQ</a> | 
+    <a href="eaco-exchange-analysis2025.html" style="color:var(--accent);text-decoration:none" data-i18n="footer.nav.exchange">Exchange Analysis</a> | 
+    <a href="https://ucoingroup.github.io/eacoweb3-2026/eaco-charity2025.html" target="_blank" rel="noopener" style="color:var(--accent2);text-decoration:none" data-i18n="footer.nav.charity">EACO Public Welfare 2025</a>
+  </p>
   <p data-i18n="footer.disclaimer" style="margin-top:8px; font-size:.8rem; opacity:.6;">eaco europe group 内部测试用，安全第一，仅供参考</p>
 </footer>
 
@@ -1017,9 +1024,9 @@ function setTheme(theme) {
   document.querySelectorAll('.theme-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.theme === theme);
   });
-  localStorage.setItem('eaco-api-theme', theme);
+  localStorage.setItem('eacoswap_theme', theme);
 }
-const saved = localStorage.getItem('eaco-api-theme') || 'cosmic';
+const saved = localStorage.getItem('eacoswap_theme') || 'cosmic';
 setTheme(saved);
 </script>
 
@@ -1058,6 +1065,10 @@ const i18n = {
     "changelog.v230": "统一语言/主题切换器样式与 index.html / faq.html 一致",
     "footer.main": "EACOswap API v2.3.0 | GitHub | OrbMarkets",
     "footer.disclaimer": "eaco europe group 内部测试用，安全第一，仅供参考",
+    "footer.nav.home": "首页",
+    "footer.nav.faq": "常见问题",
+    "footer.nav.exchange": "兑换分析",
+    "footer.nav.charity": "EACO公益2025",
     "section.overview.desc.1": "EACOswap 后端采用 Node.js + Express 构建，作为 Solana 数据提供商（CoinGecko / Helius / Birdeye / Jupiter）的安全代理层。API Key 仅存储于服务端环境变量，前端绝不暴露。",
     "constant.responseFormat.title": "响应格式",
     "constant.responseFormat.value": "JSON (统一封装)",
@@ -1206,6 +1217,10 @@ const i18n = {
     "changelog.v230": "Unified language/theme switcher style with index.html / faq.html",
     "footer.main": "EACOswap API v2.3.0 | GitHub | OrbMarkets",
     "footer.disclaimer": "eaco europe group — internal testing only, safety first, for reference only",
+    "footer.nav.home": "首页",
+    "footer.nav.faq": "常见问题",
+    "footer.nav.exchange": "兑换分析",
+    "footer.nav.charity": "EACO公益2025",
     "section.overview.desc.1": "EACOswap backend is built with Node.js + Express, acting as a secure proxy layer for Solana data providers (CoinGecko / Helius / Birdeye / Jupiter). API Keys are stored only in server-side environment variables, never exposed to the frontend.",
     "constant.responseFormat.title": "Response Format",
     "constant.responseFormat.value": "JSON (Unified)",
@@ -1354,6 +1369,10 @@ const i18n = {
     "changelog.v230": "Estilo unificado del conmutador de idioma/tema con index.html / faq.html",
     "footer.main": "EACOswap API v2.3.0 | GitHub | OrbMarkets",
     "footer.disclaimer": "eaco europe group — solo para pruebas internas, seguridad primero, solo referencia",
+    "footer.nav.home": "首页",
+    "footer.nav.faq": "常见问题",
+    "footer.nav.exchange": "兑换分析",
+    "footer.nav.charity": "EACO公益2025",
     "section.overview.desc.1": "El backend de EACOswap está construido con Node.js + Express, actuando como capa proxy segura para proveedores de datos Solana (CoinGecko / Helius / Birdeye / Jupiter). Las API Keys se almacenan solo en variables de entorno del servidor, nunca expuestas al frontend.",
     "constant.responseFormat.title": "Formato de Respuesta",
     "constant.responseFormat.value": "JSON (Unificado)",
@@ -1502,6 +1521,10 @@ const i18n = {
     "changelog.v230": "Style unifie du commutateur de langue/theme avec index.html / faq.html",
     "footer.main": "EACOswap API v2.3.0 | GitHub | OrbMarkets",
     "footer.disclaimer": "eaco europe group — test interne uniquement, sécurité d'abord, référence seulement",
+    "footer.nav.home": "首页",
+    "footer.nav.faq": "常见问题",
+    "footer.nav.exchange": "兑换分析",
+    "footer.nav.charity": "EACO公益2025",
     "section.overview.desc.1": "Le backend EACOswap est construit avec Node.js + Express, agissant comme couche proxy sécurisée pour les fournisseurs de données Solana (CoinGecko / Helius / Birdeye / Jupiter). Les clés API sont stockées uniquement dans les variables d'environnement côté serveur, jamais exposées au frontend.",
     "constant.responseFormat.title": "Format de Réponse",
     "constant.responseFormat.value": "JSON (Unifié)",
@@ -1650,6 +1673,10 @@ const i18n = {
     "changelog.v230": "Единый стиль переключателя языка/темы с index.html / faq.html",
     "footer.main": "EACOswap API v2.3.0 | GitHub | OrbMarkets",
     "footer.disclaimer": "eaco europe group — только для внутреннего тестирования, безопасность превыше всего",
+    "footer.nav.home": "首页",
+    "footer.nav.faq": "常见问题",
+    "footer.nav.exchange": "兑换分析",
+    "footer.nav.charity": "EACO公益2025",
     "section.overview.desc.1": "Бэкенд EACOswap построен на Node.js + Express и выступает в качестве безопасного прокси-слоя для поставщиков данных Solana (CoinGecko / Helius / Birdeye / Jupiter). API-ключи хранятся только в переменных окружения сервера, никогда не раскрываются фронтенду.",
     "constant.responseFormat.title": "Формат Ответа",
     "constant.responseFormat.value": "JSON (Унифицированный)",
@@ -1798,6 +1825,10 @@ const i18n = {
     "changelog.v230": "أسلوب موحد لمبدل اللغة/السمة مع index.html / faq.html",
     "footer.main": "EACOswap API v2.3.0 | GitHub | OrbMarkets",
     "footer.disclaimer": "eaco europe group — للاختبار الداخلي فقط، السلامة أولاً، للرجوع فقط",
+    "footer.nav.home": "首页",
+    "footer.nav.faq": "常见问题",
+    "footer.nav.exchange": "兑换分析",
+    "footer.nav.charity": "EACO公益2025",
     "section.overview.desc.1": "يتم بناء الواجهة الخلفية لـ EACOswap باستخدام Node.js + Express، وتعمل كطبقة وكيل آمنة لمزودي بيانات Solana (CoinGecko / Helius / Birdeye / Jupiter). يتم تخزين مفاتيح API فقط في متغيرات بيئة الخادم، ولا يتم الكشف عنها أبداً للواجهة الأمامية.",
     "constant.responseFormat.title": "تنسيق الاستجابة",
     "constant.responseFormat.value": "JSON (موحد)",
@@ -1946,6 +1977,17 @@ function setLang(lang) {
 
 const savedLang = localStorage.getItem('eacoswap_lang') || 'en';
 setLang(savedLang);
+
+// Register Service Worker for PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').then(function(registration) {
+      console.log('API Spec SW registered: ', registration.scope);
+    }, function(err) {
+      console.log('API Spec SW registration failed: ', err);
+    });
+  });
+}
 </script>
 
 </body>

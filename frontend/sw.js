@@ -1,8 +1,11 @@
 // EACOswap Service Worker - PWA Offline Cache
-const CACHE_NAME = 'eacoswap-v1';
+const CACHE_NAME = 'eacoswap-v2';
 const CACHE_ASSETS = [
   './',
   './index.html',
+  './faq.html',
+  './api-spec.html',
+  './eaco-exchange-analysis2025.html',
   './styles.css',
   './js/app.js',
   './manifest.json'
