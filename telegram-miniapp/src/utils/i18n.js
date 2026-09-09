@@ -21,7 +21,7 @@ export function t(key, lang = 'en', fallback = '') {
 
 export const LANGUAGES = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
-  { code: 'zh', name: '中文', flag: '🇨🇳' },
+  { code: 'zh', name: '华语', flag: '🇨🇳' },
   { code: 'es', name: 'Español', flag: '🇪🇸' },
   { code: 'ar', name: 'العربية', flag: '🇸🇦' },
   { code: 'fr', name: 'Français', flag: '🇫🇷' },

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -72,18 +72,19 @@ header .badge {
   background: var(--bg-card); border: 1px solid var(--border); color: var(--accent); margin-top: 10px;
 }
 
-.theme-switcher {
-  position: fixed; top: 20px; right: 20px; display: flex; gap: 8px; z-index: 100;
+/* Header & Controls (unified with index.html / faq.html) */
+.header-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; max-width: 1200px; margin: 0 auto; }
+.header-left { text-align: center; }
+.controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-left: auto; flex-shrink: 0; }
+.ctrl-group { display: flex; align-items: center; gap: 4px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 2px; }
+.lang-btn, .theme-btn {
+  padding: 6px 10px; border: none; background: transparent; color: var(--text-secondary);
+  border-radius: 6px; cursor: pointer; font-size: .8rem; font-weight: 600;
+  transition: all .2s; white-space: nowrap;
 }
-.theme-btn {
-  width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border);
-  cursor: pointer; transition: transform .2s, box-shadow .2s; background: transparent;
-}
-.theme-btn:hover { transform: scale(1.15); }
-.theme-btn.active { box-shadow: 0 0 0 2px var(--accent); }
-.theme-btn[data-theme="cosmic"] { background: #0a1628; border-color: #64ffda; }
-.theme-btn[data-theme="army"] { background: #1b2a1b; border-color: #c3b091; }
-.theme-btn[data-theme="classic"] { background: #f5f0e8; border-color: #8b0000; }
+.lang-btn.active, .theme-btn.active { background: var(--accent); color: var(--bg); }
+[data-theme="classic"] .lang-btn.active, [data-theme="classic"] .theme-btn.active { color: #fff; }
+.lang-btn:hover, .theme-btn:hover { color: var(--accent); }
 
 .toc {
   background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
@@ -201,46 +202,51 @@ footer a { color: var(--accent); text-decoration: none; }
   .endpoint-header { flex-wrap: wrap; }
   .path { font-size: .9rem; }
   header h1 { font-size: 1.8rem; }
+  .header-inner { justify-content: center; }
+  .controls { justify-content: center; }
+  .lang-btn, .theme-btn { padding: 5px 7px; font-size: .7rem; }
   .constants-grid { grid-template-columns: 1fr; }
 }
 
-/* Language Switcher */
-.lang-switcher { position: fixed; top: 60px; right: 20px; display: flex; gap: 6px; z-index: 100; flex-direction: column; align-items: flex-end; }
-.lang-btn { padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-secondary); cursor: pointer; font-size: .75rem; transition: all .2s; }
-.lang-btn:hover { color: var(--accent); border-color: var(--accent); }
-.lang-btn.active { background: var(--accent); color: var(--bg-primary); border-color: var(--accent); font-weight: 600; }
-body[data-lang="ar"] { direction: rtl; }
-body[data-lang="ar"] .container { text-align: right; }
-body[data-lang="ar"] .toc ul { columns: 1; }
-body[data-lang="ar"] .endpoint-header { flex-direction: row-reverse; }
-body[data-lang="ar"] .constants-grid { direction: rtl; }
+/* RTL Support */
+[dir="rtl"] { text-align: right; }
+[dir="rtl"] .container { text-align: right; }
+[dir="rtl"] .toc ul { columns: 1; }
+[dir="rtl"] .endpoint-header { flex-direction: row-reverse; }
+[dir="rtl"] .endpoint-header .method { margin-right: 0; margin-left: 12px; }
+[dir="rtl"] .constants-grid { direction: rtl; }
 
 </style>
 </head>
 <body data-theme="cosmic">
 
-<div class="theme-switcher">
-  <button class="theme-btn active" data-theme="cosmic" title="宇宙蓝 Cosmic" onclick="setTheme('cosmic')"></button>
-  <button class="theme-btn" data-theme="army" title="军绿 Army" onclick="setTheme('army')"></button>
-  <button class="theme-btn" data-theme="classic" title="米黄古典 Classic" onclick="setTheme('classic')"></button>
-</div>
-
 <div class="container">
 
-<div class="lang-switcher">
-  <button class="lang-btn active" data-lang="zh" onclick="setLang('zh')">华语</button>
-  <button class="lang-btn" data-lang="en" onclick="setLang('en')">English</button>
-  <button class="lang-btn" data-lang="es" onclick="setLang('es')">Español</button>
-  <button class="lang-btn" data-lang="fr" onclick="setLang('fr')">Français</button>
-  <button class="lang-btn" data-lang="ru" onclick="setLang('ru')">Русский</button>
-  <button class="lang-btn" data-lang="ar" onclick="setLang('ar')">العربية</button>
-</div>
-
-
 <header>
-  <h1 data-i18n="page.title">EACOswap API 规范</h1>
-  <p class="subtitle" data-i18n="page.subtitle">Solana DEX 导航与 EACO 代币兑换 — 后端接口文档</p>
-  <span class="badge">v2.0.0 | Base URL: /api</span>
+  <div class="header-inner">
+    <a href="index.html" class="header-left" style="text-decoration:none">
+      <h1 data-i18n="page.title">EACOswap API 规范</h1>
+      <p class="subtitle" data-i18n="page.subtitle">Solana DEX 导航与 EACO 代币兑换 — 后端接口文档</p>
+      <span class="badge">v2.3.0 | Base URL: /api</span>
+    </a>
+    <div class="controls">
+      <!-- Language Switcher -->
+      <div class="ctrl-group" id="langGroup">
+        <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" data-lang="zh" onclick="setLang('zh')">华语</button>
+        <button class="lang-btn" data-lang="es" onclick="setLang('es')">ES</button>
+        <button class="lang-btn" data-lang="ar" onclick="setLang('ar')">ع</button>
+        <button class="lang-btn" data-lang="fr" onclick="setLang('fr')">FR</button>
+        <button class="lang-btn" data-lang="ru" onclick="setLang('ru')">RU</button>
+      </div>
+      <!-- Theme Switcher -->
+      <div class="ctrl-group" id="themeGroup">
+        <button class="theme-btn active" data-theme="cosmic" data-i18n="theme_cosmic" onclick="setTheme('cosmic')">Cosmic</button>
+        <button class="theme-btn" data-theme="army" data-i18n="theme_army" onclick="setTheme('army')">Army</button>
+        <button class="theme-btn" data-theme="classic" data-i18n="theme_classic" onclick="setTheme('classic')">Classic</button>
+      </div>
+    </div>
+  </div>
 </header>
 
 <div class="toc">
@@ -262,7 +268,7 @@ body[data-lang="ar"] .constants-grid { direction: rtl; }
 
 <section class="section" id="overview">
   <h2 class="section-title" data-i18n="section.overview">1. 概述</h2>
-  <p style="color:var(--text-secondary); margin-bottom:15px;">
+  <p data-i18n="section.overview.desc.1" style="color:var(--text-secondary); margin-bottom:15px;">
     EACOswap 后端采用 Node.js + Express 构建，作为 Solana 数据提供商（CoinGecko / Helius / Birdeye / Jupiter）的安全代理层。
     API Key 仅存储于服务端环境变量，前端绝不暴露。
   </p>
@@ -276,12 +282,12 @@ body[data-lang="ar"] .constants-grid { direction: rtl; }
       <div class="value">application/json</div>
     </div>
     <div class="constant-card">
-      <h4>响应格式</h4>
-      <div class="value">JSON (统一封装)</div>
+      <h4 data-i18n="constant.responseFormat.title">响应格式</h4>
+      <div class="value" data-i18n="constant.responseFormat.value">JSON (统一封装)</div>
     </div>
     <div class="constant-card">
-      <h4>CORS</h4>
-      <div class="value">可配置 (默认 *)</div>
+      <h4 data-i18n="constant.cors.title">CORS</h4>
+      <div class="value" data-i18n="constant.cors.value">可配置 (默认 *)</div>
     </div>
   </div>
 </section>
@@ -289,16 +295,16 @@ body[data-lang="ar"] .constants-grid { direction: rtl; }
 <section class="section" id="response-format">
   <h2 class="section-title" data-i18n="section.responseFormat">2. 统一响应格式</h2>
   <div class="note">
-    <p><strong>所有 API 返回统一结构</strong>：前端必须读取 <code>data.data</code> 或 <code>data</code> 字段，不能直接取根级数据。</p>
+    <p data-i18n="section.responseFormat.note.1"><strong>所有 API 返回统一结构</strong>：前端必须读取 <code>data.data</code> 或 <code>data</code> 字段，不能直接取根级数据。</p>
   </div>
-  <h3 class="sub-title">成功响应</h3>
+  <h3 class="sub-title" data-i18n="section.responseFormat.subtitle.1">成功响应</h3>
   <div class="code-block">
 <span class="key">{</span><br>
   <span class="key">"success"</span>: <span class="boolean">true</span>,<br>
   <span class="key">"data"</span>: { ... }  <span class="comment">// 具体业务数据</span><br>
 <span class="key">}</span>
   </div>
-  <h3 class="sub-title">失败响应</h3>
+  <h3 class="sub-title" data-i18n="section.responseFormat.subtitle.2">失败响应</h3>
   <div class="code-block">
 <span class="key">{</span><br>
   <span class="key">"success"</span>: <span class="boolean">false</span>,<br>
@@ -356,7 +362,7 @@ body[data-lang="ar"] .constants-grid { direction: rtl; }
     </div>
   </div>
 
-  <h3 class="sub-title" style="margin-top:30px;">10 大 DEX 列表</h3>
+  <h3 class="sub-title" style="margin-top:30px;" data-i18n="section.constants.subtitle.1">10 大 DEX 列表</h3>
   <div class="code-block">
 <span class="comment">// DEX_LIST</span><br>
 <span class="key">[</span><br>
@@ -373,7 +379,7 @@ body[data-lang="ar"] .constants-grid { direction: rtl; }
 <span class="key">]</span>
   </div>
 
-  <h3 class="sub-title">公益链接</h3>
+  <h3 class="sub-title" data-i18n="section.constants.subtitle.2">公益链接</h3>
   <div class="constant-card">
     <div class="value"><a href="https://ucoingroup.github.io/eacoweb3-2026/eaco-charity2025.html" target="_blank" style="color:var(--accent);">https://ucoingroup.github.io/eacoweb3-2026/eaco-charity2025.html</a></div>
   </div>
@@ -388,9 +394,9 @@ body[data-lang="ar"] .constants-grid { direction: rtl; }
       <span class="method get">GET</span>
       <span class="path">/api/health</span>
     </div>
-    <div class="description">健康检查 — 返回服务状态及依赖服务可用性</div>
+    <div class="description" data-i18n="section.endpoints.health.desc">健康检查 — 返回服务状态及依赖服务可用性</div>
     <div class="endpoint-body">
-      <h3 class="sub-title">响应</h3>
+      <h3 class="sub-title" data-i18n="section.endpoints.subtitle.response">响应</h3>
       <div class="code-block">
 <span class="key">{</span><br>
   <span class="key">"status"</span>: <span class="string">"ok"</span>,<br>
@@ -413,7 +419,7 @@ body[data-lang="ar"] .constants-grid { direction: rtl; }
       <span class="method get">GET</span>
       <span class="path">/api/config</span>
     </div>
-    <div class="description">服务端配置信息 — 安全暴露，不含实际 Key</div>
+    <div class="description" data-i18n="section.endpoints.config.desc">服务端配置信息 — 安全暴露，不含实际 Key</div>
     <div class="endpoint-body">
       <div class="code-block">
 <span class="key">{</span><br>
@@ -432,7 +438,7 @@ body[data-lang="ar"] .constants-grid { direction: rtl; }
       <span class="method get">GET</span>
       <span class="path">/api/sol-price</span>
     </div>
-    <div class="description">SOL 实时价格 — 来源 CoinGecko（免费，无需 Key），缓存 60 秒</div>
+    <div class="description" data-i18n="section.endpoints.solPrice.desc">SOL 实时价格 — 来源 CoinGecko（免费，无需 Key），缓存 60 秒</div>
     <div class="endpoint-body">
       <h3 class="sub-title">响应</h3>
       <div class="code-block">
@@ -457,14 +463,14 @@ body[data-lang="ar"] .constants-grid { direction: rtl; }
       <span class="method get">GET</span>
       <span class="path">/api/tokens/market-cap</span>
     </div>
-    <div class="description">Solana 生态代币市值排行 — 来源 CoinGecko，缓存 5 分钟</div>
+    <div class="description" data-i18n="section.endpoints.marketCap.desc">Solana 生态代币市值排行 — 来源 CoinGecko，缓存 5 分钟</div>
     <div class="endpoint-body">
-      <h3 class="sub-title">请求参数</h3>
+      <h3 class="sub-title" data-i18n="section.endpoints.subtitle.requestParams">请求参数</h3>
       <table class="params-table">
-        <tr><th>参数</th><th>类型</th><th>必填</th><th>默认值</th><th>说明</th></tr>
-        <tr><td>per_page</td><td class="type">number</td><td class="optional">否</td><td>100</td><td>每页数量，最大 250</td></tr>
-        <tr><td>page</td><td class="type">number</td><td class="optional">否</td><td>1</td><td>页码，从 1 开始</td></tr>
-        <tr><td>vs_currency</td><td class="type">string</td><td class="optional">否</td><td>usd</td><td>计价货币（usd / cny / eur）</td></tr>
+        <tr><th data-i18n="table.params.header.param">参数</th><th data-i18n="table.params.header.type">类型</th><th data-i18n="table.params.header.required">必填</th><th data-i18n="table.params.header.default">默认值</th><th data-i18n="table.params.header.desc">说明</th></tr>
+        <tr><td>per_page</td><td class="type">number</td><td class="optional">否</td><td>100</td><td data-i18n="table.params.cell.perPage">每页数量，最大 250</td></tr>
+        <tr><td>page</td><td class="type">number</td><td class="optional">否</td><td>1</td><td data-i18n="table.params.cell.page">页码，从 1 开始</td></tr>
+        <tr><td>vs_currency</td><td class="type">string</td><td class="optional">否</td><td>usd</td><td data-i18n="table.params.cell.currency">计价货币（usd / cny / eur）</td></tr>
       </table>
       <h3 class="sub-title">响应</h3>
       <div class="code-block">
@@ -494,9 +500,9 @@ body[data-lang="ar"] .constants-grid { direction: rtl; }
       <span class="method post">POST</span>
       <span class="path">/api/helius/rpc</span>
     </div>
-    <div class="description">Helius RPC 代理 — 转发 Solana JSON-RPC 请求（需 HELIUS_API_KEY）</div>
+    <div class="description" data-i18n="section.endpoints.heliusRpc.desc">Helius RPC 代理 — 转发 Solana JSON-RPC 请求（需 HELIUS_API_KEY）</div>
     <div class="endpoint-body">
-      <h3 class="sub-title">请求体</h3>
+      <h3 class="sub-title" data-i18n="section.endpoints.subtitle.requestBody">请求体</h3>
       <div class="code-block">
 <span class="key">{</span><br>
   <span class="key">"jsonrpc"</span>: <span class="string">"2.0"</span>,<br>
@@ -519,7 +525,7 @@ body[data-lang="ar"] .constants-grid { direction: rtl; }
 <span class="key">}</span>
       </div>
       <div class="note">
-        <p>未配置 HELIUS_API_KEY 时返回 <span class="status-badge status-503">503</span> <code>{ success: false, error: "Helius API not configured" }</code></p>
+        <p data-i18n="section.endpoints.heliusRpc.note.1">未配置 HELIUS_API_KEY 时返回 <span class="status-badge status-503">503</span> <code>{ success: false, error: "Helius API not configured" }</code></p>
       </div>
     </div>
   </div>
@@ -530,15 +536,15 @@ body[data-lang="ar"] .constants-grid { direction: rtl; }
       <span class="method get">GET</span>
       <span class="path">/api/helius/das/assets-by-owner</span>
     </div>
-    <div class="description">查询指定钱包地址的代币资产列表 — Helius DAS API（需 HELIUS_API_KEY）</div>
+    <div class="description" data-i18n="section.endpoints.heliusDas.desc">查询指定钱包地址的代币资产列表 — Helius DAS API（需 HELIUS_API_KEY）</div>
     <div class="endpoint-body">
       <h3 class="sub-title">请求参数</h3>
       <table class="params-table">
-        <tr><th>参数</th><th>类型</th><th>必填</th><th>说明</th></tr>
-        <tr><td>owner</td><td class="type">string</td><td class="required">是</td><td>Solana 钱包地址 (Base58)</td></tr>
+        <tr><th data-i18n="table.params.header.param">参数</th><th data-i18n="table.params.header.type">类型</th><th data-i18n="table.params.header.required">必填</th><th data-i18n="table.params.header.desc">说明</th></tr>
+        <tr><td>owner</td><td class="type">string</td><td class="required">是</td><td data-i18n="table.params.cell.walletAddress">Solana 钱包地址 (Base58)</td></tr>
       </table>
       <div class="note">
-        <p>缓存 2 分钟，适合频繁刷新的资产面板</p>
+        <p data-i18n="section.endpoints.heliusDas.note.1">缓存 2 分钟，适合频繁刷新的资产面板</p>
       </div>
     </div>
   </div>
@@ -549,12 +555,12 @@ body[data-lang="ar"] .constants-grid { direction: rtl; }
       <span class="method get">GET</span>
       <span class="path">/api/helius/token-accounts</span>
     </div>
-    <div class="description">查询代币持有者数量 — 通过 getProgramAccounts 统计（需 HELIUS_API_KEY）</div>
+    <div class="description" data-i18n="section.endpoints.tokenAccounts.desc">查询代币持有者数量 — 通过 getProgramAccounts 统计（需 HELIUS_API_KEY）</div>
     <div class="endpoint-body">
       <h3 class="sub-title">请求参数</h3>
       <table class="params-table">
         <tr><th>参数</th><th>类型</th><th>必填</th><th>说明</th></tr>
-        <tr><td>mint</td><td class="type">string</td><td class="required">是</td><td>代币合约地址</td></tr>
+        <tr><td>mint</td><td class="type">string</td><td class="required">是</td><td data-i18n="table.params.cell.tokenAddress">代币合约地址</td></tr>
       </table>
       <h3 class="sub-title">响应</h3>
       <div class="code-block">
@@ -576,15 +582,15 @@ body[data-lang="ar"] .constants-grid { direction: rtl; }
       <span class="method get">GET</span>
       <span class="path">/api/birdeye/token/:address</span>
     </div>
-    <div class="description">Birdeye 代币详情 — 深度数据、社交媒体、标签（需 BIRDEYE_API_KEY）</div>
+    <div class="description" data-i18n="section.endpoints.birdeyeToken.desc">Birdeye 代币详情 — 深度数据、社交媒体、标签（需 BIRDEYE_API_KEY）</div>
     <div class="endpoint-body">
-      <h3 class="sub-title">路径参数</h3>
+      <h3 class="sub-title" data-i18n="section.endpoints.subtitle.pathParams">路径参数</h3>
       <table class="params-table">
         <tr><th>参数</th><th>类型</th><th>必填</th><th>说明</th></tr>
         <tr><td>address</td><td class="type">string</td><td class="required">是</td><td>代币合约地址</td></tr>
       </table>
       <div class="note">
-        <p>未配置 BIRDEYE_API_KEY 时返回 <span class="status-badge status-503">503</span></p>
+        <p data-i18n="section.endpoints.birdeyeToken.note.1">未配置 BIRDEYE_API_KEY 时返回 <span class="status-badge status-503">503</span></p>
       </div>
     </div>
   </div>
@@ -595,18 +601,18 @@ body[data-lang="ar"] .constants-grid { direction: rtl; }
       <span class="method get">GET</span>
       <span class="path">/api/birdeye/price/:address</span>
     </div>
-    <div class="description">代币实时价格 — 优先 Birdeye，无 Key 时自动降级到 CoinGecko</div>
+    <div class="description" data-i18n="section.endpoints.birdeyePrice.desc">代币实时价格 — 优先 Birdeye，无 Key 时自动降级到 CoinGecko</div>
     <div class="endpoint-body">
       <h3 class="sub-title">路径参数</h3>
       <table class="params-table">
         <tr><th>参数</th><th>类型</th><th>必填</th><th>说明</th></tr>
         <tr><td>address</td><td class="type">string</td><td class="required">是</td><td>代币合约地址</td></tr>
       </table>
-      <h3 class="sub-title">降级策略</h3>
+      <h3 class="sub-title" data-i18n="section.endpoints.subtitle.fallback">降级策略</h3>
       <ol style="color:var(--text-secondary); margin-left:20px; font-size:.9rem;">
-        <li>若配置了 BIRDEYE_KEY，优先调用 Birdeye API（缓存 30 秒）</li>
-        <li>若 Birdeye 失败或无 Key，自动降级到 CoinGecko token_price</li>
-        <li>CoinGecko 缓存 60 秒</li>
+        <li data-i18n="section.endpoints.birdeyePrice.fallback.1">若配置了 BIRDEYE_KEY，优先调用 Birdeye API（缓存 30 秒）</li>
+        <li data-i18n="section.endpoints.birdeyePrice.fallback.2">若 Birdeye 失败或无 Key，自动降级到 CoinGecko token_price</li>
+        <li data-i18n="section.endpoints.birdeyePrice.fallback.3">CoinGecko 缓存 60 秒</li>
       </ol>
     </div>
   </div>
@@ -617,14 +623,14 @@ body[data-lang="ar"] .constants-grid { direction: rtl; }
       <span class="method get">GET</span>
       <span class="path">/api/jupiter/quote</span>
     </div>
-    <div class="description">Jupiter v6 兑换报价 — 最优路径、滑点、价格影响（免费，缓存 15 秒）</div>
+    <div class="description" data-i18n="section.endpoints.jupiterQuote.desc">Jupiter v6 兑换报价 — 最优路径、滑点、价格影响（免费，缓存 15 秒）</div>
     <div class="endpoint-body">
       <h3 class="sub-title">请求参数</h3>
       <table class="params-table">
         <tr><th>参数</th><th>类型</th><th>必填</th><th>默认值</th><th>说明</th></tr>
-        <tr><td>inputMint</td><td class="type">string</td><td class="optional">否</td><td>SOL</td><td>输入代币合约地址</td></tr>
-        <tr><td>outputMint</td><td class="type">string</td><td class="required">是</td><td>—</td><td>输出代币合约地址</td></tr>
-        <tr><td>amount</td><td class="type">number</td><td class="required">是</td><td>—</td><td>输入数量（lamports / raw units）</td></tr>
+        <tr><td>inputMint</td><td class="type">string</td><td class="optional">否</td><td>SOL</td><td data-i18n="table.params.cell.inputMint">输入代币合约地址</td></tr>
+        <tr><td>outputMint</td><td class="type">string</td><td class="required">是</td><td>—</td><td data-i18n="table.params.cell.outputMint">输出代币合约地址</td></tr>
+        <tr><td>amount</td><td class="type">number</td><td class="required">是</td><td>—</td><td data-i18n="table.params.cell.amount">输入数量（lamports / raw units）</td></tr>
       </table>
       <h3 class="sub-title">响应</h3>
       <div class="code-block">
@@ -643,7 +649,7 @@ body[data-lang="ar"] .constants-grid { direction: rtl; }
 <span class="key">}</span>
       </div>
       <div class="note">
-        <p>报价有效期极短（约 15 秒），获取后需立即执行交易。仅预览路由，实际兑换需调用 Jupiter API 获取 transaction。</p>
+        <p data-i18n="section.endpoints.jupiterQuote.note.1">报价有效期极短（约 15 秒），获取后需立即执行交易。仅预览路由，实际兑换需调用 Jupiter API 获取 transaction。</p>
       </div>
     </div>
   </div>
@@ -653,34 +659,34 @@ body[data-lang="ar"] .constants-grid { direction: rtl; }
 <section class="section" id="errors">
   <h2 class="section-title" data-i18n="section.errors">5. 错误码</h2>
   <table class="response-table">
-    <tr><th>HTTP 状态</th><th>场景</th><th>示例</th></tr>
-    <tr><td><span class="status-badge status-200">200</span></td><td>请求成功</td><td><code>{ success: true, data: {...} }</code></td></tr>
-    <tr><td><span class="status-badge status-400">400</span></td><td>参数缺失/无效</td><td><code>{ success: false, error: "Missing outputMint parameter" }</code></td></tr>
-    <tr><td><span class="status-badge status-503">503</span></td><td>上游服务未配置</td><td><code>{ success: false, error: "Helius API not configured" }</code></td></tr>
-    <tr><td><span class="status-badge status-400">404</span></td><td>API 端点不存在</td><td><code>{ success: false, error: "API endpoint not found" }</code></td></tr>
-    <tr><td><span class="status-badge status-400">429</span></td><td>速率限制触发</td><td><code>{ success: false, error: "Too many requests" }</code></td></tr>
-    <tr><td><span class="status-badge status-400">500</span></td><td>服务器内部错误</td><td><code>{ success: false, error: "Internal server error" }</code></td></tr>
+    <tr><th data-i18n="table.errors.header.status">HTTP 状态</th><th data-i18n="table.errors.header.scenario">场景</th><th data-i18n="table.errors.header.example">示例</th></tr>
+    <tr><td><span class="status-badge status-200">200</span></td><td data-i18n="table.errors.cell.success">请求成功</td><td><code>{ success: true, data: {...} }</code></td></tr>
+    <tr><td><span class="status-badge status-400">400</span></td><td data-i18n="table.errors.cell.invalidParam">参数缺失/无效</td><td><code>{ success: false, error: "Missing outputMint parameter" }</code></td></tr>
+    <tr><td><span class="status-badge status-503">503</span></td><td data-i18n="table.errors.cell.notConfigured">上游服务未配置</td><td><code>{ success: false, error: "Helius API not configured" }</code></td></tr>
+    <tr><td><span class="status-badge status-400">404</span></td><td data-i18n="table.errors.cell.notFound">API 端点不存在</td><td><code>{ success: false, error: "API endpoint not found" }</code></td></tr>
+    <tr><td><span class="status-badge status-400">429</span></td><td data-i18n="table.errors.cell.rateLimited">速率限制触发</td><td><code>{ success: false, error: "Too many requests" }</code></td></tr>
+    <tr><td><span class="status-badge status-400">500</span></td><td data-i18n="table.errors.cell.serverError">服务器内部错误</td><td><code>{ success: false, error: "Internal server error" }</code></td></tr>
   </table>
 </section>
 
 <section class="section" id="security">
   <h2 class="section-title" data-i18n="section.security">6. 安全规范</h2>
   <div class="note">
-    <p><strong>API Key 管理</strong>：Helius / Birdeye Key 仅存在于后端 <code>.env</code>，禁止暴露给前端。</p>
+    <p data-i18n="section.security.note.1"><strong>API Key 管理</strong>：Helius / Birdeye Key 仅存在于后端 <code>.env</code>，禁止暴露给前端。</p>
   </div>
   <ul style="color:var(--text-secondary); margin-left:20px; line-height:2;">
-    <li><strong>CORS</strong>：生产环境配置 <code>CORS_ORIGINS</code> 为具体域名，禁用 <code>*</code></li>
-    <li><strong>Rate Limit</strong>：默认 60 req/min，生产可按需调整</li>
-    <li><strong>Helmet</strong>：启用 CSP、XSS 过滤、HSTS 等安全头</li>
-    <li><strong>超时控制</strong>：所有上游请求 15 秒超时，防止挂起</li>
-    <li><strong>缓存策略</strong>：价格 60s、市值 300s、报价 15s、资产 120s</li>
-    <li><strong>错误脱敏</strong>：生产环境不暴露内部错误详情</li>
+    <li data-i18n="section.security.list.1"><strong>CORS</strong>：生产环境配置 <code>CORS_ORIGINS</code> 为具体域名，禁用 <code>*</code></li>
+    <li data-i18n="section.security.list.2"><strong>Rate Limit</strong>：默认 60 req/min，生产可按需调整</li>
+    <li data-i18n="section.security.list.3"><strong>Helmet</strong>：启用 CSP、XSS 过滤、HSTS 等安全头</li>
+    <li data-i18n="section.security.list.4"><strong>超时控制</strong>：所有上游请求 15 秒超时，防止挂起</li>
+    <li data-i18n="section.security.list.5"><strong>缓存策略</strong>：价格 60s、市值 300s、报价 15s、资产 120s</li>
+    <li data-i18n="section.security.list.6"><strong>错误脱敏</strong>：生产环境不暴露内部错误详情</li>
   </ul>
 </section>
 
 <section class="section" id="examples">
   <h2 class="section-title" data-i18n="section.examples">7. 请求示例</h2>
-  <h3 class="sub-title">获取 SOL 价格</h3>
+  <h3 class="sub-title" data-i18n="section.examples.subtitle.1">获取 SOL 价格</h3>
   <div class="code-block">
 <span class="comment">// cURL</span><br>
 curl -X GET http://localhost:3000/api/sol-price<br><br>
@@ -690,7 +696,7 @@ curl -X GET http://localhost:3000/api/sol-price<br><br>
 console.log(data.data.solana.usd);  <span class="comment">// 145.32</span>
   </div>
 
-  <h3 class="sub-title">获取代币市值排行 (Top 100)</h3>
+  <h3 class="sub-title" data-i18n="section.examples.subtitle.2">获取代币市值排行 (Top 100)</h3>
   <div class="code-block">
 <span class="comment">// cURL</span><br>
 curl -X GET "http://localhost:3000/api/tokens/market-cap?per_page=100&page=1&vs_currency=usd"<br><br>
@@ -699,7 +705,7 @@ curl -X GET "http://localhost:3000/api/tokens/market-cap?per_page=100&page=1&vs_
 <span class="key">const</span> { data } = <span class="key">await</span> res.json();  <span class="comment">// data = 代币数组</span>
   </div>
 
-  <h3 class="sub-title">Jupiter 兑换报价 (SOL -&gt; EACO)</h3>
+  <h3 class="sub-title" data-i18n="section.examples.subtitle.3">Jupiter 兑换报价 (SOL -&gt; EACO)</h3>
   <div class="code-block">
 <span class="comment">// 输入 1 SOL = 1,000,000,000 lamports</span><br>
 curl -X GET "http://localhost:3000/api/jupiter/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH&amount=1000000000"<br><br>
@@ -713,13 +719,13 @@ curl -X GET "http://localhost:3000/api/jupiter/quote?inputMint=So111111111111111
 <span class="key">const</span> { data } = <span class="key">await</span> res.json();
   </div>
 
-  <h3 class="sub-title">查询代币持有者数量</h3>
+  <h3 class="sub-title" data-i18n="section.examples.subtitle.4">查询代币持有者数量</h3>
   <div class="code-block">
 <span class="comment">// EACO 持有者数量</span><br>
 curl -X GET "http://localhost:3000/api/helius/token-accounts?mint=DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH"
   </div>
 
-  <h3 class="sub-title">Helius RPC 代理 (获取余额)</h3>
+  <h3 class="sub-title" data-i18n="section.examples.subtitle.5">Helius RPC 代理 (获取余额)</h3>
   <div class="code-block">
 <span class="comment">// POST body</span><br>
 curl -X POST http://localhost:3000/api/helius/rpc \<br>
@@ -731,14 +737,14 @@ curl -X POST http://localhost:3000/api/helius/rpc \<br>
 
 <section class="section" id="dex-apis">
   <h2 class="section-title" data-i18n="section.dexApis">8. DEX API 集成参考</h2>
-  <p style="color:var(--text-secondary); margin-bottom:20px;">
+  <p data-i18n="section.dexApis.desc.1" style="color:var(--text-secondary); margin-bottom:20px;">
     EACOswap 不直接暴露底层 DEX 原始接口，而是在后端做统一抽象和代理。以下列出全球前 10 大 Solana DEX 的 API 设计思路，供开发者理解 EACOswap 的封装逻辑和扩展方法。
   </p>
 
-  <h3 class="sub-title">8.1 DEX API 对比总览</h3>
+  <h3 class="sub-title" data-i18n="section.dexApis.subtitle.1">8.1 DEX API 对比总览</h3>
   <div style="overflow-x:auto; margin-bottom:30px;">
   <table class="response-table" style="min-width:800px;">
-    <tr><th>DEX</th><th>API 类型</th><th>认证方式</th><th>核心端点</th><th>EACOswap 集成方式</th></tr>
+    <tr><th>DEX</th><th data-i18n="table.dex.header.apiType">API 类型</th><th data-i18n="table.dex.header.auth">认证方式</th><th data-i18n="table.dex.header.endpoint">核心端点</th><th data-i18n="table.dex.header.integration">EACOswap 集成方式</th></tr>
     <tr><td><strong>Jupiter</strong></td><td>REST + SDK</td><td>可选 API Key</td><td><code>/quote</code>, <code>/swap</code>, <code>/price</code></td><td>后端代理 + 前端 deeplink</td></tr>
     <tr><td><strong>Raydium</strong></td><td>REST + SDK</td><td>无需 Key</td><td><code>/v2/main/pool</code>, <code>/v2/ammV3/ammPools</code></td><td>前端直接链接跳转</td></tr>
     <tr><td><strong>Orca</strong></td><td>REST + SDK</td><td>无需 Key</td><td>Whirlpool SDK 链上调用</td><td>前端直接链接跳转</td></tr>
@@ -752,9 +758,9 @@ curl -X POST http://localhost:3000/api/helius/rpc \<br>
   </table>
   </div>
 
-  <h3 class="sub-title">8.2 Jupiter v6 API 深度解析</h3>
+  <h3 class="sub-title" data-i18n="section.dexApis.subtitle.2">8.2 Jupiter v6 API 深度解析</h3>
   <div class="note">
-    <p><strong>Jupiter</strong> 是 Solana 上最重要的 DEX 聚合器，EACOswap 的核心兑换功能依赖 Jupiter API。Jupiter v6 提供 Quote -&gt; Swap 两段式架构。</p>
+    <p data-i18n="section.dexApis.note.1"><strong>Jupiter</strong> 是 Solana 上最重要的 DEX 聚合器，EACOswap 的核心兑换功能依赖 Jupiter API。Jupiter v6 提供 Quote -&gt; Swap 两段式架构。</p>
   </div>
 
   <h4 style="color:var(--accent); margin:20px 0 10px; font-size:1rem;">Jupiter 官方端点（EACOswap 代理前）</h4>
@@ -785,7 +791,7 @@ https://price.jup.ag/v6/price?ids=SOL,EACO,USDC
 <span class="comment">// 返回前端: { success: true, data: { outAmount, priceImpactPct, routePlan, ... } }</span>
   </div>
 
-  <h3 class="sub-title">8.3 Raydium API 设计参考</h3>
+  <h3 class="sub-title" data-i18n="section.dexApis.subtitle.3">8.3 Raydium API 设计参考</h3>
   <div class="code-block">
 <span class="comment">// Raydium AMM V4 Pool Info</span><br>
 GET https://api.raydium.io/v2/main/pool<br><br>
@@ -795,7 +801,7 @@ GET https://api.raydium.io/v2/ammV3/ammPools<br><br>
 <span class="comment">// EACOswap 策略: 前端 deeplink 到 Raydium 页面，不代理交易</span>
   </div>
 
-  <h3 class="sub-title">8.4 Orca Whirlpool SDK 设计</h3>
+  <h3 class="sub-title" data-i18n="section.dexApis.subtitle.4">8.4 Orca Whirlpool SDK 设计</h3>
   <div class="code-block">
 <span class="comment">// Orca 不依赖 REST API，而是通过 NPM SDK 直接与链上交互</span><br>
 <span class="key">import</span> { WhirlpoolContext, swapQuoteByInputToken } <span class="key">from</span> <span class="string">'@orca-so/whirlpools-sdk'</span>;<br><br>
@@ -803,10 +809,10 @@ GET https://api.raydium.io/v2/ammV3/ammPools<br><br>
 <span class="comment">// 参数通过 URL query 传递，由 Orca 前端解析</span>
   </div>
 
-  <h3 class="sub-title">8.5 CoinGecko vs Birdeye 价格数据策略</h3>
+  <h3 class="sub-title" data-i18n="section.dexApis.subtitle.5">8.5 CoinGecko vs Birdeye 价格数据策略</h3>
   <div style="overflow-x:auto; margin-bottom:20px;">
   <table class="response-table" style="min-width:700px;">
-    <tr><th>维度</th><th>CoinGecko</th><th>Birdeye</th></tr>
+    <tr><th data-i18n="table.compare.header.dimension">维度</th><th>CoinGecko</th><th>Birdeye</th></tr>
     <tr><td>数据源</td><td>中心化交易所 + 链上聚合</td><td>纯链上实时数据</td></tr>
     <tr><td>延迟</td><td>1-5 分钟</td><td>实时（秒级）</td></tr>
     <tr><td>Solana SPL 覆盖</td><td>主流代币完整</td><td>长尾代币更全面</td></tr>
@@ -816,7 +822,7 @@ GET https://api.raydium.io/v2/ammV3/ammPools<br><br>
   </table>
   </div>
 
-  <h3 class="sub-title">8.6 Helius RPC vs Solana Public RPC</h3>
+  <h3 class="sub-title" data-i18n="section.dexApis.subtitle.6">8.6 Helius RPC vs Solana Public RPC</h3>
   <div class="code-block">
 <span class="comment">// Solana Public RPC（免费，限速）</span><br>
 https://api.mainnet-beta.solana.com<br><br>
@@ -834,15 +840,15 @@ https://mainnet.helius-rpc.com/?api-key=YOUR_KEY<br><br>
 <section class="section" id="design-philosophy">
   <h2 class="section-title" data-i18n="section.designPhilosophy">9. API 设计哲学</h2>
 
-  <h3 class="sub-title">9.1 统一封装原则</h3>
+  <h3 class="sub-title" data-i18n="section.designPhilosophy.subtitle.1">9.1 统一封装原则</h3>
   <ul style="color:var(--text-secondary); margin-left:20px; line-height:2;">
-    <li><strong>屏蔽差异</strong>：前端不关心数据来自 CoinGecko 还是 Birdeye，只调用 <code>/api/birdeye/price</code>，后端自动降级</li>
-    <li><strong>统一格式</strong>：所有响应包装为 <code>{ success, data, error }</code>，前端处理逻辑一致</li>
-    <li><strong>安全代理</strong>：API Key 仅在后端，前端不暴露任何第三方凭证</li>
-    <li><strong>缓存层</strong>：高频数据（价格）缓存 30-60s，低频数据（市值）缓存 5 分钟</li>
+    <li data-i18n="section.designPhilosophy.list.1"><strong>屏蔽差异</strong>：前端不关心数据来自 CoinGecko 还是 Birdeye，只调用 <code>/api/birdeye/price</code>，后端自动降级</li>
+    <li data-i18n="section.designPhilosophy.list.2"><strong>统一格式</strong>：所有响应包装为 <code>{ success, data, error }</code>，前端处理逻辑一致</li>
+    <li data-i18n="section.designPhilosophy.list.3"><strong>安全代理</strong>：API Key 仅在后端，前端不暴露任何第三方凭证</li>
+    <li data-i18n="section.designPhilosophy.list.4"><strong>缓存层</strong>：高频数据（价格）缓存 30-60s，低频数据（市值）缓存 5 分钟</li>
   </ul>
 
-  <h3 class="sub-title">9.2 分层架构</h3>
+  <h3 class="sub-title" data-i18n="section.designPhilosophy.subtitle.2">9.2 分层架构</h3>
   <div class="code-block">
 <span class="comment">// +-------------------------------------------+</span><br>
 <span class="comment">// |  前端 (Web/Android/iOS/Telegram)           |</span><br>
@@ -860,7 +866,7 @@ https://mainnet.helius-rpc.com/?api-key=YOUR_KEY<br><br>
 <span class="comment">//     Jupiter       Raydium      Orca ...</span>
   </div>
 
-  <h3 class="sub-title">9.3 错误降级策略</h3>
+  <h3 class="sub-title" data-i18n="section.designPhilosophy.subtitle.3">9.3 错误降级策略</h3>
   <div class="code-block">
 <span class="comment">// 价格查询降级链路:</span><br>
 <span class="comment">// 1. Birdeye API (最实时, 需 Key) -&gt; 成功?</span><br>
@@ -874,7 +880,7 @@ https://mainnet.helius-rpc.com/?api-key=YOUR_KEY<br><br>
 <span class="comment">//    +- 否: 返回 { success: false, error: "Price unavailable" }</span>
   </div>
 
-  <h3 class="sub-title">9.4 扩展新 DEX 的方法</h3>
+  <h3 class="sub-title" data-i18n="section.designPhilosophy.subtitle.4">9.4 扩展新 DEX 的方法</h3>
   <div class="code-block">
 <span class="comment">// 假设要集成新的 DEX "FooSwap":</span><br><br>
 <span class="comment">// Step 1: 在 backend/routes/api.js 添加新端点</span><br>
@@ -891,10 +897,10 @@ router.get(<span class="string">'/fooswap/quote'</span>, <span class="key">async
 <section class="section" id="rate-limits">
   <h2 class="section-title" data-i18n="section.rateLimits">10. 速率限制与生产建议</h2>
 
-  <h3 class="sub-title">10.1 各上游服务商限制</h3>
+  <h3 class="sub-title" data-i18n="section.rateLimits.subtitle.1">10.1 各上游服务商限制</h3>
   <div style="overflow-x:auto; margin-bottom:20px;">
   <table class="response-table" style="min-width:700px;">
-    <tr><th>服务商</th><th>免费 tier</th><th>付费 tier</th><th>限制维度</th></tr>
+    <tr><th data-i18n="table.rateLimits.header.provider">服务商</th><th data-i18n="table.rateLimits.header.free">免费 tier</th><th data-i18n="table.rateLimits.header.paid">付费 tier</th><th data-i18n="table.rateLimits.header.dimension">限制维度</th></tr>
     <tr><td>CoinGecko</td><td>10-30 calls/min</td><td>500 calls/min ($129/mo)</td><td>IP + Key</td></tr>
     <tr><td>Helius</td><td>无免费 tier</td><td>从 $49/mo 起</td><td>Key only</td></tr>
     <tr><td>Birdeye</td><td>有限试用</td><td>按调用量计费</td><td>Key only</td></tr>
@@ -902,7 +908,7 @@ router.get(<span class="string">'/fooswap/quote'</span>, <span class="key">async
   </table>
   </div>
 
-  <h3 class="sub-title">10.2 EACOswap 后端限流配置</h3>
+  <h3 class="sub-title" data-i18n="section.rateLimits.subtitle.2">10.2 EACOswap 后端限流配置</h3>
   <div class="code-block">
 <span class="comment">// backend/.env 生产环境推荐</span><br>
 RATE_LIMIT_PER_MINUTE=120        <span class="comment">// 单 IP 每分钟最大请求</span><br>
@@ -913,10 +919,10 @@ JUPITER_API_KEY=your_key         <span class="comment">// Jupiter 更高限流</
 CORS_ORIGINS=https://eacoswap.io,https://t.me  <span class="comment">// 生产限制域名</span>
   </div>
 
-  <h3 class="sub-title">10.3 缓存策略矩阵</h3>
+  <h3 class="sub-title" data-i18n="section.rateLimits.subtitle.3">10.3 缓存策略矩阵</h3>
   <div style="overflow-x:auto; margin-bottom:20px;">
   <table class="response-table" style="min-width:700px;">
-    <tr><th>数据类型</th><th>缓存时长</th><th>刷新触发</th><th>数据源</th></tr>
+    <tr><th data-i18n="table.cache.header.dataType">数据类型</th><th data-i18n="table.cache.header.duration">缓存时长</th><th data-i18n="table.cache.header.trigger">刷新触发</th><th data-i18n="table.cache.header.source">数据源</th></tr>
     <tr><td>SOL 价格</td><td>60 秒</td><td>定时 + 手动刷新</td><td>CoinGecko</td></tr>
     <tr><td>代币价格</td><td>30 秒</td><td>页面加载</td><td>Birdeye -&gt; CoinGecko</td></tr>
     <tr><td>市值排行</td><td>300 秒</td><td>下拉刷新</td><td>CoinGecko</td></tr>
@@ -933,17 +939,19 @@ CORS_ORIGINS=https://eacoswap.io,https://t.me  <span class="comment">// 生产�
     <tr><th>版本</th><th>日期</th><th>变更内容</th></tr>
     <tr><td>v1.0.0</td><td>2026-09-08</td><td>初始 API 规范：10 个端点、统一响应格式、6 语言、3 主题、DEX 集成参考</td></tr>
     <tr><td>v2.0.0</td><td>2026-09-08</td><td>新增 Section 8-11：DEX API 集成参考（10 大 DEX 对比表、Jupiter v6 深度解析、Raydium/Orca 设计模式、CoinGecko vs Birdeye 策略）、API 设计哲学（分层架构、错误降级策略、扩展新 DEX 方法）、速率限制与生产建议（上游服务商限制、后端限流配置、缓存策略矩阵）</td></tr>
+    <tr><td>v2.3.0</td><td>2026-09-08</td><td data-i18n="changelog.v230">统一语言/主题切换器样式与 index.html / faq.html 一致</td></tr>
+    <tr><td>v2.3.0</td><td>2026-09-08</td><td data-i18n="changelog.v220">完善6语言国际化，所有UI文本支持翻译</td></tr>
   </table>
 
   <div class="note" style="margin-top:20px;">
-    <p><strong>未来规划</strong>：WebSocket 实时价格推送、多链支持（ETH/BSC）、EACO 质押 API、NFT 资产查询。</p>
+    <p data-i18n="section.changelog.note.1"><strong>未来规划</strong>：WebSocket 实时价格推送、多链支持（ETH/BSC）、EACO 质押 API、NFT 资产查询。</p>
   </div>
 </section>
 
 
 <footer>
-  <p>EACOswap API v2.0.0 | <a href="https://github.com/ucoingroup/eacoswap2025" target="_blank">GitHub</a> | <a href="https://orbmarkets.io/token/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH" target="_blank">OrbMarkets</a></p>
-  <p style="margin-top:8px; font-size:.8rem; opacity:.6;">eaco europe group 内部测试用，安全第一，仅供参考</p>
+  <p data-i18n="footer.main">EACOswap API v2.3.0 | <a href="https://github.com/ucoingroup/eacoswap2025" target="_blank">GitHub</a> | <a href="https://orbmarkets.io/token/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH" target="_blank">OrbMarkets</a> | <a href="https://discord.gg/bWCDME9Pkc" target="_blank">Discord</a></p>
+  <p data-i18n="footer.disclaimer" style="margin-top:8px; font-size:.8rem; opacity:.6;">eaco europe group 内部测试用，安全第一，仅供参考</p>
 </footer>
 
 </div>
@@ -987,7 +995,114 @@ const i18n = {
     "section.dexApis": "8. DEX API 集成参考",
     "section.designPhilosophy": "9. API 设计哲学",
     "section.rateLimits": "10. 速率限制与生产建议",
-    "section.changelog": "11. 版本变更记录"
+    "section.changelog": "11. 版本变更记录",
+    "theme_cosmic": "宇宙蓝 Cosmic",
+    "theme_army": "军绿 Army",
+    "theme_classic": "米黄古典 Classic",
+    "changelog.v230.desc": "统一语言/主题切换器样式与 index.html / faq.html 一致（横排文字按钮、ctrl-group 容器、缩写语言标签）；i18n key 从 theme.cosmic 改为 theme_cosmic；默认语言改为 en",
+    "changelog.v230": "统一语言/主题切换器样式与 index.html / faq.html 一致",
+    "footer.main": "EACOswap API v2.3.0 | GitHub | OrbMarkets",
+    "footer.disclaimer": "eaco europe group 内部测试用，安全第一，仅供参考",
+    "section.overview.desc.1": "EACOswap 后端采用 Node.js + Express 构建，作为 Solana 数据提供商（CoinGecko / Helius / Birdeye / Jupiter）的安全代理层。API Key 仅存储于服务端环境变量，前端绝不暴露。",
+    "constant.responseFormat.title": "响应格式",
+    "constant.responseFormat.value": "JSON (统一封装)",
+    "constant.cors.title": "CORS",
+    "constant.cors.value": "可配置 (默认 *)",
+    "section.responseFormat.note.1": "所有 API 返回统一结构：前端必须读取 data.data 或 data 字段，不能直接取根级数据。",
+    "section.responseFormat.subtitle.1": "成功响应",
+    "section.responseFormat.subtitle.2": "失败响应",
+    "section.constants.subtitle.1": "10 大 DEX 列表",
+    "section.constants.subtitle.2": "公益链接",
+    "section.endpoints.health.desc": "健康检查 — 返回服务状态及依赖服务可用性",
+    "section.endpoints.config.desc": "服务端配置信息 — 安全暴露，不含实际 Key",
+    "section.endpoints.solPrice.desc": "SOL 实时价格 — 来源 CoinGecko（免费，无需 Key），缓存 60 秒",
+    "section.endpoints.marketCap.desc": "Solana 生态代币市值排行 — 来源 CoinGecko，缓存 5 分钟",
+    "section.endpoints.heliusRpc.desc": "Helius RPC 代理 — 转发 Solana JSON-RPC 请求（需 HELIUS_API_KEY）",
+    "section.endpoints.heliusDas.desc": "查询指定钱包地址的代币资产列表 — Helius DAS API（需 HELIUS_API_KEY）",
+    "section.endpoints.tokenAccounts.desc": "查询代币持有者数量 — 通过 getProgramAccounts 统计（需 HELIUS_API_KEY）",
+    "section.endpoints.birdeyeToken.desc": "Birdeye 代币详情 — 深度数据、社交媒体、标签（需 BIRDEYE_API_KEY）",
+    "section.endpoints.birdeyePrice.desc": "代币实时价格 — 优先 Birdeye，无 Key 时自动降级到 CoinGecko",
+    "section.endpoints.jupiterQuote.desc": "Jupiter v6 兑换报价 — 最优路径、滑点、价格影响（免费，缓存 15 秒）",
+    "table.params.header.param": "参数",
+    "table.params.header.type": "类型",
+    "table.params.header.required": "必填",
+    "table.params.header.default": "默认值",
+    "table.params.header.desc": "说明",
+    "table.errors.header.status": "HTTP 状态",
+    "table.errors.header.scenario": "场景",
+    "table.errors.header.example": "示例",
+    "table.rateLimits.header.provider": "服务商",
+    "table.rateLimits.header.free": "免费 tier",
+    "table.rateLimits.header.paid": "付费 tier",
+    "table.rateLimits.header.dimension": "限制维度",
+    "table.cache.header.dataType": "数据类型",
+    "table.cache.header.duration": "缓存时长",
+    "table.cache.header.trigger": "刷新触发",
+    "table.cache.header.source": "数据源",
+    "table.dex.header.apiType": "API 类型",
+    "table.dex.header.auth": "认证方式",
+    "table.dex.header.endpoint": "核心端点",
+    "table.dex.header.integration": "EACOswap 集成方式",
+    "table.compare.header.dimension": "维度",
+    "table.errors.cell.success": "请求成功",
+    "table.errors.cell.invalidParam": "参数缺失/无效",
+    "table.errors.cell.notConfigured": "上游服务未配置",
+    "table.errors.cell.notFound": "API 端点不存在",
+    "table.errors.cell.rateLimited": "速率限制触发",
+    "table.errors.cell.serverError": "服务器内部错误",
+    "section.endpoints.subtitle.response": "响应",
+    "section.endpoints.subtitle.requestParams": "请求参数",
+    "section.endpoints.subtitle.requestBody": "请求体",
+    "section.endpoints.subtitle.pathParams": "路径参数",
+    "section.endpoints.subtitle.fallback": "降级策略",
+    "table.params.cell.perPage": "每页数量，最大 250",
+    "table.params.cell.page": "页码，从 1 开始",
+    "table.params.cell.currency": "计价货币（usd / cny / eur）",
+    "table.params.cell.walletAddress": "Solana 钱包地址 (Base58)",
+    "table.params.cell.tokenAddress": "代币合约地址",
+    "table.params.cell.inputMint": "输入代币合约地址",
+    "table.params.cell.outputMint": "输出代币合约地址",
+    "table.params.cell.amount": "输入数量（lamports / raw units）",
+    "section.endpoints.heliusRpc.note.1": "未配置 HELIUS_API_KEY 时返回 ",
+    "section.endpoints.heliusDas.note.1": "缓存 2 分钟，适合频繁刷新的资产面板",
+    "section.endpoints.birdeyeToken.note.1": "未配置 BIRDEYE_API_KEY 时返回 ",
+    "section.endpoints.jupiterQuote.note.1": "报价有效期极短（约 15 秒），获取后需立即执行交易。仅预览路由，实际兑换需调用 Jupiter API 获取 transaction。",
+    "section.security.note.1": "API Key 管理：Helius / Birdeye Key 仅存在于后端 .env，禁止暴露给前端。",
+    "section.dexApis.desc.1": "EACOswap 不直接暴露底层 DEX 原始接口，而是在后端做统一抽象和代理。以下列出全球前 10 大 Solana DEX 的 API 设计思路，供开发者理解 EACOswap 的封装逻辑和扩展方法。",
+    "section.dexApis.subtitle.1": "8.1 DEX API 对比总览",
+    "section.dexApis.subtitle.2": "8.2 Jupiter v6 API 深度解析",
+    "section.dexApis.note.1": "Jupiter 是 Solana 上最重要的 DEX 聚合器，EACOswap 的核心兑换功能依赖 Jupiter API。Jupiter v6 提供 Quote -> Swap 两段式架构。",
+    "section.dexApis.subtitle.3": "8.3 Raydium API 设计参考",
+    "section.dexApis.subtitle.4": "8.4 Orca Whirlpool SDK 设计",
+    "section.dexApis.subtitle.5": "8.5 CoinGecko vs Birdeye 价格数据策略",
+    "section.dexApis.subtitle.6": "8.6 Helius RPC vs Solana Public RPC",
+    "section.designPhilosophy.subtitle.1": "9.1 统一封装原则",
+    "section.designPhilosophy.list.1": "屏蔽差异：前端不关心数据来自 CoinGecko 还是 Birdeye，只调用 /api/birdeye/price，后端自动降级",
+    "section.designPhilosophy.list.2": "统一格式：所有响应包装为 { success, data, error }，前端处理逻辑一致",
+    "section.designPhilosophy.list.3": "安全代理：API Key 仅在后端，前端不暴露任何第三方凭证",
+    "section.designPhilosophy.list.4": "缓存层：高频数据（价格）缓存 30-60s，低频数据（市值）缓存 5 分钟",
+    "section.designPhilosophy.subtitle.2": "9.2 分层架构",
+    "section.designPhilosophy.subtitle.3": "9.3 错误降级策略",
+    "section.designPhilosophy.subtitle.4": "9.4 扩展新 DEX 的方法",
+    "section.rateLimits.subtitle.1": "10.1 各上游服务商限制",
+    "section.rateLimits.subtitle.2": "10.2 EACOswap 后端限流配置",
+    "section.rateLimits.subtitle.3": "10.3 缓存策略矩阵",
+    "section.examples.subtitle.1": "获取 SOL 价格",
+    "section.examples.subtitle.2": "获取代币市值排行 (Top 100)",
+    "section.examples.subtitle.3": "Jupiter 兑换报价 (SOL -> EACO)",
+    "section.examples.subtitle.4": "查询代币持有者数量",
+    "section.examples.subtitle.5": "Helius RPC 代理 (获取余额)",
+    "section.security.list.1": "CORS：生产环境配置 CORS_ORIGINS 为具体域名，禁用 *",
+    "section.security.list.2": "Rate Limit：默认 60 req/min，生产可按需调整",
+    "section.security.list.3": "Helmet：启用 CSP、XSS 过滤、HSTS 等安全头",
+    "section.security.list.4": "超时控制：所有上游请求 15 秒超时，防止挂起",
+    "section.security.list.5": "缓存策略：价格 60s、市值 300s、报价 15s、资产 120s",
+    "section.security.list.6": "错误脱敏：生产环境不暴露内部错误详情",
+    "section.changelog.note.1": "未来规划：WebSocket 实时价格推送、多链支持（ETH/BSC）、EACO 质押 API、NFT 资产查询。",
+    "changelog.v220": "完善6语言国际化，所有UI文本支持翻译",
+    "section.endpoints.birdeyePrice.fallback.1": "若配置了 BIRDEYE_KEY，优先调用 Birdeye API（缓存 30 秒）",
+    "section.endpoints.birdeyePrice.fallback.2": "若 Birdeye 失败或无 Key，自动降级到 CoinGecko token_price",
+    "section.endpoints.birdeyePrice.fallback.3": "CoinGecko 缓存 60 秒"
   },
   en: {
     "page.title": "EACOswap API Specification",
@@ -1014,7 +1129,114 @@ const i18n = {
     "section.dexApis": "8. DEX API Integration Reference",
     "section.designPhilosophy": "9. API Design Philosophy",
     "section.rateLimits": "10. Rate Limits & Production Tips",
-    "section.changelog": "11. Changelog"
+    "section.changelog": "11. Changelog",
+    "theme_cosmic": "Cosmic Blue",
+    "theme_army": "Army Green",
+    "theme_classic": "Classic Beige",
+    "changelog.v230.desc": "Unified language/theme switcher style with index.html / faq.html (horizontal text buttons, ctrl-group container, abbreviated language labels); renamed i18n key from theme.cosmic to theme_cosmic; default language changed to en",
+    "changelog.v230": "Unified language/theme switcher style with index.html / faq.html",
+    "footer.main": "EACOswap API v2.3.0 | GitHub | OrbMarkets",
+    "footer.disclaimer": "eaco europe group — internal testing only, safety first, for reference only",
+    "section.overview.desc.1": "EACOswap backend is built with Node.js + Express, acting as a secure proxy layer for Solana data providers (CoinGecko / Helius / Birdeye / Jupiter). API Keys are stored only in server-side environment variables, never exposed to the frontend.",
+    "constant.responseFormat.title": "Response Format",
+    "constant.responseFormat.value": "JSON (Unified)",
+    "constant.cors.title": "CORS",
+    "constant.cors.value": "Configurable (default *)",
+    "section.responseFormat.note.1": "All APIs return a unified structure: the frontend must read the data.data or data field, and cannot directly access root-level data.",
+    "section.responseFormat.subtitle.1": "Success Response",
+    "section.responseFormat.subtitle.2": "Error Response",
+    "section.constants.subtitle.1": "Top 10 DEX List",
+    "section.constants.subtitle.2": "Charity Link",
+    "section.endpoints.health.desc": "Health check — returns service status and dependency availability",
+    "section.endpoints.config.desc": "Server configuration info — safely exposed, no actual Keys included",
+    "section.endpoints.solPrice.desc": "SOL real-time price — from CoinGecko (free, no Key required), cached 60s",
+    "section.endpoints.marketCap.desc": "Solana ecosystem token market cap ranking — from CoinGecko, cached 5 minutes",
+    "section.endpoints.heliusRpc.desc": "Helius RPC proxy — forwards Solana JSON-RPC requests (requires HELIUS_API_KEY)",
+    "section.endpoints.heliusDas.desc": "Query token asset list for a specified wallet address — Helius DAS API (requires HELIUS_API_KEY)",
+    "section.endpoints.tokenAccounts.desc": "Query token holder count — counted via getProgramAccounts (requires HELIUS_API_KEY)",
+    "section.endpoints.birdeyeToken.desc": "Birdeye token details — deep data, social media, tags (requires BIRDEYE_API_KEY)",
+    "section.endpoints.birdeyePrice.desc": "Token real-time price — prefers Birdeye, automatically falls back to CoinGecko when no Key",
+    "section.endpoints.jupiterQuote.desc": "Jupiter v6 swap quote — optimal route, slippage, price impact (free, cached 15s)",
+    "table.params.header.param": "Parameter",
+    "table.params.header.type": "Type",
+    "table.params.header.required": "Required",
+    "table.params.header.default": "Default",
+    "table.params.header.desc": "Description",
+    "table.errors.header.status": "HTTP Status",
+    "table.errors.header.scenario": "Scenario",
+    "table.errors.header.example": "Example",
+    "table.rateLimits.header.provider": "Provider",
+    "table.rateLimits.header.free": "Free Tier",
+    "table.rateLimits.header.paid": "Paid Tier",
+    "table.rateLimits.header.dimension": "Limit Dimension",
+    "table.cache.header.dataType": "Data Type",
+    "table.cache.header.duration": "Cache Duration",
+    "table.cache.header.trigger": "Refresh Trigger",
+    "table.cache.header.source": "Data Source",
+    "table.dex.header.apiType": "API Type",
+    "table.dex.header.auth": "Auth Method",
+    "table.dex.header.endpoint": "Core Endpoint",
+    "table.dex.header.integration": "EACOswap Integration",
+    "table.compare.header.dimension": "Dimension",
+    "table.errors.cell.success": "Request Success",
+    "table.errors.cell.invalidParam": "Missing/Invalid Parameter",
+    "table.errors.cell.notConfigured": "Upstream Service Not Configured",
+    "table.errors.cell.notFound": "API Endpoint Not Found",
+    "table.errors.cell.rateLimited": "Rate Limit Triggered",
+    "table.errors.cell.serverError": "Internal Server Error",
+    "section.endpoints.subtitle.response": "Response",
+    "section.endpoints.subtitle.requestParams": "Request Parameters",
+    "section.endpoints.subtitle.requestBody": "Request Body",
+    "section.endpoints.subtitle.pathParams": "Path Parameters",
+    "section.endpoints.subtitle.fallback": "Fallback Strategy",
+    "table.params.cell.perPage": "Items per page, max 250",
+    "table.params.cell.page": "Page number, starts from 1",
+    "table.params.cell.currency": "Currency (usd / cny / eur)",
+    "table.params.cell.walletAddress": "Solana wallet address (Base58)",
+    "table.params.cell.tokenAddress": "Token contract address",
+    "table.params.cell.inputMint": "Input token contract address",
+    "table.params.cell.outputMint": "Output token contract address",
+    "table.params.cell.amount": "Input amount (lamports / raw units)",
+    "section.endpoints.heliusRpc.note.1": "Returns  when HELIUS_API_KEY is not configured",
+    "section.endpoints.heliusDas.note.1": "Cached for 2 minutes, suitable for frequently refreshed asset panels",
+    "section.endpoints.birdeyeToken.note.1": "Returns  when BIRDEYE_API_KEY is not configured",
+    "section.endpoints.jupiterQuote.note.1": "Quote validity is extremely short (about 15s), transaction must be executed immediately after obtaining. Route preview only; actual swap requires calling Jupiter API to get transaction.",
+    "section.security.note.1": "API Key Management: Helius / Birdeye Keys exist only in the backend .env, never expose to the frontend.",
+    "section.dexApis.desc.1": "EACOswap does not directly expose underlying DEX raw interfaces, but provides unified abstraction and proxy at the backend. Below are the API design approaches of the top 10 global Solana DEXs, to help developers understand EACOswap's encapsulation logic and extension methods.",
+    "section.dexApis.subtitle.1": "8.1 DEX API Comparison Overview",
+    "section.dexApis.subtitle.2": "8.2 Jupiter v6 API Deep Dive",
+    "section.dexApis.note.1": "Jupiter is the most important DEX aggregator on Solana, and EACOswap's core swap functionality depends on Jupiter API. Jupiter v6 provides a two-stage Quote -> Swap architecture.",
+    "section.dexApis.subtitle.3": "8.3 Raydium API Design Reference",
+    "section.dexApis.subtitle.4": "8.4 Orca Whirlpool SDK Design",
+    "section.dexApis.subtitle.5": "8.5 CoinGecko vs Birdeye Price Data Strategy",
+    "section.dexApis.subtitle.6": "8.6 Helius RPC vs Solana Public RPC",
+    "section.designPhilosophy.subtitle.1": "9.1 Unified Encapsulation Principle",
+    "section.designPhilosophy.list.1": "Shield differences: the frontend doesn't care whether data comes from CoinGecko or Birdeye, only calls /api/birdeye/price, backend automatically falls back",
+    "section.designPhilosophy.list.2": "Unified format: all responses are wrapped as { success, data, error }, frontend processing logic is consistent",
+    "section.designPhilosophy.list.3": "Secure proxy: API Keys exist only on the backend, frontend never exposes any third-party credentials",
+    "section.designPhilosophy.list.4": "Cache layer: high-frequency data (prices) cached 30-60s, low-frequency data (market cap) cached 5 minutes",
+    "section.designPhilosophy.subtitle.2": "9.2 Layered Architecture",
+    "section.designPhilosophy.subtitle.3": "9.3 Error Fallback Strategy",
+    "section.designPhilosophy.subtitle.4": "9.4 How to Extend a New DEX",
+    "section.rateLimits.subtitle.1": "10.1 Upstream Provider Limits",
+    "section.rateLimits.subtitle.2": "10.2 EACOswap Backend Rate Limit Config",
+    "section.rateLimits.subtitle.3": "10.3 Cache Strategy Matrix",
+    "section.examples.subtitle.1": "Get SOL Price",
+    "section.examples.subtitle.2": "Get Token Market Cap Ranking (Top 100)",
+    "section.examples.subtitle.3": "Jupiter Swap Quote (SOL -> EACO)",
+    "section.examples.subtitle.4": "Query Token Holder Count",
+    "section.examples.subtitle.5": "Helius RPC Proxy (Get Balance)",
+    "section.security.list.1": "CORS: configure CORS_ORIGINS to specific domains in production, disable *",
+    "section.security.list.2": "Rate Limit: default 60 req/min, production can be adjusted as needed",
+    "section.security.list.3": "Helmet: enable CSP, XSS filtering, HSTS and other security headers",
+    "section.security.list.4": "Timeout control: all upstream requests timeout after 15 seconds to prevent hanging",
+    "section.security.list.5": "Cache strategy: prices 60s, market cap 300s, quotes 15s, assets 120s",
+    "section.security.list.6": "Error desensitization: production environment does not expose internal error details",
+    "section.changelog.note.1": "Future roadmap: WebSocket real-time price push, multi-chain support (ETH/BSC), EACO staking API, NFT asset query.",
+    "changelog.v220": "Complete 6-language i18n, all UI texts translatable",
+    "section.endpoints.birdeyePrice.fallback.1": "If BIRDEYE_KEY is configured, prefer Birdeye API (cached 30 seconds)",
+    "section.endpoints.birdeyePrice.fallback.2": "If Birdeye fails or no Key, automatically fall back to CoinGecko token_price",
+    "section.endpoints.birdeyePrice.fallback.3": "CoinGecko cached 60 seconds"
   },
   es: {
     "page.title": "Especificación API de EACOswap",
@@ -1041,7 +1263,114 @@ const i18n = {
     "section.dexApis": "8. Referencia de Integración API DEX",
     "section.designPhilosophy": "9. Filosofía de Diseño API",
     "section.rateLimits": "10. Límites de Velocidad y Consejos de Producción",
-    "section.changelog": "11. Registro de Cambios"
+    "section.changelog": "11. Registro de Cambios",
+    "theme_cosmic": "Azul Cósmico",
+    "theme_army": "Verde Militar",
+    "theme_classic": "Beige Clásico",
+    "changelog.v230.desc": "Estilo unificado del conmutador de idioma/tema con index.html / faq.html (botones de texto horizontales, contenedor ctrl-group, etiquetas de idioma abreviadas); clave i18n renombrada de theme.cosmic a theme_cosmic; idioma por defecto cambiado a en",
+    "changelog.v230": "Estilo unificado del conmutador de idioma/tema con index.html / faq.html",
+    "footer.main": "EACOswap API v2.3.0 | GitHub | OrbMarkets",
+    "footer.disclaimer": "eaco europe group — solo para pruebas internas, seguridad primero, solo referencia",
+    "section.overview.desc.1": "El backend de EACOswap está construido con Node.js + Express, actuando como capa proxy segura para proveedores de datos Solana (CoinGecko / Helius / Birdeye / Jupiter). Las API Keys se almacenan solo en variables de entorno del servidor, nunca expuestas al frontend.",
+    "constant.responseFormat.title": "Formato de Respuesta",
+    "constant.responseFormat.value": "JSON (Unificado)",
+    "constant.cors.title": "CORS",
+    "constant.cors.value": "Configurable (predeterminado *)",
+    "section.responseFormat.note.1": "Todas las APIs devuelven una estructura unificada: el frontend debe leer el campo data.data o data, y no puede acceder directamente a los datos de nivel raíz.",
+    "section.responseFormat.subtitle.1": "Respuesta Exitosa",
+    "section.responseFormat.subtitle.2": "Respuesta de Error",
+    "section.constants.subtitle.1": "Lista de Top 10 DEX",
+    "section.constants.subtitle.2": "Enlace de Caridad",
+    "section.endpoints.health.desc": "Verificación de salud — devuelve el estado del servicio y la disponibilidad de dependencias",
+    "section.endpoints.config.desc": "Información de configuración del servidor — expuesta de forma segura, sin claves reales",
+    "section.endpoints.solPrice.desc": "Precio en tiempo real de SOL — desde CoinGecko (gratuito, sin clave requerida), caché 60s",
+    "section.endpoints.marketCap.desc": "Ranking de capitalización de mercado de tokens del ecosistema Solana — desde CoinGecko, caché 5 minutos",
+    "section.endpoints.heliusRpc.desc": "Proxy Helius RPC — reenvía solicitudes JSON-RPC de Solana (requiere HELIUS_API_KEY)",
+    "section.endpoints.heliusDas.desc": "Consultar lista de activos de tokens para una dirección de billetera específica — Helius DAS API (requiere HELIUS_API_KEY)",
+    "section.endpoints.tokenAccounts.desc": "Consultar cantidad de tenedores de tokens — contado vía getProgramAccounts (requiere HELIUS_API_KEY)",
+    "section.endpoints.birdeyeToken.desc": "Detalles de token Birdeye — datos profundos, redes sociales, etiquetas (requiere BIRDEYE_API_KEY)",
+    "section.endpoints.birdeyePrice.desc": "Precio en tiempo real del token — prefiere Birdeye, automáticamente retrocede a CoinGecko sin clave",
+    "section.endpoints.jupiterQuote.desc": "Cotización de swap Jupiter v6 — ruta óptima, deslizamiento, impacto de precio (gratuito, caché 15s)",
+    "table.params.header.param": "Parámetro",
+    "table.params.header.type": "Tipo",
+    "table.params.header.required": "Requerido",
+    "table.params.header.default": "Predeterminado",
+    "table.params.header.desc": "Descripción",
+    "table.errors.header.status": "Estado HTTP",
+    "table.errors.header.scenario": "Escenario",
+    "table.errors.header.example": "Ejemplo",
+    "table.rateLimits.header.provider": "Proveedor",
+    "table.rateLimits.header.free": "Nivel Gratuito",
+    "table.rateLimits.header.paid": "Nivel de Pago",
+    "table.rateLimits.header.dimension": "Dimensión de Límite",
+    "table.cache.header.dataType": "Tipo de Dato",
+    "table.cache.header.duration": "Duración de Caché",
+    "table.cache.header.trigger": "Disparador de Actualización",
+    "table.cache.header.source": "Fuente de Datos",
+    "table.dex.header.apiType": "Tipo de API",
+    "table.dex.header.auth": "Método de Autenticación",
+    "table.dex.header.endpoint": "Endpoint Principal",
+    "table.dex.header.integration": "Integración EACOswap",
+    "table.compare.header.dimension": "Dimensión",
+    "table.errors.cell.success": "Solicitud Exitosa",
+    "table.errors.cell.invalidParam": "Parámetro Faltante/Inválido",
+    "table.errors.cell.notConfigured": "Servicio Ascendente No Configurado",
+    "table.errors.cell.notFound": "Endpoint API No Encontrado",
+    "table.errors.cell.rateLimited": "Límite de Velocidad Activado",
+    "table.errors.cell.serverError": "Error Interno del Servidor",
+    "section.endpoints.subtitle.response": "Respuesta",
+    "section.endpoints.subtitle.requestParams": "Parámetros de Solicitud",
+    "section.endpoints.subtitle.requestBody": "Cuerpo de Solicitud",
+    "section.endpoints.subtitle.pathParams": "Parámetros de Ruta",
+    "section.endpoints.subtitle.fallback": "Estrategia de Retroceso",
+    "table.params.cell.perPage": "Elementos por página, máx 250",
+    "table.params.cell.page": "Número de página, empieza desde 1",
+    "table.params.cell.currency": "Moneda (usd / cny / eur)",
+    "table.params.cell.walletAddress": "Dirección de billetera Solana (Base58)",
+    "table.params.cell.tokenAddress": "Dirección del contrato del token",
+    "table.params.cell.inputMint": "Dirección del contrato de token de entrada",
+    "table.params.cell.outputMint": "Dirección del contrato de token de salida",
+    "table.params.cell.amount": "Cantidad de entrada (lamports / unidades raw)",
+    "section.endpoints.heliusRpc.note.1": "Devuelve  cuando HELIUS_API_KEY no está configurado",
+    "section.endpoints.heliusDas.note.1": "Caché por 2 minutos, adecuado para paneles de activos actualizados frecuentemente",
+    "section.endpoints.birdeyeToken.note.1": "Devuelve  cuando BIRDEYE_API_KEY no está configurado",
+    "section.endpoints.jupiterQuote.note.1": "La validez de la cotización es extremadamente corta (unos 15s), la transacción debe ejecutarse inmediatamente después de obtenerla. Solo vista previa de ruta; el intercambio real requiere llamar a Jupiter API para obtener la transacción.",
+    "section.security.note.1": "Gestión de API Key: Las claves Helius / Birdeye existen solo en el backend .env, nunca expuestas al frontend.",
+    "section.dexApis.desc.1": "EACOswap no expone directamente las interfaces DEX subyacentes, sino que proporciona abstracción y proxy unificados en el backend. A continuación se muestran los enfoques de diseño API de los 10 mejores DEX globales de Solana, para ayudar a los desarrolladores a comprender la lógica de encapsulación y los métodos de extensión de EACOswap.",
+    "section.dexApis.subtitle.1": "8.1 Comparación General de API DEX",
+    "section.dexApis.subtitle.2": "8.2 Análisis Profundo de API Jupiter v6",
+    "section.dexApis.note.1": "Jupiter es el agregador DEX más importante en Solana, y la funcionalidad central de intercambio de EACOswap depende de la API Jupiter. Jupiter v6 proporciona una arquitectura de dos etapas Quote -> Swap.",
+    "section.dexApis.subtitle.3": "8.3 Referencia de Diseño API Raydium",
+    "section.dexApis.subtitle.4": "8.4 Diseño de Orca Whirlpool SDK",
+    "section.dexApis.subtitle.5": "8.5 Estrategia de Datos de Precios CoinGecko vs Birdeye",
+    "section.dexApis.subtitle.6": "8.6 Helius RPC vs Solana Public RPC",
+    "section.designPhilosophy.subtitle.1": "9.1 Principio de Encapsulación Unificada",
+    "section.designPhilosophy.list.1": "Diferencias de blindaje: el frontend no se preocupa si los datos provienen de CoinGecko o Birdeye, solo llama a /api/birdeye/price, el backend retrocede automáticamente",
+    "section.designPhilosophy.list.2": "Formato unificado: todas las respuestas se envuelven como { success, data, error }, la lógica de procesamiento del frontend es consistente",
+    "section.designPhilosophy.list.3": "Proxy seguro: las API Keys existen solo en el backend, el frontend nunca expone credenciales de terceros",
+    "section.designPhilosophy.list.4": "Capa de caché: datos de alta frecuencia (precios) en caché 30-60s, datos de baja frecuencia (capitalización) en caché 5 minutos",
+    "section.designPhilosophy.subtitle.2": "9.2 Arquitectura por Capas",
+    "section.designPhilosophy.subtitle.3": "9.3 Estrategia de Retroceso por Error",
+    "section.designPhilosophy.subtitle.4": "9.4 Cómo Extender un Nuevo DEX",
+    "section.rateLimits.subtitle.1": "10.1 Límites de Proveedores Ascendentes",
+    "section.rateLimits.subtitle.2": "10.2 Configuración de Límite de Velocidad Backend EACOswap",
+    "section.rateLimits.subtitle.3": "10.3 Matriz de Estrategia de Caché",
+    "section.examples.subtitle.1": "Obtener Precio SOL",
+    "section.examples.subtitle.2": "Obtener Ranking de Capitalización de Mercado (Top 100)",
+    "section.examples.subtitle.3": "Cotización de Swap Jupiter (SOL -> EACO)",
+    "section.examples.subtitle.4": "Consultar Cantidad de Tenedores",
+    "section.examples.subtitle.5": "Proxy Helius RPC (Obtener Balance)",
+    "section.security.list.1": "CORS: configure CORS_ORIGINS a dominios específicos en producción, deshabilitar *",
+    "section.security.list.2": "Límite de Velocidad: predeterminado 60 req/min, producción ajustable según necesidad",
+    "section.security.list.3": "Helmet: habilitar CSP, filtrado XSS, HSTS y otros encabezados de seguridad",
+    "section.security.list.4": "Control de tiempo de espera: todas las solicitudes ascendentes tienen timeout de 15 segundos para prevenir bloqueos",
+    "section.security.list.5": "Estrategia de caché: precios 60s, capitalización 300s, cotizaciones 15s, activos 120s",
+    "section.security.list.6": "Desensibilización de errores: el entorno de producción no expone detalles de errores internos",
+    "section.changelog.note.1": "Hoja de ruta futura: push de precios en tiempo real WebSocket, soporte multi-cadena (ETH/BSC), API de staking EACO, consulta de activos NFT.",
+    "changelog.v220": "Completa internacionalización en 6 idiomas, todos los textos de UI traducibles",
+    "section.endpoints.birdeyePrice.fallback.1": "Si BIRDEYE_KEY está configurada, preferir API Birdeye (caché 30 segundos)",
+    "section.endpoints.birdeyePrice.fallback.2": "Si Birdeye falla o no hay clave, retroceder automáticamente a CoinGecko token_price",
+    "section.endpoints.birdeyePrice.fallback.3": "CoinGecko en caché 60 segundos"
   },
   fr: {
     "page.title": "Spécification API EACOswap",
@@ -1068,7 +1397,114 @@ const i18n = {
     "section.dexApis": "8. Référence d'Intégration API DEX",
     "section.designPhilosophy": "9. Philosophie de Conception API",
     "section.rateLimits": "10. Limites de Débit et Conseils de Production",
-    "section.changelog": "11. Journal des Modifications"
+    "section.changelog": "11. Journal des Modifications",
+    "theme_cosmic": "Bleu Cosmique",
+    "theme_army": "Vert Militaire",
+    "theme_classic": "Beige Classique",
+    "changelog.v230.desc": "Style unifie du commutateur de langue/theme avec index.html / faq.html (boutons texte horizontaux, conteneur ctrl-group, etiquettes de langue abregees); cle i18n renommee de theme.cosmic a theme_cosmic; langue par defaut changee en en",
+    "changelog.v230": "Style unifie du commutateur de langue/theme avec index.html / faq.html",
+    "footer.main": "EACOswap API v2.3.0 | GitHub | OrbMarkets",
+    "footer.disclaimer": "eaco europe group — test interne uniquement, sécurité d'abord, référence seulement",
+    "section.overview.desc.1": "Le backend EACOswap est construit avec Node.js + Express, agissant comme couche proxy sécurisée pour les fournisseurs de données Solana (CoinGecko / Helius / Birdeye / Jupiter). Les clés API sont stockées uniquement dans les variables d'environnement côté serveur, jamais exposées au frontend.",
+    "constant.responseFormat.title": "Format de Réponse",
+    "constant.responseFormat.value": "JSON (Unifié)",
+    "constant.cors.title": "CORS",
+    "constant.cors.value": "Configurable (défaut *)",
+    "section.responseFormat.note.1": "Toutes les APIs retournent une structure unifiée : le frontend doit lire le champ data.data ou data, et ne peut pas accéder directement aux données de niveau racine.",
+    "section.responseFormat.subtitle.1": "Réponse de Succès",
+    "section.responseFormat.subtitle.2": "Réponse d'Erreur",
+    "section.constants.subtitle.1": "Liste des 10 Meilleurs DEX",
+    "section.constants.subtitle.2": "Lien de Charité",
+    "section.endpoints.health.desc": "Vérification de santé — renvoie l'état du service et la disponibilité des dépendances",
+    "section.endpoints.config.desc": "Informations de configuration du serveur — exposées en toute sécurité, sans clés réelles",
+    "section.endpoints.solPrice.desc": "Prix SOL en temps réel — depuis CoinGecko (gratuit, aucune clé requise), cache 60s",
+    "section.endpoints.marketCap.desc": "Classement de la capitalisation boursière des tokens de l'écosystème Solana — depuis CoinGecko, cache 5 minutes",
+    "section.endpoints.heliusRpc.desc": "Proxy Helius RPC — transmet les requêtes JSON-RPC Solana (nécessite HELIUS_API_KEY)",
+    "section.endpoints.heliusDas.desc": "Requête de liste d'actifs de tokens pour une adresse de portefeuille spécifiée — Helius DAS API (nécessite HELIUS_API_KEY)",
+    "section.endpoints.tokenAccounts.desc": "Requête du nombre de détenteurs de tokens — compté via getProgramAccounts (nécessite HELIUS_API_KEY)",
+    "section.endpoints.birdeyeToken.desc": "Détails du token Birdeye — données approfondies, médias sociaux, tags (nécessite BIRDEYE_API_KEY)",
+    "section.endpoints.birdeyePrice.desc": "Prix du token en temps réel — privilégie Birdeye, bascule automatiquement vers CoinGecko sans clé",
+    "section.endpoints.jupiterQuote.desc": "Devis de swap Jupiter v6 — route optimale, glissement, impact de prix (gratuit, cache 15s)",
+    "table.params.header.param": "Paramètre",
+    "table.params.header.type": "Type",
+    "table.params.header.required": "Requis",
+    "table.params.header.default": "Défaut",
+    "table.params.header.desc": "Description",
+    "table.errors.header.status": "Statut HTTP",
+    "table.errors.header.scenario": "Scénario",
+    "table.errors.header.example": "Exemple",
+    "table.rateLimits.header.provider": "Fournisseur",
+    "table.rateLimits.header.free": "Niveau Gratuit",
+    "table.rateLimits.header.paid": "Niveau Payant",
+    "table.rateLimits.header.dimension": "Dimension de Limite",
+    "table.cache.header.dataType": "Type de Donnée",
+    "table.cache.header.duration": "Durée du Cache",
+    "table.cache.header.trigger": "Déclencheur de Rafraîchissement",
+    "table.cache.header.source": "Source de Données",
+    "table.dex.header.apiType": "Type d'API",
+    "table.dex.header.auth": "Méthode d'Auth",
+    "table.dex.header.endpoint": "Endpoint Principal",
+    "table.dex.header.integration": "Intégration EACOswap",
+    "table.compare.header.dimension": "Dimension",
+    "table.errors.cell.success": "Succès de la Requête",
+    "table.errors.cell.invalidParam": "Paramètre Manquant/Invalide",
+    "table.errors.cell.notConfigured": "Service Amont Non Configuré",
+    "table.errors.cell.notFound": "Endpoint API Non Trouvé",
+    "table.errors.cell.rateLimited": "Limite de Débit Déclenché",
+    "table.errors.cell.serverError": "Erreur Interne du Serveur",
+    "section.endpoints.subtitle.response": "Réponse",
+    "section.endpoints.subtitle.requestParams": "Paramètres de Requête",
+    "section.endpoints.subtitle.requestBody": "Corps de Requête",
+    "section.endpoints.subtitle.pathParams": "Paramètres de Chemin",
+    "section.endpoints.subtitle.fallback": "Stratégie de Secours",
+    "table.params.cell.perPage": "Éléments par page, max 250",
+    "table.params.cell.page": "Numéro de page, commence à 1",
+    "table.params.cell.currency": "Devise (usd / cny / eur)",
+    "table.params.cell.walletAddress": "Adresse de portefeuille Solana (Base58)",
+    "table.params.cell.tokenAddress": "Adresse du contrat du token",
+    "table.params.cell.inputMint": "Adresse du contrat de token d'entrée",
+    "table.params.cell.outputMint": "Adresse du contrat de token de sortie",
+    "table.params.cell.amount": "Montant d'entrée (lamports / unités brutes)",
+    "section.endpoints.heliusRpc.note.1": "Renvoie  quand HELIUS_API_KEY n'est pas configuré",
+    "section.endpoints.heliusDas.note.1": "Mise en cache 2 minutes, adapté aux panneaux d'actifs rafraîchis fréquemment",
+    "section.endpoints.birdeyeToken.note.1": "Renvoie  quand BIRDEYE_API_KEY n'est pas configuré",
+    "section.endpoints.jupiterQuote.note.1": "La validité du devis est extrêmement courte (environ 15s), la transaction doit être exécutée immédiatement après obtention. Aperçu de route uniquement ; l'échange réel nécessite d'appeler l'API Jupiter pour obtenir la transaction.",
+    "section.security.note.1": "Gestion des Clés API : Les clés Helius / Birdeye existent uniquement dans le backend .env, jamais exposées au frontend.",
+    "section.dexApis.desc.1": "EACOswap n'expose pas directement les interfaces DEX brutes sous-jacentes, mais fournit une abstraction et un proxy unifiés au backend. Ci-dessous les approches de conception d'API des 10 meilleurs DEX Solana mondiaux, pour aider les développeurs à comprendre la logique d'encapsulation et les méthodes d'extension d'EACOswap.",
+    "section.dexApis.subtitle.1": "8.1 Aperçu Comparatif API DEX",
+    "section.dexApis.subtitle.2": "8.2 Plongée Profonde API Jupiter v6",
+    "section.dexApis.note.1": "Jupiter est l'agrégeur DEX le plus important sur Solana, et la fonctionnalité d'échange centrale d'EACOswap dépend de l'API Jupiter. Jupiter v6 fournit une architecture à deux étapes Quote -> Swap.",
+    "section.dexApis.subtitle.3": "8.3 Référence de Conception API Raydium",
+    "section.dexApis.subtitle.4": "8.4 Conception Orca Whirlpool SDK",
+    "section.dexApis.subtitle.5": "8.5 Stratégie de Données de Prix CoinGecko vs Birdeye",
+    "section.dexApis.subtitle.6": "8.6 Helius RPC vs Solana Public RPC",
+    "section.designPhilosophy.subtitle.1": "9.1 Principe d'Encapsulation Unifiée",
+    "section.designPhilosophy.list.1": "Bouclier des différences : le frontend ne se soucie pas de savoir si les données proviennent de CoinGecko ou Birdeye, appelle uniquement /api/birdeye/price, le backend bascule automatiquement",
+    "section.designPhilosophy.list.2": "Format unifié : toutes les réponses sont encapsulées comme { success, data, error }, la logique de traitement du frontend est cohérente",
+    "section.designPhilosophy.list.3": "Proxy sécurisé : les clés API existent uniquement sur le backend, le frontend n'expose jamais d'identifiants tiers",
+    "section.designPhilosophy.list.4": "Couche de cache : données haute fréquence (prix) en cache 30-60s, données basse fréquence (capitalisation) en cache 5 minutes",
+    "section.designPhilosophy.subtitle.2": "9.2 Architecture en Couches",
+    "section.designPhilosophy.subtitle.3": "9.3 Stratégie de Secours par Erreur",
+    "section.designPhilosophy.subtitle.4": "9.4 Comment Étendre un Nouveau DEX",
+    "section.rateLimits.subtitle.1": "10.1 Limites des Fournisseurs Amont",
+    "section.rateLimits.subtitle.2": "10.2 Configuration de Limite de Débit Backend EACOswap",
+    "section.rateLimits.subtitle.3": "10.3 Matrice de Stratégie de Cache",
+    "section.examples.subtitle.1": "Obtenir le Prix SOL",
+    "section.examples.subtitle.2": "Obtenir le Classement de Capitalisation (Top 100)",
+    "section.examples.subtitle.3": "Devis de Swap Jupiter (SOL -> EACO)",
+    "section.examples.subtitle.4": "Requête du Nombre de Détenteurs",
+    "section.examples.subtitle.5": "Proxy Helius RPC (Obtenir Solde)",
+    "section.security.list.1": "CORS : configurer CORS_ORIGINS à des domaines spécifiques en production, désactiver *",
+    "section.security.list.2": "Limite de Débit : défaut 60 req/min, production ajustable selon les besoins",
+    "section.security.list.3": "Helmet : activer CSP, filtrage XSS, HSTS et autres en-têtes de sécurité",
+    "section.security.list.4": "Contrôle de délai : toutes les requêtes amont expirent après 15 secondes pour éviter le blocage",
+    "section.security.list.5": "Stratégie de cache : prix 60s, capitalisation 300s, devis 15s, actifs 120s",
+    "section.security.list.6": "Désensibilisation des erreurs : l'environnement de production n'expose pas les détails des erreurs internes",
+    "section.changelog.note.1": "Feuille de route future : push de prix en temps réel WebSocket, support multi-chaîne (ETH/BSC), API de staking EACO, requête d'actifs NFT.",
+    "changelog.v220": "Internationalisation complète en 6 langues, tous les textes UI traduisibles",
+    "section.endpoints.birdeyePrice.fallback.1": "Si BIRDEYE_KEY est configurée, privilégier l'API Birdeye (cache 30 secondes)",
+    "section.endpoints.birdeyePrice.fallback.2": "Si Birdeye échoue ou pas de clé, basculer automatiquement vers CoinGecko token_price",
+    "section.endpoints.birdeyePrice.fallback.3": "CoinGecko en cache 60 secondes"
   },
   ru: {
     "page.title": "Спецификация API EACOswap",
@@ -1095,7 +1531,114 @@ const i18n = {
     "section.dexApis": "8. Справочник по Интеграции API DEX",
     "section.designPhilosophy": "9. Философия Проектирования API",
     "section.rateLimits": "10. Ограничения Скорости и Рекомендации для Продакшена",
-    "section.changelog": "11. История Изменений"
+    "section.changelog": "11. История Изменений",
+    "theme_cosmic": "Космический Синий",
+    "theme_army": "Армейский Зелёный",
+    "theme_classic": "Классический Бежевый",
+    "changelog.v230.desc": "Единый стиль переключателя языка/темы с index.html / faq.html (горизонтальные текстовые кнопки, контейнер ctrl-group, сокращенные метки языка); ключ i18n переименован с theme.cosmic на theme_cosmic; язык по умолчанию изменен на en",
+    "changelog.v230": "Единый стиль переключателя языка/темы с index.html / faq.html",
+    "footer.main": "EACOswap API v2.3.0 | GitHub | OrbMarkets",
+    "footer.disclaimer": "eaco europe group — только для внутреннего тестирования, безопасность превыше всего",
+    "section.overview.desc.1": "Бэкенд EACOswap построен на Node.js + Express и выступает в качестве безопасного прокси-слоя для поставщиков данных Solana (CoinGecko / Helius / Birdeye / Jupiter). API-ключи хранятся только в переменных окружения сервера, никогда не раскрываются фронтенду.",
+    "constant.responseFormat.title": "Формат Ответа",
+    "constant.responseFormat.value": "JSON (Унифицированный)",
+    "constant.cors.title": "CORS",
+    "constant.cors.value": "Настраиваемый (по умолчанию *)",
+    "section.responseFormat.note.1": "Все API возвращают единую структуру: фронтенд должен читать поле data.data или data, и не может напрямую обращаться к данным корневого уровня.",
+    "section.responseFormat.subtitle.1": "Успешный Ответ",
+    "section.responseFormat.subtitle.2": "Ответ с Ошибкой",
+    "section.constants.subtitle.1": "Топ-10 Список DEX",
+    "section.constants.subtitle.2": "Благотворительная Ссылка",
+    "section.endpoints.health.desc": "Проверка работоспособности — возвращает статус службы и доступность зависимостей",
+    "section.endpoints.config.desc": "Информация о конфигурации сервера — безопасно раскрыта, без реальных ключей",
+    "section.endpoints.solPrice.desc": "Цена SOL в реальном времени — из CoinGecko (бесплатно, ключ не требуется), кэш 60с",
+    "section.endpoints.marketCap.desc": "Рейтинг рыночной капитализации токенов экосистемы Solana — из CoinGecko, кэш 5 минут",
+    "section.endpoints.heliusRpc.desc": "Прокси Helius RPC — пересылает запросы Solana JSON-RPC (требуется HELIUS_API_KEY)",
+    "section.endpoints.heliusDas.desc": "Запрос списка токенов для указанного адреса кошелька — Helius DAS API (требуется HELIUS_API_KEY)",
+    "section.endpoints.tokenAccounts.desc": "Запрос количества держателей токенов — подсчёт через getProgramAccounts (требуется HELIUS_API_KEY)",
+    "section.endpoints.birdeyeToken.desc": "Детали токена Birdeye — глубокие данные, социальные сети, теги (требуется BIRDEYE_API_KEY)",
+    "section.endpoints.birdeyePrice.desc": "Цена токена в реальном времени — предпочитает Birdeye, автоматически откатывается на CoinGecko без ключа",
+    "section.endpoints.jupiterQuote.desc": "Котировка обмена Jupiter v6 — оптимальный маршрут, проскальзывание, влияние цены (бесплатно, кэш 15с)",
+    "table.params.header.param": "Параметр",
+    "table.params.header.type": "Тип",
+    "table.params.header.required": "Обязательный",
+    "table.params.header.default": "По умолчанию",
+    "table.params.header.desc": "Описание",
+    "table.errors.header.status": "HTTP Статус",
+    "table.errors.header.scenario": "Сценарий",
+    "table.errors.header.example": "Пример",
+    "table.rateLimits.header.provider": "Провайдер",
+    "table.rateLimits.header.free": "Бесплатный Уровень",
+    "table.rateLimits.header.paid": "Платный Уровень",
+    "table.rateLimits.header.dimension": "Измерение Ограничения",
+    "table.cache.header.dataType": "Тип Данных",
+    "table.cache.header.duration": "Длительность Кэша",
+    "table.cache.header.trigger": "Триггер Обновления",
+    "table.cache.header.source": "Источник Данных",
+    "table.dex.header.apiType": "Тип API",
+    "table.dex.header.auth": "Метод Авторизации",
+    "table.dex.header.endpoint": "Основная Конечная Точка",
+    "table.dex.header.integration": "Интеграция EACOswap",
+    "table.compare.header.dimension": "Измерение",
+    "table.errors.cell.success": "Успех Запроса",
+    "table.errors.cell.invalidParam": "Отсутствующий/Недействительный Параметр",
+    "table.errors.cell.notConfigured": "Восходящий Сервис Не Настроен",
+    "table.errors.cell.notFound": "Конечная Точка API Не Найдена",
+    "table.errors.cell.rateLimited": "Ограничение Скорости Сработало",
+    "table.errors.cell.serverError": "Внутренняя Ошибка Сервера",
+    "section.endpoints.subtitle.response": "Ответ",
+    "section.endpoints.subtitle.requestParams": "Параметры Запроса",
+    "section.endpoints.subtitle.requestBody": "Тело Запроса",
+    "section.endpoints.subtitle.pathParams": "Параметры Пути",
+    "section.endpoints.subtitle.fallback": "Стратегия Отката",
+    "table.params.cell.perPage": "Элементов на страницу, макс 250",
+    "table.params.cell.page": "Номер страницы, начинается с 1",
+    "table.params.cell.currency": "Валюта (usd / cny / eur)",
+    "table.params.cell.walletAddress": "Адрес кошелька Solana (Base58)",
+    "table.params.cell.tokenAddress": "Адрес контракта токена",
+    "table.params.cell.inputMint": "Адрес входного контракта токена",
+    "table.params.cell.outputMint": "Адрес выходного контракта токена",
+    "table.params.cell.amount": "Входное количество (лампорты / сырые единицы)",
+    "section.endpoints.heliusRpc.note.1": "Возвращает  когда HELIUS_API_KEY не настроен",
+    "section.endpoints.heliusDas.note.1": "Кэшируется 2 минуты, подходит для часто обновляемых панелей активов",
+    "section.endpoints.birdeyeToken.note.1": "Возвращает  когда BIRDEYE_API_KEY не настроен",
+    "section.endpoints.jupiterQuote.note.1": "Срок действия котировки чрезвычайно короток (около 15 с), транзакцию необходимо выполнить сразу после получения. Только предпросмотр маршрута; фактический обмен требует вызова API Jupiter для получения транзакции.",
+    "section.security.note.1": "Управление API-ключами: Ключи Helius / Birdeye существуют только в бэкенде .env, никогда не раскрывать фронтенду.",
+    "section.dexApis.desc.1": "EACOswap напрямую не раскрывает базовые интерфейсы DEX, а предоставляет унифицированную абстракцию и прокси на бэкенде. Ниже представлены подходы к проектированию API топ-10 глобальных DEX Solana, чтобы помочь разработчикам понять логику инкапсуляции и методы расширения EACOswap.",
+    "section.dexApis.subtitle.1": "8.1 Обзор Сравнения API DEX",
+    "section.dexApis.subtitle.2": "8.2 Глубокий Анализ API Jupiter v6",
+    "section.dexApis.note.1": "Jupiter — самый важный DEX-агрегатор на Solana, и основная функция обмена EACOswap зависит от API Jupiter. Jupiter v6 предоставляет двухэтапную архитектуру Quote -> Swap.",
+    "section.dexApis.subtitle.3": "8.3 Справочник по Дизайну API Raydium",
+    "section.dexApis.subtitle.4": "8.4 Дизайн Orca Whirlpool SDK",
+    "section.dexApis.subtitle.5": "8.5 Стратегия Ценовых Данных CoinGecko vs Birdeye",
+    "section.dexApis.subtitle.6": "8.6 Helius RPC vs Solana Public RPC",
+    "section.designPhilosophy.subtitle.1": "9.1 Принцип Унифицированной Инкапсуляции",
+    "section.designPhilosophy.list.1": "Скрытие различий: фронтенд не заботится, откуда приходят данные — из CoinGecko или Birdeye, вызывает только /api/birdeye/price, бэкенд автоматически откатывается",
+    "section.designPhilosophy.list.2": "Унифицированный формат: все ответы оборачиваются как { success, data, error }, логика обработки фронтенда единообразна",
+    "section.designPhilosophy.list.3": "Безопасный прокси: API-ключи существуют только на бэкенде, фронтенд никогда не раскрывает сторонние учётные данные",
+    "section.designPhilosophy.list.4": "Слой кэша: данные высокой частоты (цены) кэшируются 30-60с, данные низкой частоты (капитализация) кэшируются 5 минут",
+    "section.designPhilosophy.subtitle.2": "9.2 Многоуровневая Архитектура",
+    "section.designPhilosophy.subtitle.3": "9.3 Стратегия Отката по Ошибке",
+    "section.designPhilosophy.subtitle.4": "9.4 Как Расширить Новый DEX",
+    "section.rateLimits.subtitle.1": "10.1 Ограничения Провайдеров",
+    "section.rateLimits.subtitle.2": "10.2 Конфигурация Ограничения Скорости Бэкенда EACOswap",
+    "section.rateLimits.subtitle.3": "10.3 Матрица Стратегии Кэша",
+    "section.examples.subtitle.1": "Получить Цену SOL",
+    "section.examples.subtitle.2": "Получить Рейтинг Рыночной Капитализации (Топ 100)",
+    "section.examples.subtitle.3": "Котировка Обмена Jupiter (SOL -> EACO)",
+    "section.examples.subtitle.4": "Запрос Количества Держателей",
+    "section.examples.subtitle.5": "Прокси Helius RPC (Получить Баланс)",
+    "section.security.list.1": "CORS: настроить CORS_ORIGINS на конкретные домены в продакшене, отключить *",
+    "section.security.list.2": "Ограничение Скорости: по умолчанию 60 запр/мин, в продакшене можно настроить по необходимости",
+    "section.security.list.3": "Helmet: включить CSP, фильтрацию XSS, HSTS и другие заголовки безопасности",
+    "section.security.list.4": "Контроль таймаута: все восходящие запросы имеют таймаут 15 секунд для предотвращения зависания",
+    "section.security.list.5": "Стратегия кэша: цены 60с, капитализация 300с, котировки 15с, активы 120с",
+    "section.security.list.6": "Обезличивание ошибок: в продакшене не раскрываются детали внутренних ошибок",
+    "section.changelog.note.1": "Дорожная карта: push цен в реальном времени WebSocket, поддержка нескольких цепочек (ETH/BSC), API стейкинга EACO, запрос активов NFT.",
+    "changelog.v220": "Полная интернационализация на 6 языках, все UI-тексты переводимы",
+    "section.endpoints.birdeyePrice.fallback.1": "Если BIRDEYE_KEY настроен, предпочитать API Birdeye (кэш 30 секунд)",
+    "section.endpoints.birdeyePrice.fallback.2": "Если Birdeye не работает или нет ключа, автоматически откатиться на CoinGecko token_price",
+    "section.endpoints.birdeyePrice.fallback.3": "CoinGecko кэшируется 60 секунд"
   },
   ar: {
     "page.title": "مواصفات API الخاصة بـ EACOswap",
@@ -1122,25 +1665,147 @@ const i18n = {
     "section.dexApis": "8. مرجع تكامل API لـ DEX",
     "section.designPhilosophy": "9. فلسفة تصميم API",
     "section.rateLimits": "10. حدود المعدل ونصائح الإنتاج",
-    "section.changelog": "11. سجل التغييرات"
+    "section.changelog": "11. سجل التغييرات",
+    "theme_cosmic": "كوزميك أزرق",
+    "theme_army": "أخضر عسكري",
+    "theme_classic": "بيج كلاسيكي",
+    "changelog.v230.desc": "أسلوب موحد لمبدل اللغة/السمة مع index.html / faq.html (أزرار نصية أفقية، حاوية ctrl-group، تسميات لغة مختصرة)؛ إعادة تسمية مفتاح i18n من theme.cosmic إلى theme_cosmic؛ اللغة الافتراضية تغيرت إلى en",
+    "changelog.v230": "أسلوب موحد لمبدل اللغة/السمة مع index.html / faq.html",
+    "footer.main": "EACOswap API v2.3.0 | GitHub | OrbMarkets",
+    "footer.disclaimer": "eaco europe group — للاختبار الداخلي فقط، السلامة أولاً، للرجوع فقط",
+    "section.overview.desc.1": "يتم بناء الواجهة الخلفية لـ EACOswap باستخدام Node.js + Express، وتعمل كطبقة وكيل آمنة لمزودي بيانات Solana (CoinGecko / Helius / Birdeye / Jupiter). يتم تخزين مفاتيح API فقط في متغيرات بيئة الخادم، ولا يتم الكشف عنها أبداً للواجهة الأمامية.",
+    "constant.responseFormat.title": "تنسيق الاستجابة",
+    "constant.responseFormat.value": "JSON (موحد)",
+    "constant.cors.title": "CORS",
+    "constant.cors.value": "قابل للتكوين (افتراضي *)",
+    "section.responseFormat.note.1": "تُرجع جميع واجهات API بنية موحدة: يجب على الواجهة الأمامية قراءة حقل data.data أو data، ولا يمكنها الوصول مباشرة إلى البيانات على المستوى الجذري.",
+    "section.responseFormat.subtitle.1": "استجابة ناجحة",
+    "section.responseFormat.subtitle.2": "استجابة خطأ",
+    "section.constants.subtitle.1": "قائمة أفضل 10 DEX",
+    "section.constants.subtitle.2": "رابط خيري",
+    "section.endpoints.health.desc": "فحص الصحة — يُرجع حالة الخدمة وتوفر التبعيات",
+    "section.endpoints.config.desc": "معلومات تكوين الخادم — مكشوفة بأمان، بدون مفاتيح فعلية",
+    "section.endpoints.solPrice.desc": "سعر SOL في الوقت الفعلي — من CoinGecko (مجاني، لا يحتاج مفتاح)، مخبأة 60 ثانية",
+    "section.endpoints.marketCap.desc": "تصنيف القيمة السوقية لرموز نظام Solana البيئي — من CoinGecko، مخبأة 5 دقائق",
+    "section.endpoints.heliusRpc.desc": "وكيل Helius RPC — يُحوّل طلبات Solana JSON-RPC (يتطلب HELIUS_API_KEY)",
+    "section.endpoints.heliusDas.desc": "استعلام قائمة أصول الرموز لعنوان محفظة محدد — Helius DAS API (يتطلب HELIUS_API_KEY)",
+    "section.endpoints.tokenAccounts.desc": "استعلام عدد حاملي الرموز — يتم العد عبر getProgramAccounts (يتطلب HELIUS_API_KEY)",
+    "section.endpoints.birdeyeToken.desc": "تفاصيل رمز Birdeye — بيانات عميقة، وسائل التواصل الاجتماعي، وسوم (يتطلب BIRDEYE_API_KEY)",
+    "section.endpoints.birdeyePrice.desc": "سعر الرمز في الوقت الفعلي — يُفضّل Birdeye، يتراجع تلقائياً إلى CoinGecko بدون مفتاح",
+    "section.endpoints.jupiterQuote.desc": "عرض المبادلة Jupiter v6 — أفضل مسار، انزلاق، تأثير السعر (مجاني، مخبأ 15 ثانية)",
+    "table.params.header.param": "المعلمة",
+    "table.params.header.type": "النوع",
+    "table.params.header.required": "مطلوب",
+    "table.params.header.default": "الافتراضي",
+    "table.params.header.desc": "الوصف",
+    "table.errors.header.status": "حالة HTTP",
+    "table.errors.header.scenario": "السيناريو",
+    "table.errors.header.example": "مثال",
+    "table.rateLimits.header.provider": "المزود",
+    "table.rateLimits.header.free": "الطبقة المجانية",
+    "table.rateLimits.header.paid": "الطبقة المدفوعة",
+    "table.rateLimits.header.dimension": "بُعد القيد",
+    "table.cache.header.dataType": "نوع البيانات",
+    "table.cache.header.duration": "مدة الذاكرة المؤقتة",
+    "table.cache.header.trigger": "مشغل التحديث",
+    "table.cache.header.source": "مصدر البيانات",
+    "table.dex.header.apiType": "نوع API",
+    "table.dex.header.auth": "طريقة المصادقة",
+    "table.dex.header.endpoint": "نقطة النهاية الأساسية",
+    "table.dex.header.integration": "تكامل EACOswap",
+    "table.compare.header.dimension": "البُعد",
+    "table.errors.cell.success": "نجاح الطلب",
+    "table.errors.cell.invalidParam": "معامل مفقود/غير صالح",
+    "table.errors.cell.notConfigured": "الخدمة الصاعدة غير مُكوّنة",
+    "table.errors.cell.notFound": "نقطة نهاية API غير موجودة",
+    "table.errors.cell.rateLimited": "تم تشغيل حد المعدل",
+    "table.errors.cell.serverError": "خطأ داخلي في الخادم",
+    "section.endpoints.subtitle.response": "استجابة",
+    "section.endpoints.subtitle.requestParams": "معاملات الطلب",
+    "section.endpoints.subtitle.requestBody": "جسم الطلب",
+    "section.endpoints.subtitle.pathParams": "معاملات المسار",
+    "section.endpoints.subtitle.fallback": "استراتيجية التراجع",
+    "table.params.cell.perPage": "العناصر في الصفحة، الحد الأقصى 250",
+    "table.params.cell.page": "رقم الصفحة، يبدأ من 1",
+    "table.params.cell.currency": "العملة (usd / cny / eur)",
+    "table.params.cell.walletAddress": "عنوان محفظة Solana (Base58)",
+    "table.params.cell.tokenAddress": "عنوان عقد الرمز",
+    "table.params.cell.inputMint": "عنوان عقد رمز الإدخال",
+    "table.params.cell.outputMint": "عنوان عقد رمز الإخراج",
+    "table.params.cell.amount": "كمية الإدخال (lamports / وحدات خام)",
+    "section.endpoints.heliusRpc.note.1": "يُرجع  عندما لا يكون HELIUS_API_KEY مُكوّناً",
+    "section.endpoints.heliusDas.note.1": "مخبأة لمدة دقيقتين، مناسبة للوحات الأصول التي يتم تحديثها بشكل متكرر",
+    "section.endpoints.birdeyeToken.note.1": "يُرجع  عندما لا يكون BIRDEYE_API_KEY مُكوّناً",
+    "section.endpoints.jupiterQuote.note.1": "صلاحية العرض قصيرة جداً (حوالي 15 ثانية)، يجب تنفيذ المعاملة فور الحصول عليها. معاينة المسار فقط؛ يتطلب التبادل الفعلي استدعاء Jupiter API للحصول على المعاملة.",
+    "section.security.note.1": "إدارة مفاتيح API: مفاتيح Helius / Birdeye موجودة فقط في الواجهة الخلفية .env، لا يجب الكشف عنها للواجهة الأمامية.",
+    "section.dexApis.desc.1": "لا يكشف EACOswap مباشرة عن واجهات DEX الأساسية، بل يوفر تجريداً ووكيلاً موحدين في الواجهة الخلفية. فيما يلي مقاربات تصميم API لأفضل 10 بورصات لامركزية عالمية على Solana، لمساعدة المطورين على فهم منطق التغليف وطرق التوسع لـ EACOswap.",
+    "section.dexApis.subtitle.1": "8.1 نظرة عامة على مقارنة API DEX",
+    "section.dexApis.subtitle.2": "8.2 تحليل عميق لـ Jupiter v6 API",
+    "section.dexApis.note.1": "Jupiter هو أهم مجمع DEX على Solana، وتعتمد وظيفة المبادلة الأساسية لـ EACOswap على Jupiter API. يوفر Jupiter v6 بنية من مرحلتين Quote -> Swap.",
+    "section.dexApis.subtitle.3": "8.3 مرجع تصميم Raydium API",
+    "section.dexApis.subtitle.4": "8.4 تصميم Orca Whirlpool SDK",
+    "section.dexApis.subtitle.5": "8.5 استراتيجية بيانات الأسعار CoinGecko vs Birdeye",
+    "section.dexApis.subtitle.6": "8.6 Helius RPC vs Solana Public RPC",
+    "section.designPhilosophy.subtitle.1": "9.1 مبدأ التغليف الموحد",
+    "section.designPhilosophy.list.1": "إخفاء الاختلافات: الواجهة الأمامية لا تهتم بمصدر البيانات سواء CoinGecko أو Birdeye، تستدعي فقط /api/birdeye/price، والواجهة الخلفية تتراجع تلقائياً",
+    "section.designPhilosophy.list.2": "تنسيق موحد: جميع الاستجابات مغلفة كـ { success, data, error }، منطق معالجة الواجهة الأمامية متسق",
+    "section.designPhilosophy.list.3": "وكيل آمن: مفاتيح API موجودة فقط في الواجهة الخلفية، الواجهة الأمامية لا تكشف أبداً عن بيانات اعتماد أي طرف ثالث",
+    "section.designPhilosophy.list.4": "طبقة التخزين المؤقت: البيانات عالية التردد (الأسعار) مخبأة 30-60 ثانية، البيانات منخفضة التردد (القيمة السوقية) مخبأة 5 دقائق",
+    "section.designPhilosophy.subtitle.2": "9.2 البنية الطبقية",
+    "section.designPhilosophy.subtitle.3": "9.3 استراتيجية التراجع عند الخطأ",
+    "section.designPhilosophy.subtitle.4": "9.4 كيفية توسيع DEX جديد",
+    "section.rateLimits.subtitle.1": "10.1 قيود مزودي الخدمة الصاعدين",
+    "section.rateLimits.subtitle.2": "10.2 تكوين حد المعدل للواجهة الخلفية EACOswap",
+    "section.rateLimits.subtitle.3": "10.3 مصفوفة استراتيجية الذاكرة المؤقتة",
+    "section.examples.subtitle.1": "الحصول على سعر SOL",
+    "section.examples.subtitle.2": "الحصول على تصنيف القيمة السوقية (أفضل 100)",
+    "section.examples.subtitle.3": "عرض المبادلة Jupiter (SOL -> EACO)",
+    "section.examples.subtitle.4": "استعلام عدد حاملي الرمز",
+    "section.examples.subtitle.5": "وكيل Helius RPC (الحصول على الرصيد)",
+    "section.security.list.1": "CORS: تكوين CORS_ORIGINS لنطاقات محددة في الإنتاج، تعطيل *",
+    "section.security.list.2": "حد المعدل: افتراضي 60 طلب/دقيقة، يمكن تعديل الإنتاج حسب الحاجة",
+    "section.security.list.3": "Helmet: تمكين CSP، تصفية XSS، HSTS وغيرها من رؤوس الأمان",
+    "section.security.list.4": "التحكم في المهلة: جميع الطلبات الصاعدة تنتهي بعد 15 ثانية لمنع التعليق",
+    "section.security.list.5": "استراتيجية التخزين المؤقت: الأسعار 60 ثانية، القيمة السوقية 300 ثانية، العروض 15 ثانية، الأصول 120 ثانية",
+    "section.security.list.6": "إخفاء تفاصيل الأخطاء: بيئة الإنتاج لا تكشف عن تفاصيل الأخطاء الداخلية",
+    "section.changelog.note.1": "خارطة الطريق المستقبلية: دفع الأسعار في الوقت الفعلي عبر WebSocket، دعم سلاسل متعددة (ETH/BSC)، API تجميد EACO، استعلام أصول NFT.",
+    "changelog.v220": "تدويل كامل بـ 6 لغات، جميع نصوص واجهة المستخدم قابلة للترجمة",
+    "section.endpoints.birdeyePrice.fallback.1": "إذا تم تكوين BIRDEYE_KEY، يُفضّل Birdeye API (مخبأة 30 ثانية)",
+    "section.endpoints.birdeyePrice.fallback.2": "إذا فشل Birdeye أو لا يوجد مفتاح، التراجع تلقائياً إلى CoinGecko token_price",
+    "section.endpoints.birdeyePrice.fallback.3": "CoinGecko مخبأة 60 ثانية"
   }
 };
 
 function setLang(lang) {
   document.body.setAttribute('data-lang', lang);
+  document.documentElement.lang = lang === 'ar' ? 'ar' : lang === 'zh' ? 'zh' : lang === 'ru' ? 'ru' : lang === 'es' ? 'es' : lang === 'fr' ? 'fr' : 'en';
   document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.lang === lang);
   });
-  localStorage.setItem('eaco-api-lang', lang);
+  localStorage.setItem('eacoswap_lang', lang);
 
   const dict = i18n[lang] || i18n['zh'];
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
-    if (dict[key]) el.textContent = dict[key];
+    if (dict && dict[key]) {
+      // For elements with child elements, use innerHTML to preserve structure
+      if (el.children.length > 0 && dict[key].includes('<')) {
+        el.innerHTML = dict[key];
+      } else if (el.children.length > 0) {
+        // Try to preserve child elements by replacing text nodes
+        el.innerHTML = dict[key];
+      } else {
+        el.textContent = dict[key];
+      }
+    }
+    // If no translation found, keep original (fallback)
   });
+
+  // RTL handling for Arabic
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
 }
 
-const savedLang = localStorage.getItem('eaco-api-lang') || 'zh';
+const savedLang = localStorage.getItem('eacoswap_lang') || 'en';
 setLang(savedLang);
 </script>
 

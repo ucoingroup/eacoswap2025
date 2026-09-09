@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="title">EACO + SOL Global Exchange Analysis</title>
+<style>
+/* ===== Theme Variables (unified with index.html) ===== */
+:root {
+  --bg:#0a0e27;--bg2:#0f1c3f;--card:rgba(20,30,60,0.6);--card2:rgba(25,40,70,0.5);
+  --border:rgba(100,149,237,0.3);--accent:#64b5f6;--accent2:#00e5ff;--gold:#ffd700;
+  --text:#e0e7ff;--text2:#7986cb;--muted:#7986cb;
+  --green:#4caf50;--orange:#ff9800;--red:#f44336;--radius:12px;
+  --grad:linear-gradient(135deg,#64b5f6,#00e5ff);
+}
+[data-theme="army"] {
+  --bg:#1b2a1b;--bg2:#2d4a2d;--card:rgba(42,58,42,0.6);--card2:rgba(50,70,50,0.5);
+  --border:rgba(195,176,145,0.3);--accent:#c3b091;--accent2:#a89870;--gold:#ffd700;
+  --text:#f0f0e6;--text2:#8b9a6b;--muted:#6a7a5a;
+  --green:#7cb342;--orange:#ff9800;--red:#f44336;
+  --grad:linear-gradient(135deg,#a3c44d,#c9a84c);
+}
+[data-theme="classic"] {
+  --bg:#f5f0e8;--bg2:#ebe5d9;--card:rgba(255,255,255,0.8);--card2:rgba(240,235,224,0.7);
+  --border:rgba(139,0,0,0.2);--accent:#8b0000;--accent2:#a0522d;--gold:#b8860b;
+  --text:#2c1810;--text2:#6b5b4f;--muted:#9a8a7a;
+  --green:#2e7d32;--orange:#e65100;--red:#c62828;
+  --grad:linear-gradient(135deg,#8b6914,#a0522d);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6;overflow-x:hidden}
+#starfield{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1}
+
+/* ===== Header & Controls (unified with index.html) ===== */
+header{position:sticky;top:0;z-index:100;background:var(--bg2);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;max-width:1200px;margin:0 auto;flex-wrap:wrap;gap:10px}
+.logo{display:flex;align-items:center;gap:8px;font-size:1.2rem;font-weight:800}
+.logo span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-left:auto;flex-shrink:0}
+.ctrl-group{display:flex;align-items:center;gap:4px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:2px}
+.lang-btn,.theme-btn{
+  padding:6px 10px;border:none;background:transparent;color:var(--text2);
+  border-radius:6px;cursor:pointer;font-size:.8rem;font-weight:600;
+  transition:all .2s;white-space:nowrap;
+}
+.lang-btn.active,.theme-btn.active{background:var(--accent);color:var(--bg)}
+[data-theme="classic"] .lang-btn.active,[data-theme="classic"] .theme-btn.active{color:#fff}
+.lang-btn:hover,.theme-btn:hover{color:var(--accent)}
+
+.container{max-width:1200px;margin:0 auto;padding:20px}
+.hero{text-align:center;padding:60px 20px 40px;position:relative}
+.hero h1{font-size:2.5em;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px}
+.hero p{font-size:1.1em;color:var(--muted);max-width:700px;margin:0 auto 20px}
+.ca-box{display:inline-block;background:rgba(100,149,237,0.1);border:1px solid var(--border);border-radius:8px;padding:10px 20px;font-family:monospace;font-size:0.85em;cursor:pointer;transition:all 0.3s}
+.ca-box:hover{border-color:var(--accent);box-shadow:0 0 15px rgba(100,149,237,0.3)}
+.ca-label{color:var(--muted);font-size:0.8em}
+.ca-value{color:var(--gold);margin-left:8px}
+
+.section{margin:40px 0}
+.section h2{text-align:center;font-size:1.8em;margin-bottom:8px;color:var(--accent)}
+.section .subtitle{text-align:center;color:var(--muted);margin-bottom:30px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:all 0.3s;backdrop-filter:blur(10px)}
+.card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 4px 20px rgba(100,149,237,0.15)}
+.card-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.card-head .sym{font-size:1.5em;font-weight:bold;color:var(--gold)}
+.card-head .flag{font-size:1.8em}
+.card-head .name{font-size:1.1em;color:var(--text)}
+.friendly{display:inline-block;padding:3px 10px;border-radius:12px;font-size:0.75em;font-weight:bold;margin-left:auto}
+.friendly.high{background:rgba(76,175,80,0.2);color:var(--green);border:1px solid var(--green)}
+.friendly.med{background:rgba(255,152,0,0.2);color:var(--orange);border:1px solid var(--orange)}
+.friendly.low{background:rgba(244,67,54,0.2);color:var(--red);border:1px solid var(--red)}
+.card-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(100,149,237,0.1);font-size:0.9em}
+.card-row:last-child{border-bottom:none}
+.card-row .label{color:var(--muted)}
+.card-row .val{color:var(--text);text-align:right;max-width:200px}
+.card .note{margin-top:10px;padding:8px 12px;background:rgba(100,149,237,0.05);border-radius:6px;font-size:0.85em;color:var(--muted)}
+.path-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:all 0.3s}
+.path-card:hover{border-color:var(--accent2)}
+.path-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.path-head .flag{font-size:2em}
+.path-head .title{font-size:1.1em;color:var(--accent)}
+.path-steps{list-style:none;counter-reset:step}
+.path-steps li{counter-increment:step;padding:6px 0 6px 30px;position:relative;font-size:0.9em;color:var(--text)}
+.path-steps li::before{content:counter(step);position:absolute;left:0;top:6px;width:20px;height:20px;background:var(--accent);color:#000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75em;font-weight:bold}
+.path-rate{color:var(--gold);font-size:0.85em;margin:8px 0}
+.dex-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;transition:all 0.3s}
+.dex-card:hover{border-color:var(--accent2);transform:translateY(-2px)}
+.dex-card .icon{font-size:2em;margin-bottom:8px}
+.dex-card .name{font-size:1em;color:var(--accent);margin-bottom:4px}
+.dex-card .vol{font-size:0.8em;color:var(--gold);margin-bottom:4px}
+.dex-card .fee{font-size:0.75em;color:var(--muted)}
+.dex-card .best{font-size:0.75em;color:var(--muted);margin-top:6px;padding:4px 8px;background:rgba(0,229,255,0.05);border-radius:4px}
+.onramp-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;transition:all 0.3s}
+.onramp-card:hover{border-color:var(--accent)}
+.onramp-card .name{color:var(--accent);font-size:1em;margin-bottom:4px}
+.onramp-card .region{color:var(--muted);font-size:0.8em;margin-bottom:4px}
+.onramp-card .detail{color:var(--text);font-size:0.85em}
+.strategy-card{display:flex;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;transition:all 0.3s}
+.strategy-card:hover{border-color:var(--accent2)}
+.strategy-card .phase{flex-shrink:0;width:40px;height:40px;background:var(--grad);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#000}
+.strategy-card .body .title{color:var(--accent);font-size:1em;margin-bottom:4px}
+.strategy-card .body .desc{color:var(--muted);font-size:0.85em}
+.link-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.link-card{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 14px;text-decoration:none;color:var(--text);transition:all 0.3s}
+.link-card:hover{border-color:var(--accent);background:rgba(100,149,237,0.1)}
+.link-card .icon{font-size:1.3em;flex-shrink:0}
+.link-card .text{font-size:0.85em}
+.orb-banner{text-align:center;padding:20px;background:linear-gradient(135deg,rgba(100,149,237,0.15),rgba(0,229,255,0.15));border:1px solid var(--border);border-radius:var(--radius);margin:20px 0}
+.orb-banner a{color:var(--accent2);text-decoration:none;font-weight:bold}
+.orb-banner a:hover{text-decoration:underline}
+footer{text-align:center;padding:40px 20px;color:var(--muted);font-size:0.85em;border-top:1px solid var(--border)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--green);color:#000;padding:10px 24px;border-radius:8px;font-size:0.85em;opacity:0;transition:opacity 0.3s;z-index:200}
+.toast.show{opacity:1}
+
+/* ===== RTL Support ===== */
+[dir="rtl"] { text-align: right; }
+[dir="rtl"] .card-head { flex-direction: row-reverse; }
+[dir="rtl"] .card-row { flex-direction: row-reverse; }
+[dir="rtl"] .strategy-card { flex-direction: row-reverse; }
+[dir="rtl"] .path-head { flex-direction: row-reverse; }
+[dir="rtl"] .link-card { flex-direction: row-reverse; }
+[dir="rtl"] .path-steps li { padding: 6px 30px 6px 0; }
+[dir="rtl"] .path-steps li::before { left: auto; right: 0; }
+[dir="rtl"] .controls { margin-left: 0; margin-right: auto; }
+
+@media(max-width:768px){
+  .hero h1{font-size:1.8em}
+  .grid{grid-template-columns:1fr}
+  .header-inner{justify-content:center}
+  .controls{justify-content:center;margin-left:0;margin-right:0}
+  .container{padding:12px}
+}
+</style>
+</head>
+<body data-theme="cosmic">
+<canvas id="starfield"></canvas>
+
+<!-- ===== Header with Controls ===== -->
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo" style="text-decoration:none"><span>EACO Analysis</span></a>
+    <div class="controls">
+      <div class="ctrl-group" id="langGroup">
+        <button class="lang-btn active" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="zh">华语</button>
+        <button class="lang-btn" data-lang="es">ES</button>
+        <button class="lang-btn" data-lang="ar">ع</button>
+        <button class="lang-btn" data-lang="fr">FR</button>
+        <button class="lang-btn" data-lang="ru">RU</button>
+      </div>
+      <div class="ctrl-group" id="themeGroup">
+        <button class="theme-btn active" data-theme="cosmic" data-i18n="theme_cosmic">Cosmic</button>
+        <button class="theme-btn" data-theme="army" data-i18n="theme_army">Army</button>
+        <button class="theme-btn" data-theme="classic" data-i18n="theme_classic">Classic</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+<div class="hero">
+<h1 data-i18n="title">EACO + SOL Global Exchange Analysis</h1>
+<p data-i18n="subtitle">Analyzing Web3-friendly currencies among the world's top 10 fiat currencies and EACO+SOL exchange pathways</p>
+<div class="ca-box" onclick="copyCA()">
+<span class="ca-label" data-i18n="ca_label">EACO Contract Address (Solana):</span>
+<span class="ca-value">DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH</span>
+</div>
+</div>
+
+<div class="orb-banner">
+<span data-i18n="orb_text">View EACO real-time token data on OrbMarkets:</span>
+<a href="https://orbmarkets.io/token/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH" target="_blank" rel="noopener">OrbMarkets EACO &rarr;</a>
+</div>
+
+<!-- Section 1: Currency Analysis -->
+<div class="section" id="sec-currencies">
+<h2 data-i18n="s1_title">Top 10 Global Currencies - Web3 Friendliness Analysis</h2>
+<p class="subtitle" data-i18n="s1_sub">Evaluating regulatory clarity, crypto adoption, and Solana ecosystem support</p>
+<div class="grid" id="currency-grid"></div>
+</div>
+
+<!-- Section 2: Exchange Paths -->
+<div class="section" id="sec-paths">
+<h2 data-i18n="s2_title">EACO + SOL Exchange Pathways</h2>
+<p class="subtitle" data-i18n="s2_sub">Detailed step-by-step exchange routes for key currencies</p>
+<div class="grid" id="path-grid"></div>
+</div>
+
+<!-- Section 3: Solana DEX -->
+<div class="section" id="sec-dex">
+<h2 data-i18n="s3_title">Solana DEX Ecosystem</h2>
+<p class="subtitle" data-i18n="s3_sub">Top decentralized exchanges for EACO + SOL trading</p>
+<div class="grid" id="dex-grid"></div>
+</div>
+
+<!-- Section 4: Fiat Onramps -->
+<div class="section" id="sec-onramp">
+<h2 data-i18n="s4_title">Fiat Onramp / Offramp Channels</h2>
+<p class="subtitle" data-i18n="s4_sub">Gateways connecting fiat currencies to Solana ecosystem</p>
+<div class="grid" id="onramp-grid"></div>
+</div>
+
+<!-- Section 5: Strategy -->
+<div class="section" id="sec-strategy">
+<h2 data-i18n="s5_title">EACO + SOL Exchange Development Strategy</h2>
+<p class="subtitle" data-i18n="s5_sub">Phased roadmap for global currency integration</p>
+<div id="strategy-list"></div>
+</div>
+
+<!-- Section 6: Eco Links -->
+<div class="section" id="sec-links">
+<h2 data-i18n="s6_title">EACO Ecosystem Links</h2>
+<p class="subtitle" data-i18n="s6_sub">Explore the full EACO Web3 ecosystem</p>
+<div class="link-grid" id="link-grid"></div>
+</div>
+
+<footer>
+<p data-i18n="footer1">EACO = Energy x Attitude x Cooperation x Optimization | Earth's Best Coin</p>
+<p data-i18n="footer2" style="margin-top:8px">Chain: Solana | CA: DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH</p>
+<p style="margin-top:8px"><a href="https://discord.gg/bWCDME9Pkc" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none" data-i18n="footer3">Join EACO Discord Community</a></p>
+<p style="margin-top:8px"><a href="index.html" style="color:var(--accent);text-decoration:none" data-i18n="back_home">&#8592; Back to EACOswap Home</a></p>
+<p style="margin-top:16px"><a href="https://ucoingroup.github.io/eacoweb3-2026/eaco-charity2025.html" target="_blank" rel="noopener" style="color:var(--accent2);text-decoration:none" data-i18n="charity_link">EACO Charity 2025 &#10084;</a></p>
+</footer>
+</div>
+
+<div class="toast" id="toast">Contract address copied!</div>
+
+<script>
+// ============ I18N ============
+const I18N = {
+  en: {
+    "title": "EACO + SOL Global Exchange Analysis",
+    "subtitle": "Analyzing Web3-friendly currencies among the world's top 10 fiat currencies and EACO+SOL exchange pathways",
+    "ca_label": "EACO Contract Address (Solana):",
+    "orb_text": "View EACO real-time token data on OrbMarkets:",
+    "s1_title": "Top 10 Global Currencies - Web3 Friendliness Analysis",
+    "s1_sub": "Evaluating regulatory clarity, crypto adoption, and Solana ecosystem support",
+    "s2_title": "EACO + SOL Exchange Pathways",
+    "s2_sub": "Detailed step-by-step exchange routes for key currencies",
+    "s3_title": "Solana DEX Ecosystem",
+    "s3_sub": "Top decentralized exchanges for EACO + SOL trading",
+    "s4_title": "Fiat Onramp / Offramp Channels",
+    "s4_sub": "Gateways connecting fiat currencies to Solana ecosystem",
+    "s5_title": "EACO + SOL Exchange Development Strategy",
+    "s5_sub": "Phased roadmap for global currency integration",
+    "s6_title": "EACO Ecosystem Links",
+    "s6_sub": "Explore the full EACO Web3 ecosystem",
+    "footer1": "EACO = Energy x Attitude x Cooperation x Optimization | Earth's Best Coin",
+    "footer2": "Chain: Solana | CA: DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH",
+    "footer3": "Join EACO Discord Community",
+    "f_high": "High",
+    "f_med": "Medium",
+    "f_low": "Limited",
+    "lbl_region": "Region",
+    "lbl_rate": "Reference Rate",
+    "lbl_reg": "Regulatory Framework",
+    "lbl_path": "Exchange Path",
+    "lbl_note": "Note",
+    "toast_copied": "Contract address copied!",
+    "theme_cosmic": "Cosmic",
+    "theme_army": "Army",
+    "theme_classic": "Classic",
+    "back_home": "\u2190 Back to EACOswap Home",
+    "charity_link": "EACO Charity 2025 \u2665",
+  },
+  zh: {
+    "title": "EACO + SOL 全球兑换行情分析",
+    "subtitle": "分析全球前10大货币中对Web3友善的货币及EACO+SOL兑换路径",
+    "ca_label": "EACO 合约地址（Solana链）：",
+    "orb_text": "在 OrbMarkets 查看 EACO 实时代币数据：",
+    "s1_title": "全球前10大货币 — Web3友好度分析",
+    "s1_sub": "评估监管清晰度、加密采纳与Solana生态支持",
+    "s2_title": "EACO + SOL 兑换路径",
+    "s2_sub": "重点货币的分步兑换路线详解",
+    "s3_title": "Solana DEX 生态",
+    "s3_sub": "EACO + SOL 交易的顶级去中心化交易所",
+    "s4_title": "法币入金/出金通道",
+    "s4_sub": "连接法币与Solana生态的网关",
+    "s5_title": "EACO + SOL 兑换发展战略",
+    "s5_sub": "全球货币整合的分阶段路线图",
+    "s6_title": "EACO 生态链接",
+    "s6_sub": "探索完整的 EACO Web3 生态",
+    "footer1": "EACO = 能量 x 态度 x 协作 x 优化 | 地球最佳货币",
+    "footer2": "链: Solana | 合约地址: DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH",
+    "footer3": "加入 EACO Discord 社区",
+    "f_high": "高",
+    "f_med": "中",
+    "f_low": "有限",
+    "lbl_region": "地区",
+    "lbl_rate": "参考汇率",
+    "lbl_reg": "监管框架",
+    "lbl_path": "兑换路径",
+    "lbl_note": "备注",
+    "toast_copied": "合约地址已复制！",
+    "theme_cosmic": "宇宙蓝 Cosmic",
+    "theme_army": "军绿 Army",
+    "theme_classic": "米黄古典 Classic",
+    "back_home": "← 返回 EACOswap 首页",
+    "charity_link": "EACO 公益 2025 ♥",
+  },
+  es: {
+    "title": "Analisis Global de Intercambio EACO + SOL",
+    "subtitle": "Analizando monedas fiat amigables con Web3 entre las 10 principales del mundo y rutas de intercambio EACO+SOL",
+    "ca_label": "Direccion del Contrato EACO (Solana):",
+    "orb_text": "Ver datos de token EACO en tiempo real en OrbMarkets:",
+    "s1_title": "Top 10 Monedas Globales - Analisis de Amigabilidad Web3",
+    "s1_sub": "Evaluando claridad regulatoria, adopcion de cripto y soporte del ecosistema Solana",
+    "s2_title": "Rutas de Intercambio EACO + SOL",
+    "s2_sub": "Rutas detalladas paso a paso para monedas clave",
+    "s3_title": "Ecosistema DEX de Solana",
+    "s3_sub": "Principales exchanges descentralizados para trading EACO + SOL",
+    "s4_title": "Canales de Entrada/Salida de Fiat",
+    "s4_sub": "Pasarelas que conectan monedas fiat con el ecosistema Solana",
+    "s5_title": "Estrategia de Desarrollo de Intercambio EACO + SOL",
+    "s5_sub": "Hoja de ruta por fases para la integracion de monedas globales",
+    "s6_title": "Enlaces del Ecosistema EACO",
+    "s6_sub": "Explora el ecosistema Web3 completo de EACO",
+    "footer1": "EACO = Energia x Actitud x Cooperacion x Optimizacion | La Mejor Moneda de la Tierra",
+    "footer2": "Cadena: Solana | CA: DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH",
+    "footer3": "Unirse a la Comunidad Discord de EACO",
+    "f_high": "Alto",
+    "f_med": "Medio",
+    "f_low": "Limitado",
+    "lbl_region": "Region",
+    "lbl_rate": "Tasa de Referencia",
+    "lbl_reg": "Marco Regulatorio",
+    "lbl_path": "Ruta de Intercambio",
+    "lbl_note": "Nota",
+    "toast_copied": "Direccion del contrato copiada!",
+    "theme_cosmic": "Azul Cosmico",
+    "theme_army": "Verde Militar",
+    "theme_classic": "Beige Clasico",
+    "back_home": "\u2190 Volver a EACOswap",
+    "charity_link": "EACO Caridad 2025 \u2665",
+  },
+  fr: {
+    "title": "Analyse Globale des Echanges EACO + SOL",
+    "subtitle": "Analyse des devises fiat favorables au Web3 parmi les 10 principales mondiales et les voies d'echange EACO+SOL",
+    "ca_label": "Adresse du Contrat EACO (Solana) :",
+    "orb_text": "Voir les donnees de token EACO en temps reel sur OrbMarkets :",
+    "s1_title": "Top 10 Devises Mondiales - Analyse de Favorabilite Web3",
+    "s1_sub": "Evaluation de la clarte reglementaire, de l'adoption crypto et du soutien de l'ecosysteme Solana",
+    "s2_title": "Voies d'Echange EACO + SOL",
+    "s2_sub": "Routes d'echange detaillees etape par etape pour les devises cles",
+    "s3_title": "Ecosysteme DEX Solana",
+    "s3_sub": "Principaux exchanges decentralises pour le trading EACO + SOL",
+    "s4_title": "Canaux d'Entree/Sortie Fiat",
+    "s4_sub": "Passerelles connectant les devises fiat a l'ecosysteme Solana",
+    "s5_title": "Strategie de Developpement des Echanges EACO + SOL",
+    "s5_sub": "Feuille de route par phases pour l'integration des devises mondiales",
+    "s6_title": "Liens de l'Ecosysteme EACO",
+    "s6_sub": "Explorez l'ecosysteme Web3 complet d'EACO",
+    "footer1": "EACO = Energie x Attitude x Cooperation x Optimisation | La Meilleure Monde de la Terre",
+    "footer2": "Chaine : Solana | CA : DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH",
+    "footer3": "Rejoindre la Communaute Discord EACO",
+    "f_high": "Eleve",
+    "f_med": "Moyen",
+    "f_low": "Limite",
+    "lbl_region": "Region",
+    "lbl_rate": "Taux de Reference",
+    "lbl_reg": "Cadre Reglementaire",
+    "lbl_path": "Voie d'Echange",
+    "lbl_note": "Note",
+    "toast_copied": "Adresse du contrat copiee !",
+    "theme_cosmic": "Bleu Cosmique",
+    "theme_army": "Vert Militaire",
+    "theme_classic": "Beige Classique",
+    "back_home": "\u2190 Retour a l Accueil EACOswap",
+    "charity_link": "EACO Charite 2025 \u2665",
+  },
+  ru: {
+    "title": "Глобальный Анализ Обмена EACO + SOL",
+    "subtitle": "Анализ дружественных к Web3 фиатных валют среди топ-10 мировых валют и путей обмена EACO+SOL",
+    "ca_label": "Адрес Контракта EACO (Solana):",
+    "orb_text": "Просмотр данных токена EACO в реальном времени на OrbMarkets:",
+    "s1_title": "Топ-10 Мировых Валют - Анализ Дружественности к Web3",
+    "s1_sub": "Оценка регуляторной ясности, принятия криптовалют и поддержки экосистемы Solana",
+    "s2_title": "Пути Обмена EACO + SOL",
+    "s2_sub": "Подробные пошаговые маршруты обмена для ключевых валют",
+    "s3_title": "Экосистема DEX Solana",
+    "s3_sub": "Ведущие децентрализованные биржи для торговли EACO + SOL",
+    "s4_title": "Каналы Ввода/Вывода Фиата",
+    "s4_sub": "Шлюзы, соединяющие фиатные валюты с экосистемой Solana",
+    "s5_title": "Стратегия Развития Обмена EACO + SOL",
+    "s5_sub": "Поэтапная дорожная карта для интеграции мировых валют",
+    "s6_title": "Ссылки Экосистемы EACO",
+    "s6_sub": "Исследуйте полную экосистему Web3 EACO",
+    "footer1": "EACO = Энергия x Отношение x Сотрудничество x Оптимизация | Лучшая Монета Земли",
+    "footer2": "Сеть: Solana | CA: DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH",
+    "footer3": "Присоединиться к Сообществу Discord EACO",
+    "f_high": "Высокий",
+    "f_med": "Средний",
+    "f_low": "Ограниченный",
+    "lbl_region": "Регион",
+    "lbl_rate": "Справочный Курс",
+    "lbl_reg": "Регуляторная Рамка",
+    "lbl_path": "Путь Обмена",
+    "lbl_note": "Примечание",
+    "toast_copied": "Адрес контракта скопирован!",
+    "theme_cosmic": "Космический Синий",
+    "theme_army": "Армейский Зеленый",
+    "theme_classic": "Классический Бежевый",
+    "back_home": "\u2190 \u041d\u0430 \u0413\u043b\u0430\u0432\u043d\u0443\u044e EACOswap",
+    "charity_link": "EACO \u0411\u043b\u0430\u0433\u043e\u0442\u0432\u043e\u0440\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c 2025 \u2665",
+  },
+  ar: {
+    "title": "تحليل عالمي لتبادل EACO + SOL",
+    "subtitle": "تحليل العملات الورقية الصديقة للويب3 بين أفضل 10 عملات عالمية ومسارات تبادل EACO+SOL",
+    "ca_label": "عنوان عقد EACO (Solana):",
+    "orb_text": "عرض بيانات رمز EACO في الوقت الفعلي على OrbMarkets:",
+    "s1_title": "أفضل 10 عملات عالمية - تحليل مدى التوافق مع الويب3",
+    "s1_sub": "تقييم الوضوح التنظيمي، وتبني العملات المشفرة، ودعم نظام Solana البيئي",
+    "s2_title": "مسارات تبادل EACO + SOL",
+    "s2_sub": "مسارات تبادل مفصلة خطوة بخطوة للعملات الرئيسية",
+    "s3_title": "نظام DEX الخاص بـ Solana",
+    "s3_sub": "أفضل البورصات اللامركزية لتداول EACO + SOL",
+    "s4_title": "قنوات إيداع/سحب العملات الورقية",
+    "s4_sub": "بوابات ربط العملات الورقية بنظام Solana البيئي",
+    "s5_title": "استراتيجية تطوير تبادل EACO + SOL",
+    "s5_sub": "خارطة طريق مرحلية لدمج العملات العالمية",
+    "s6_title": "روابط نظام EACO البيئي",
+    "s6_sub": "استكشف النظام البيئي الكامل لـ EACO Web3",
+    "footer1": "EACO = طاقة x موقف x تعاون x تحسين | أفضل عملة على الأرض",
+    "footer2": "الشبكة: Solana | العنوان: DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH",
+    "footer3": "انضم إلى مجتمع Discord الخاص بـ EACO",
+    "f_high": "مرتفع",
+    "f_med": "متوسط",
+    "f_low": "محدود",
+    "lbl_region": "المنطقة",
+    "lbl_rate": "سعر المرجع",
+    "lbl_reg": "الإطار التنظيمي",
+    "lbl_path": "مسار التبادل",
+    "lbl_note": "ملاحظة",
+    "toast_copied": "تم نسخ عنوان العقد!",
+    "theme_cosmic": "كوزميك أزرق",
+    "theme_army": "أخضر عسكري",
+    "theme_classic": "بيج كلاسيكي",
+    "back_home": "← العودة إلى الرئيسية EACOswap",
+    "charity_link": "EACO خيرية 2025 ♥",
+  },
+};
+
+// ============ DATA ============
+var CURRENCIES = [
+  {sym:"USD",flag:"🇺🇸",name_en:"US Dollar",name_zh:"\u7f8e\u5143",name_es:"Dolar Estadounidense",name_fr:"Dollar Americain",name_ru:"\u0414\u043e\u043b\u043b\u0430\u0440 \u0421\u0428\u0410",name_ar:"\u0627\u0644\u062f\u0648\u0644\u0627\u0631 \u0627\u0644\u0623\u0645\u0631\u064a\u0643\u064a",region_en:"USA",region_zh:"\u7f8e\u56fd",region_es:"EE.UU.",region_fr:"Etats-Unis",region_ru:"\u0421\u0428\u0410",region_ar:"\u0627\u0644\u0648\u0644\u0627\u064a\u0627\u062a \u0627\u0644\u0645\u062a\u062d\u062f\u0629",rate:"1 USD = 0.0119 SOL",reg_en:"Pro-crypto policy under Trump admin; BTC/ETH spot ETFs approved; Stripe supports SOL onramp",reg_zh:"\u7279\u6717\u666e\u653f\u5e9c\u4eb2\u52a0\u5bc6\u653f\u7b56\uff1bBTC/ETH\u73b0\u8d27ETF\u5df2\u6279\u51c6\uff1bStripe\u652f\u6301SOL\u5165\u91d1",reg_es:"Politica pro-cripto bajo la admin. Trump; ETFs spot BTC/ETH aprobados; Stripe soporta entrada SOL",reg_fr:"Politique pro-crypto sous l'admin. Trump; ETFs spot BTC/ETH approuves; Stripe supporte l'entree SOL",reg_ru:"\u041f\u0440\u043e-\u043a\u0440\u0438\u043f\u0442\u043e \u043f\u043e\u043b\u0438\u0442\u0438\u043a\u0430 \u043f\u0440\u0438 \u0430\u0434\u043c\u0438\u043d\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u0438 \u0422\u0440\u0430\u043c\u043f\u0430; \u0441\u043f\u043e\u0442\u043e\u0432\u044b\u0435 ETF BTC/ETH \u043e\u0434\u043e\u0431\u0440\u0435\u043d\u044b; Stripe \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u0442 \u0432\u0432\u043e\u0434 SOL",reg_ar:"\u0633\u064a\u0627\u0633\u0629 \u0645\u0624\u064a\u062f\u0629 \u0644\u0644\u0639\u0645\u0644\u0627\u062a \u0627\u0644\u0645\u0634\u0641\u0631\u0629 \u062a\u062d\u062a \u0625\u062f\u0627\u0631\u0629 \u062a\u0631\u0627\u0645\u0628\u061b \u062a\u0645\u062a \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0629 \u0639\u0644\u0649 \u0635\u0646\u0627\u062f\u064a\u0642 BTC/ETH \u0627\u0644\u0641\u0648\u0631\u064a\u0629\u061b Stripe \u064a\u062f\u0639\u0645 \u0625\u064a\u062f\u0627\u0639 SOL",friendly:"high",path_en:"USD -> SOL (via Coinbase/Stripe) -> EACO (via Jupiter/Orca)",path_zh:"\u7f8e\u5143 -> SOL(Coinbase/Stripe) -> EACO(Jupiter/Orca)",path_es:"USD -> SOL (via Coinbase/Stripe) -> EACO (via Jupiter/Orca)",path_fr:"USD -> SOL (via Coinbase/Stripe) -> EACO (via Jupiter/Orca)",path_ru:"USD -> SOL (\u0447\u0435\u0440\u0435\u0437 Coinbase/Stripe) -> EACO (\u0447\u0435\u0440\u0435\u0437 Jupiter/Orca)",path_ar:"USD -> SOL (\u0639\u0628\u0631 Coinbase/Stripe) -> EACO (\u0639\u0628\u0631 Jupiter/Orca)",note_en:"Largest crypto market; clearest regulatory framework",note_zh:"\u6700\u5927\u52a0\u5bc6\u5e02\u573a\uff1b\u76d1\u7ba1\u6846\u67b6\u6700\u6e05\u6670",note_es:"Mayor mercado cripto; marco regulatorio mas claro",note_fr:"Plus grand marche crypto; cadre reglementaire le plus clair",note_ru:"\u041a\u0440\u0443\u043f\u043d\u0435\u0439\u0448\u0438\u0439 \u043a\u0440\u0438\u043f\u0442\u043e\u0440\u044b\u043d\u043e\u043a; \u0441\u0430\u043c\u0430\u044f \u0447\u0435\u0442\u043a\u0430\u044f \u0440\u0435\u0433\u0443\u043b\u044f\u0442\u043e\u0440\u043d\u0430\u044f \u0431\u0430\u0437\u0430",note_ar:"\u0623\u0643\u0628\u0631 \u0633\u0648\u0642 \u0644\u0644\u0639\u0645\u0644\u0627\u062a \u0627\u0644\u0645\u0634\u0641\u0631\u0629\u061b \u0627\u0644\u0625\u0637\u0627\u0631 \u0627\u0644\u062a\u0646\u0638\u064a\u0645\u064a \u0627\u0644\u0623\u0643\u062b\u0631 \u0648\u0636\u0648\u062d\u0627\u064b"},
+  {sym:"EUR",flag:"🇪🇺",name_en:"Euro",name_zh:"\u6b27\u5143",name_es:"Euro",name_fr:"Euro",name_ru:"\u0415\u0432\u0440\u043e",name_ar:"\u0627\u0644\u064a\u0648\u0631\u0648",region_en:"Eurozone (EU)",region_zh:"\u6b27\u5143\u533a(EU)",region_es:"Eurozona (UE)",region_fr:"Zone Euro (UE)",region_ru:"\u0415\u0432\u0440\u043e\u0437\u043e\u043d\u0430 (\u0415\u0421)",region_ar:"\u0645\u0646\u0637\u0642\u0629 \u0627\u0644\u064a\u0648\u0631\u0648 (\u0627\u0644\u0627\u062a\u062d\u0627\u062f \u0627\u0644\u0623\u0648\u0631\u0648\u0628\u064a)",rate:"1 EUR = 0.0137 SOL",reg_en:"MiCA regulation fully effective Dec 2024; EURC stablecoin on Solana; MYKOBO provides EUR on/off-ramp",reg_zh:"MiCA\u6cd5\u89c42024\u5e7412\u6708\u5168\u9762\u751f\u6548\uff1bEURC\u7a33\u5b9a\u5e01\u5728Solana\u4e0a\uff1bMYKOBO\u63d0\u4f9b\u6b27\u5143\u5165\u51fa\u91d1",reg_es:"Reglamento MiCA vigente dic. 2024; stablecoin EURC en Solana; MYKOBO ofrece entrada/salida EUR",reg_fr:"Reglement MiCA effectif dec. 2024; stablecoin EURC sur Solana; MYKOBO offre entree/sortie EUR",reg_ru:"\u0420\u0435\u0433\u043b\u0430\u043c\u0435\u043d\u0442 MiCA \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0441 \u0434\u0435\u043a. 2024; \u0441\u0442\u0435\u0439\u0431\u043b\u043a\u043e\u0438\u043d EURC \u043d\u0430 Solana; MYKOBO \u043e\u0431\u0435\u0441\u043f\u0435\u0447\u0438\u0432\u0430\u0435\u0442 \u0432\u0432\u043e\u0434/\u0432\u044b\u0432\u043e\u0434 EUR",reg_ar:"\u0644\u0648\u0627\u0626\u062d MiCA \u0633\u0627\u0631\u064a\u0629 \u062f\u064a\u0633\u0645\u0628\u0631 2024\u061b\u7a33\u5b9a\u0628\u064a\u0627\u0646 EURC \u0639\u0644\u0649 Solana\u061b MYKOBO \u064a\u0648\u0641\u0631 \u0625\u064a\u062f\u0627\u0639/\u0633\u062d\u0628 \u0627\u0644\u064a\u0648\u0631\u0648",friendly:"high",path_en:"EUR -> SOL (via MYKOBO/Bitvavo) -> EACO (via Jupiter/Orca)",path_zh:"\u6b27\u5143 -> SOL(MYKOBO/Bitvavo) -> EACO(Jupiter/Orca)",path_es:"EUR -> SOL (via MYKOBO/Bitvavo) -> EACO (via Jupiter/Orca)",path_fr:"EUR -> SOL (via MYKOBO/Bitvavo) -> EACO (via Jupiter/Orca)",path_ru:"EUR -> SOL (\u0447\u0435\u0440\u0435\u0437 MYKOBO/Bitvavo) -> EACO (\u0447\u0435\u0440\u0435\u0437 Jupiter/Orca)",path_ar:"EUR -> SOL (\u0639\u0628\u0631 MYKOBO/Bitvavo) -> EACO (\u0639\u0628\u0631 Jupiter/Orca)",note_en:"MiCA provides unified EU crypto framework; direct EUR-Solana bridge",note_zh:"MiCA\u63d0\u4f9b\u7edf\u4e00\u6b27\u76df\u52a0\u5bc6\u6846\u67b6\uff1b\u76f4\u63a5\u6b27\u5143-Solana\u6865\u63a5",note_es:"MiCA proporciona marco cripto unificado de la UE; puente directo EUR-Solana",note_fr:"MiCA fournit un cadre crypto unifie de l'UE; pont direct EUR-Solana",note_ru:"MiCA \u043e\u0431\u0435\u0441\u043f\u0435\u0447\u0438\u0432\u0430\u0435\u0442 \u0435\u0434\u0438\u043d\u044b\u0439 \u043a\u0440\u0438\u043f\u0442\u043e-\u0440\u0435\u0433\u043b\u0430\u043c\u0435\u043d\u0442 \u0415\u0421; \u043f\u0440\u044f\u043c\u043e\u0439 \u043c\u043e\u0441\u0442 EUR-Solana",note_ar:"\u064a\u0648\u0641\u0631 MiCA \u0625\u0637\u0627\u0631\u0627\u064b \u0645\u0648\u062d\u062f\u0627\u064b \u0644\u0644\u0639\u0645\u0644\u0627\u062a \u0627\u0644\u0645\u0634\u0641\u0631\u0629 \u0641\u064a \u0627\u0644\u0627\u062a\u062d\u0627\u062f \u0627\u0644\u0623\u0648\u0631\u0648\u0628\u064a\u061b \u062c\u0633\u0631 \u0645\u0628\u0627\u0634\u0631 EUR-Solana"},
+  {sym:"JPY",flag:"🇯🇵",name_en:"Japanese Yen",name_zh:"\u65e5\u5143",name_es:"Yen Japones",name_fr:"Yen Japonais",name_ru:"\u042f\u043f\u043e\u043d\u0441\u043a\u0430\u044f \u0418\u0435\u043d\u0430",name_ar:"\u0627\u0644\u064a\u0646 \u0627\u0644\u064a\u0627\u0628\u0627\u0646\u064a",region_en:"Japan",region_zh:"\u65e5\u672c",region_es:"Japon",region_fr:"Japon",region_ru:"\u042f\u043f\u043e\u043d\u0438\u044f",region_ar:"\u0627\u0644\u064a\u0627\u0628\u0627\u0646",rate:"1 JPY = 0.0000745 SOL",reg_en:"Crypto regulated since 2017; Coincheck/bitFlyer licensed; JVCEA self-regulatory framework",reg_zh:"\u81ea2017\u5e74\u5efa\u7acb\u52a0\u5bc6\u76d1\u7ba1\uff1bCoincheck/bitFlyer\u6301\u724c\u4ea4\u6613\u6240",reg_es:"Cripto regulado desde 2017; Coincheck/bitFlyer con licencia; marco autorregulatorio JVCEA",reg_fr:"Crypto regule depuis 2017; Coincheck/bitFlyer licences; cadre auto-reglementaire JVCEA",reg_ru:"\u041a\u0440\u0438\u043f\u0442\u043e \u0440\u0435\u0433\u0443\u043b\u0438\u0440\u0443\u0435\u0442\u0441\u044f \u0441 2017; Coincheck/bitFlyer \u043b\u0438\u0446\u0435\u043d\u0437\u0438\u0440\u043e\u0432\u0430\u043d\u044b; \u0441\u0430\u043c\u043e\u0440\u0435\u0433\u0443\u043b\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 JVCEA",reg_ar:"\u0627\u0644\u0639\u0645\u0644\u0627\u062a \u0627\u0644\u0645\u0634\u0641\u0631\u0629 \u0645\u0646\u0638\u0645\u0629 \u0645\u0646\u0630 2017\u061b \u062a\u0631\u0627\u062e\u064a\u0635 Coincheck/bitFlyer\u061b \u0625\u0637\u0627\u0631 \u0627\u0644\u062a\u0646\u0638\u064a\u0645 \u0627\u0644\u0630\u0627\u062a\u064a JVCEA",friendly:"high",path_en:"JPY -> SOL (via Coincheck/bitFlyer) -> EACO (via Jupiter)",path_zh:"\u65e5\u5143 -> SOL(Coincheck/bitFlyer) -> EACO(Jupiter)",path_es:"JPY -> SOL (via Coincheck/bitFlyer) -> EACO (via Jupiter)",path_fr:"JPY -> SOL (via Coincheck/bitFlyer) -> EACO (via Jupiter)",path_ru:"JPY -> SOL (\u0447\u0435\u0440\u0435\u0437 Coincheck/bitFlyer) -> EACO (\u0447\u0435\u0440\u0435\u0437 Jupiter)",path_ar:"JPY -> SOL (\u0639\u0628\u0631 Coincheck/bitFlyer) -> EACO (\u0639\u0628\u0631 Jupiter)",note_en:"Asia's most mature crypto regulatory framework",note_zh:"\u4e9a\u6d32\u6700\u6210\u719f\u7684\u52a0\u5bc6\u76d1\u7ba1\u6846\u67b6",note_es:"Marco regulatorio cripto mas maduro de Asia",note_fr:"Cadre reglementaire crypto le plus mature d'Asie",note_ru:"\u0421\u0430\u043c\u0430\u044f \u0437\u0440\u0435\u043b\u0430\u044f \u043a\u0440\u0438\u043f\u0442\u043e-\u0440\u0435\u0433\u0443\u043b\u044f\u0442\u043e\u0440\u043d\u0430\u044f \u0431\u0430\u0437\u0430 \u0432 \u0410\u0437\u0438\u0438",note_ar:"\u0627\u0644\u0625\u0637\u0627\u0631 \u0627\u0644\u062a\u0646\u0638\u064a\u0645\u064a \u0627\u0644\u0623\u0643\u062b\u0631 \u0646\u0636\u062c\u0627\u064b \u0644\u0644\u0639\u0645\u0644\u0627\u062a \u0627\u0644\u0645\u0634\u0641\u0631\u0629 \u0641\u064a \u0622\u0633\u064a\u0627"},
+  {sym:"GBP",flag:"🇬🇧",name_en:"British Pound",name_zh:"\u82f1\u9551",name_es:"Libra Esterlina",name_fr:"Livre Sterling",name_ru:"\u0411\u0440\u0438\u0442\u0430\u043d\u0441\u043a\u0438\u0439 \u0424\u0443\u043d\u0442",name_ar:"\u0627\u0644\u062c\u0646\u064a\u0647 \u0627\u0644\u0625\u0633\u062a\u0631\u0644\u064a\u0646\u064a",region_en:"United Kingdom",region_zh:"\u82f1\u56fd",region_es:"Reino Unido",region_fr:"Royaume-Uni",region_ru:"\u0412\u0435\u043b\u0438\u043a\u043e\u0431\u0440\u0438\u0442\u0430\u043d\u0438\u044f",region_ar:"\u0627\u0644\u0645\u0645\u0644\u0643\u0629 \u0627\u0644\u0645\u062a\u062d\u062f\u0629",rate:"1 GBP = 0.0161 SOL",reg_en:"FCA lifted retail crypto ETN ban Oct 2025; trading volume surged 9x to $1.5B; clear stablecoin framework",reg_zh:"FCA\u4e8e2025\u5e7410\u6708\u89e3\u9664\u96f6\u552e\u5ba2\u6237\u52a0\u5bc6ETN\u7981\u4ee4\uff1b\u4ea4\u6613\u91cf\u6fc0\u589e9\u500d\u81f315\u4ebf\u7f8e\u5143",reg_es:"FCA levanto la prohibicion de ETN cripto para minoristas oct. 2025; volumen 9x a $1.5B",reg_fr:"FCA a leve l'interdiction des ETN crypto pour les particuliers en oct. 2025; volume x9 a 1,5B$",reg_ru:"FCA \u0441\u043d\u044f\u043b\u0430 \u0437\u0430\u043f\u0440\u0435\u0442 \u043d\u0430 \u043a\u0440\u0438\u043f\u0442\u043e-ETN \u0434\u043b\u044f \u0440\u043e\u0437\u043d\u0438\u0446\u044b \u0432 \u043e\u043a\u0442. 2025; \u043e\u0431\u044a\u0435\u043c \u0432\u044b\u0440\u043e\u0441 \u0432 9 \u0440\u0430\u0437 \u0434\u043e $1,5 \u043c\u043b\u0440\u0434",reg_ar:"\u0631\u0641\u0639\u062a FCA \u062d\u0638\u0631 ETN \u0627\u0644\u0645\u0634\u0641\u0631 \u0644\u0644\u0623\u0641\u0631\u0627\u062f \u0641\u064a \u0623\u0643\u062a\u0648\u0628\u0631 2025\u061b \u0627\u0631\u062a\u0641\u0639 \u0627\u0644\u062d\u062c\u0645 9 \u0623\u0636\u0639\u0627\u0641 \u0625\u0644\u0649 1.5 \u0645\u0644\u064a\u0627\u0631 \u062f\u0648\u0644\u0627\u0631",friendly:"high",path_en:"GBP -> SOL (via CoinList/Bitstamp) -> EACO (via Jupiter/Orca)",path_zh:"\u82f1\u9551 -> SOL(CoinList/Bitstamp) -> EACO(Jupiter/Orca)",path_es:"GBP -> SOL (via CoinList/Bitstamp) -> EACO (via Jupiter/Orca)",path_fr:"GBP -> SOL (via CoinList/Bitstamp) -> EACO (via Jupiter/Orca)",path_ru:"GBP -> SOL (\u0447\u0435\u0440\u0435\u0437 CoinList/Bitstamp) -> EACO (\u0447\u0435\u0440\u0435\u0437 Jupiter/Orca)",path_ar:"GBP -> SOL (\u0639\u0628\u0631 CoinList/Bitstamp) -> EACO (\u0639\u0628\u0631 Jupiter/Orca)",note_en:"Post-Brexit independent crypto regulation; FCA proactive approach",note_zh:"\u8131\u6b27\u540e\u72ec\u7acb\u52a0\u5bc6\u76d1\u7ba1\uff1bFCA\u79ef\u6781\u63a8\u8fdb",note_es:"Regulacion cripto independiente post-Brexit; FCA proactivo",note_fr:"Regulation crypto independante post-Brexit; FCA proactif",note_ru:"\u041d\u0435\u0437\u0430\u0432\u0438\u0441\u0438\u043c\u043e\u0435 \u043a\u0440\u0438\u043f\u0442\u043e-\u0440\u0435\u0433\u0443\u043b\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u043f\u043e\u0441\u043b\u0435 Brexit; FCA \u043f\u0440\u043e\u0430\u043a\u0442\u0438\u0432\u0435\u043d",note_ar:"\u062a\u0646\u0638\u064a\u0645 \u0645\u0633\u062a\u0642\u0644 \u0644\u0644\u0639\u0645\u0644\u0627\u062a \u0627\u0644\u0645\u0634\u0641\u0631\u0629 \u0628\u0639\u062f Brexit\u061b FCA \u0627\u0633\u062a\u0628\u0627\u0642\u064a"},
+  {sym:"CNH",flag:"🇨🇳",name_en:"Chinese Yuan (Offshore)",name_zh:"\u4eba\u6c11\u5e01",name_es:"Yuan Chino (Offshore)",name_fr:"Yuan Chinois (Offshore)",name_ru:"\u041a\u0438\u0442\u0430\u0439\u0441\u043a\u0438\u0439 \u042e\u0430\u043d\u044c (\u041e\u0444\u0448\u043e\u0440\u043d\u044b\u0439)",name_ar:"\u0627\u0644\u064a\u0648\u0627\u0646 \u0627\u0644\u0635\u064a\u0646\u064a (\u0627\u0644\u0628\u062d\u0631\u064a)",region_en:"China (Mainland + HK)",region_zh:"\u4e2d\u56fd(\u5185\u5730+\u9999\u6e2f)",region_es:"China (Continental + HK)",region_fr:"Chine (Continentale + HK)",region_ru:"\u041a\u0438\u0442\u0430\u0439 (\u041c\u0430\u0442\u0435\u0440\u0438\u043a\u043e\u0432\u044b\u0439 + \u0413\u043e\u043d\u043a\u043e\u043d\u0433)",region_ar:"\u0627\u0644\u0635\u064a\u0646 (\u0627\u0644\u0628\u0631 \u0627\u0644\u0631\u0626\u064a\u0633\u064a + \u0647\u0648\u0646\u063a \u0643\u0648\u0646\u063a)",rate:"1 CNH = 0.00165 SOL",reg_en:"Mainland restricts crypto; HK Stablecoin Ordinance effective Aug 2025; HK as Web3 gateway",reg_zh:"\u5185\u5730\u9650\u5236\u52a0\u5bc6\uff1b\u9999\u6e2f\u300a\u7a33\u5b9a\u5e01\u6761\u4f8b\u300b2025\u5e748\u6708\u751f\u6548\uff1b\u9999\u6e2f\u4f5cWeb3\u95e8\u6237",reg_es:"Continental restringe cripto; Ordenanza de Stablecoins de HK vigente ago. 2025; HK como puerta Web3",reg_fr:"Continent restreint le crypto; Ordonnance sur les Stablecoins de HK en vigueur aout 2025; HK comme porte Web3",reg_ru:"\u041c\u0430\u0442\u0435\u0440\u0438\u043a\u043e\u0432\u044b\u0439 \u041a\u0438\u0442\u0430\u0439 \u043e\u0433\u0440\u0430\u043d\u0438\u0447\u0438\u0432\u0430\u0435\u0442 \u043a\u0440\u0438\u043f\u0442\u043e; \u041e\u0440\u0434\u043e\u043d\u0430\u043d\u0441 \u0413\u043e\u043d\u043a\u043e\u043d\u0433\u0430 \u043f\u043e \u0441\u0442\u0435\u0439\u0431\u043b\u043a\u043e\u0438\u043d\u0430\u043c \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0441 \u0430\u0432\u0433. 2025; \u0413\u043e\u043d\u043a\u043e\u043d\u0433 \u043a\u0430\u043a \u0448\u043b\u044e\u0437 Web3",reg_ar:"\u0627\u0644\u0628\u0631 \u0627\u0644\u0631\u0626\u064a\u0633\u064a \u064a\u0642\u064a\u062f \u0627\u0644\u0639\u0645\u0644\u0627\u062a \u0627\u0644\u0645\u0634\u0641\u0631\u0629\u061b \u0645\u0631\u0633\u0648\u0645 \u0627\u0644\u0639\u0645\u0644\u0627\u062a \u0627\u0644\u0645\u0633\u062a\u0642\u0631\u0629 \u0641\u064a \u0647\u0648\u0646\u063a \u0643\u0648\u0646\u063a \u0633\u0627\u0631\u064a \u0623\u063a\u0633\u0637\u0633 2025\u061b \u0647\u0648\u0646\u063a \u0643\u0648\u0646\u063a \u0643\u0628\u0648\u0627\u0628\u0629 Web3",friendly:"med",path_en:"CNH -> HKD -> USDT (via OTC) -> SOL -> EACO (via Jupiter)",path_zh:"\u4eba\u6c11\u5e01 -> \u6e2f\u5e01 -> USDT(OTC) -> SOL -> EACO(Jupiter)",path_es:"CNH -> HKD -> USDT (via OTC) -> SOL -> EACO (via Jupiter)",path_fr:"CNH -> HKD -> USDT (via OTC) -> SOL -> EACO (via Jupiter)",path_ru:"CNH -> HKD -> USDT (\u0447\u0435\u0440\u0435\u0437 OTC) -> SOL -> EACO (\u0447\u0435\u0440\u0435\u0437 Jupiter)",path_ar:"CNH -> HKD -> USDT (\u0639\u0628\u0631 OTC) -> SOL -> EACO (\u0639\u0628\u0631 Jupiter)",note_en:"HK serves as primary gateway for Chinese capital",note_zh:"\u9999\u6e2f\u662f\u4e2d\u56fd\u8d44\u672c\u7684\u4e3b\u8981\u95e8\u6237",note_es:"HK sirve como puerta principal para el capital chino",note_fr:"HK sert de porte principale pour le capital chinois",note_ru:"\u0413\u043e\u043d\u043a\u043e\u043d\u0433 \u2014 \u043e\u0441\u043d\u043e\u0432\u043d\u043e\u0439 \u0448\u043b\u044e\u0437 \u0434\u043b\u044f \u043a\u0438\u0442\u0430\u0439\u0441\u043a\u043e\u0433\u043e \u043a\u0430\u043f\u0438\u0442\u0430\u043b\u0430",note_ar:"\u0647\u0648\u0646\u063a \u0643\u0648\u0646\u063a \u0647\u064a \u0627\u0644\u0628\u0648\u0627\u0628\u0629 \u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629 \u0644\u0631\u0623\u0633 \u0627\u0644\u0645\u0627\u0644 \u0627\u0644\u0635\u064a\u0646\u064a"},
+  {sym:"AUD",flag:"🇦🇺",name_en:"Australian Dollar",name_zh:"\u6fb3\u5143",name_es:"Dolar Australiano",name_fr:"Dollar Australien",name_ru:"\u0410\u0432\u0441\u0442\u0440\u0430\u043b\u0438\u0439\u0441\u043a\u0438\u0439 \u0414\u043e\u043b\u043b\u0430\u0440",name_ar:"\u0627\u0644\u062f\u0648\u0644\u0627\u0631 \u0627\u0644\u0623\u0633\u062a\u0631\u0627\u0644\u064a",region_en:"Australia",region_zh:"\u6fb3\u5927\u5229\u4e9a",region_es:"Australia",region_fr:"Australie",region_ru:"\u0410\u0432\u0441\u0442\u0440\u0430\u043b\u0438\u044f",region_ar:"\u0623\u0633\u062a\u0631\u0627\u0644\u064a\u0627",rate:"1 AUD = 0.0083 SOL",reg_en:"AUSTRAC registration; clear crypto licensing; BTC treated as property; CTO regime for tokens",reg_zh:"AUSTRAC\u6ce8\u518c\uff1b\u6e05\u6670\u52a0\u5bc6\u724c\u7167\uff1bBTC\u89c6\u4e3a\u8d22\u4ea7\uff1bCTO\u5236\u5ea6",reg_es:"Registro AUSTRAC; licencias cripto claras; BTC tratado como propiedad; regimen CTO para tokens",reg_fr:"Enregistrement AUSTRAC; licences crypto claires; BTC traite comme propriete; regime CTO pour tokens",reg_ru:"\u0420\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u044f AUSTRAC; \u0447\u0435\u0442\u043a\u0438\u0435 \u043a\u0440\u0438\u043f\u0442\u043e-\u043b\u0438\u0446\u0435\u043d\u0437\u0438\u0438; BTC \u043a\u0430\u043a \u0438\u043c\u0443\u0449\u0435\u0441\u0442\u0432\u043e; \u0440\u0435\u0436\u0438\u043c CTO \u0434\u043b\u044f \u0442\u043e\u043a\u0435\u043d\u043e\u0432",reg_ar:"\u062a\u0633\u062c\u064a\u0644 AUSTRAC\u061b \u062a\u0631\u0627\u062e\u064a\u0635 \u0645\u0634\u0641\u0631\u0629 \u0648\u0627\u0636\u062d\u0629\u061b BTC \u064a\u0639\u0627\u0645\u0644 \u0643\u0645\u0644\u0643\u064a\u0629\u061b \u0646\u0638\u0627\u0645 CTO \u0644\u0644\u0631\u0645\u0648\u0632",friendly:"high",path_en:"AUD -> SOL (via CoinSpot/BTC Markets) -> EACO (via Jupiter/Orca)",path_zh:"\u6fb3\u5143 -> SOL(CoinSpot/BTC Markets) -> EACO(Jupiter/Orca)",path_es:"AUD -> SOL (via CoinSpot/BTC Markets) -> EACO (via Jupiter/Orca)",path_fr:"AUD -> SOL (via CoinSpot/BTC Markets) -> EACO (via Jupiter/Orca)",path_ru:"AUD -> SOL (\u0447\u0435\u0440\u0435\u0437 CoinSpot/BTC Markets) -> EACO (\u0447\u0435\u0440\u0435\u0437 Jupiter/Orca)",path_ar:"AUD -> SOL (\u0639\u0628\u0631 CoinSpot/BTC Markets) -> EACO (\u0639\u0628\u0631 Jupiter/Orca)",note_en:"Strong AU-SEA crypto corridor; EACO au-trade platform leverages this",note_zh:"\u6fb3\u4e9a-\u4e1c\u5357\u4e9a\u52a0\u5bc6\u8d70\u5eca\u5f3a\u52b2\uff1bEACO au-trade\u5e73\u53f0\u5229\u7528\u6b64\u4f18\u52bf",note_es:"Fuerte corredor cripto AU-SEA; plataforma au-trade de EACO aprovecha esto",note_fr:"Fort corridor crypto AU-SEA; plateforme au-trade d'EACO en profite",note_ru:"\u0421\u0438\u043b\u044c\u043d\u044b\u0439 \u043a\u0440\u0438\u043f\u0442\u043e-\u043a\u043e\u0440\u0438\u0434\u043e\u0440 AU-SEA; \u043f\u043b\u0430\u0442\u0444\u043e\u0440\u043c\u0430 au-trade EACO \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u0442 \u044d\u0442\u043e",note_ar:"\u0645\u0645\u0631 \u0642\u0648\u064a \u0644\u0644\u0639\u0645\u0644\u0627\u062a \u0627\u0644\u0645\u0634\u0641\u0631\u0629 \u0628\u064a\u0646 \u0623\u0633\u062a\u0631\u0627\u0644\u064a\u0627 \u0648\u062c\u0646\u0648\u0628 \u0634\u0631\u0642 \u0622\u0633\u064a\u0627\u061b \u0645\u0646\u0635\u0629 au-trade \u0627\u0644\u062e\u0627\u0635\u0629 \u0628\u0640 EACO \u062a\u0633\u062a\u0641\u064a\u062f \u0645\u0646 \u0630\u0644\u0643"},
+  {sym:"CAD",flag:"🇨🇦",name_en:"Canadian Dollar",name_zh:"\u52a0\u5143",name_es:"Dolar Canadiense",name_fr:"Dollar Canadien",name_ru:"\u041a\u0430\u043d\u0430\u0434\u0441\u043a\u0438\u0439 \u0414\u043e\u043b\u043b\u0430\u0440",name_ar:"\u0627\u0644\u062f\u0648\u0644\u0627\u0631 \u0627\u0644\u0643\u0646\u062f\u064a",region_en:"Canada",region_zh:"\u52a0\u62ff\u5927",region_es:"Canada",region_fr:"Canada",region_ru:"\u041a\u0430\u043d\u0430\u0434\u0430",region_ar:"\u0643\u0646\u062f\u0627",rate:"1 CAD = 0.0084 SOL",reg_en:"CSA regulates crypto as securities; BTBT/CIRO framework; world's first BTC ETF (Purpose)",reg_zh:"CSA\u5c06\u52a0\u5bc6\u89c6\u4e3a\u8bc1\u5238\uff1bCIRO\u6846\u67b6\uff1b\u5168\u7403\u9996\u4e2aBTC ETF(Purpose)",reg_es:"CSA regula cripto como valores; marco BTBT/CIRO; primer ETF BTC del mundo (Purpose)",reg_fr:"CSA regule le crypto comme valeurs; cadre BTBT/CIRO; premier ETF BTC du monde (Purpose)",reg_ru:"CSA \u0440\u0435\u0433\u0443\u043b\u0438\u0440\u0443\u0435\u0442 \u043a\u0440\u0438\u043f\u0442\u043e \u043a\u0430\u043a \u0446\u0435\u043d\u043d\u044b\u0435 \u0431\u0443\u043c\u0430\u0433\u0438; \u0440\u0430\u043c\u043a\u0438 BTBT/CIRO; \u043f\u0435\u0440\u0432\u044b\u0439 \u0432 \u043c\u0438\u0440\u0435 BTC ETF (Purpose)",reg_ar:"\u064a\u0646\u0638\u0645 CSA \u0627\u0644\u0639\u0645\u0644\u0627\u062a \u0627\u0644\u0645\u0634\u0641\u0631\u0629 \u0643\u0623\u0648\u0631\u0627\u0642 \u0645\u0627\u0644\u064a\u0629\u061b \u0625\u0637\u0627\u0631 BTBT/CIRO\u061b \u0623\u0648\u0644 BTC ETF \u0641\u064a \u0627\u0644\u0639\u0627\u0644\u0645 (Purpose)",friendly:"high",path_en:"CAD -> SOL (via Wealthsimple/Netcoins) -> EACO (via Jupiter/Orca)",path_zh:"\u52a0\u5143 -> SOL(Wealthsimple/Netcoins) -> EACO(Jupiter/Orca)",path_es:"CAD -> SOL (via Wealthsimple/Netcoins) -> EACO (via Jupiter/Orca)",path_fr:"CAD -> SOL (via Wealthsimple/Netcoins) -> EACO (via Jupiter/Orca)",path_ru:"CAD -> SOL (\u0447\u0435\u0440\u0435\u0437 Wealthsimple/Netcoins) -> EACO (\u0447\u0435\u0440\u0435\u0437 Jupiter/Orca)",path_ar:"CAD -> SOL (\u0639\u0628\u0631 Wealthsimple/Netcoins) -> EACO (\u0639\u0628\u0631 Jupiter/Orca)",note_en:"World's first BTC ETF launched in Canada; progressive regulation",note_zh:"\u5168\u7403\u9996\u4e2aBTC ETF\u5728\u52a0\u62ff\u5927\u4e0a\u5e02\uff1b\u76d1\u7ba1\u5f00\u660e",note_es:"Primer ETF BTC del mundo lanzado en Canada; regulacion progresiva",note_fr:"Premier ETF BTC du monde lance au Canada; regulation progressive",note_ru:"\u041f\u0435\u0440\u0432\u044b\u0439 \u0432 \u043c\u0438\u0440\u0435 BTC ETF \u0437\u0430\u043f\u0443\u0449\u0435\u043d \u0432 \u041a\u0430\u043d\u0430\u0434\u0435; \u043f\u0440\u043e\u0433\u0440\u0435\u0441\u0441\u0438\u0432\u043d\u043e\u0435 \u0440\u0435\u0433\u0443\u043b\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435",note_ar:"\u0623\u0648\u0644 BTC ETF \u0641\u064a \u0627\u0644\u0639\u0627\u0644\u0645 \u0623\u0637\u0644\u0642 \u0641\u064a \u0643\u0646\u062f\u0627\u061b \u062a\u0646\u0638\u064a\u0645 \u062a\u0642\u062f\u0645\u064a"},
+  {sym:"CHF",flag:"🇨🇭",name_en:"Swiss Franc",name_zh:"\u745e\u58eb\u6cd5\u90ce",name_es:"Franco Suizo",name_fr:"Franc Suisse",name_ru:"\u0428\u0432\u0435\u0439\u0446\u0430\u0440\u0441\u043a\u0438\u0439 \u0424\u0440\u0430\u043d\u043a",name_ar:"\u0627\u0644\u0641\u0631\u0646\u0643 \u0627\u0644\u0633\u0648\u064a\u0633\u0631\u064a",region_en:"Switzerland",region_zh:"\u745e\u58eb",region_es:"Suiza",region_fr:"Suisse",region_ru:"\u0428\u0432\u0435\u0439\u0446\u0430\u0440\u0438\u044f",region_ar:"\u0633\u0648\u064a\u0633\u0631\u0627",rate:"1 CHF = 0.0147 SOL",reg_en:"FINMA licensing; Crypto Valley Zug; DLT Act provides legal certainty; SBAct for token issuance",reg_zh:"FINMA\u53d1\u724c\uff1bCrypto Valley Zug\uff1bDLT\u6cd5\u63d0\u4f9b\u6cd5\u5f8b\u786e\u5b9a\u6027\uff1bSBAct\u4ee3\u5e01\u53d1\u884c",reg_es:"Licencia FINMA; Crypto Valley Zug; Ley DLT proporciona certeza juridica; SBAct para emision de tokens",reg_fr:"Licence FINMA; Crypto Valley Zug; Loi DLT fournit certitude juridique; SBAct pour emission de tokens",reg_ru:"\u041b\u0438\u0446\u0435\u043d\u0437\u0438\u044f FINMA; Crypto Valley Zug; \u0417\u0430\u043a\u043e\u043d DLT \u0434\u0430\u0435\u0442 \u044e\u0440\u0438\u0434\u0438\u0447\u0435\u0441\u043a\u0443\u044e \u043e\u043f\u0440\u0435\u0434\u0435\u043b\u0435\u043d\u043d\u043e\u0441\u0442\u044c; SBAct \u0434\u043b\u044f \u0432\u044b\u043f\u0443\u0441\u043a\u0430 \u0442\u043e\u043a\u0435\u043d\u043e\u0432",reg_ar:"\u062a\u0631\u062e\u064a\u0635 FINMA\u061b Crypto Valley Zug\u061b \u0642\u0627\u0646\u0648\u0646 DLT \u064a\u0648\u0641\u0631 \u064a\u0642\u064a\u0646 \u0642\u0627\u0646\u0648\u0646\u064a\u061b SBACt \u0644\u0625\u0635\u062f\u0627\u0631 \u0627\u0644\u0631\u0645\u0648\u0632",friendly:"high",path_en:"CHF -> SOL (via Sygnum/SEBA Bank) -> EACO (via Jupiter/Orca)",path_zh:"\u745e\u58eb\u6cd5\u90ce -> SOL(Sygnum/SEBA Bank) -> EACO(Jupiter/Orca)",path_es:"CHF -> SOL (via Sygnum/SEBA Bank) -> EACO (via Jupiter/Orca)",path_fr:"CHF -> SOL (via Sygnum/SEBA Bank) -> EACO (via Jupiter/Orca)",path_ru:"CHF -> SOL (\u0447\u0435\u0440\u0435\u0437 Sygnum/SEBA Bank) -> EACO (\u0447\u0435\u0440\u0435\u0437 Jupiter/Orca)",path_ar:"CHF -> SOL (\u0639\u0628\u0631 Sygnum/SEBA Bank) -> EACO (\u0639\u0628\u0631 Jupiter/Orca)",note_en:"World's most crypto-friendly banking system; institutional-grade",note_zh:"\u5168\u7403\u6700\u53cb\u52a0\u5bc6\u94f6\u884c\u4f53\u7cfb\uff1b\u673a\u6784\u7ea7",note_es:"Sistema bancario mas amigable con cripto del mundo; nivel institucional",note_fr:"Systeme bancaire le plus favorable au crypto au monde; niveau institutionnel",note_ru:"\u0421\u0430\u043c\u0430\u044f \u043a\u0440\u0438\u043f\u0442\u043e-\u0434\u0440\u0443\u0436\u0435\u043b\u044e\u0431\u043d\u0430\u044f \u0431\u0430\u043d\u043a\u043e\u0432\u0441\u043a\u0430\u044f \u0441\u0438\u0441\u0442\u0435\u043c\u0430 \u0432 \u043c\u0438\u0440\u0435; \u0438\u043d\u0441\u0442\u0438\u0442\u0443\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u044b\u0439 \u0443\u0440\u043e\u0432\u0435\u043d\u044c",note_ar:"\u0627\u0644\u0646\u0638\u0627\u0645 \u0627\u0644\u0645\u0635\u0631\u0641\u064a \u0627\u0644\u0623\u0643\u062b\u0631 \u0635\u062f\u0627\u0642\u0629 \u0644\u0644\u0639\u0645\u0644\u0627\u062a \u0627\u0644\u0645\u0634\u0641\u0631\u0629 \u0641\u064a \u0627\u0644\u0639\u0627\u0644\u0645\u061b \u0645\u0633\u062a\u0648\u0649 \u0645\u0624\u0633\u0633\u064a"},
+  {sym:"SGD",flag:"🇸🇬",name_en:"Singapore Dollar",name_zh:"\u65b0\u5143",name_es:"Dolar de Singapur",name_fr:"Dollar de Singapour",name_ru:"\u0421\u0438\u043d\u0433\u0430\u043f\u0443\u0440\u0441\u043a\u0438\u0439 \u0414\u043e\u043b\u043b\u0430\u0440",name_ar:"\u062f\u0648\u0644\u0627\u0631 \u0633\u0646\u063a\u0627\u0641\u0648\u0631\u0629",region_en:"Singapore",region_zh:"\u65b0\u52a0\u5761",region_es:"Singapur",region_fr:"Singapour",region_ru:"\u0421\u0438\u043d\u0433\u0430\u043f\u0443\u0440",region_ar:"\u0633\u0646\u063a\u0627\u0641\u0648\u0631\u0629",rate:"1 SGD = 0.0090 SOL",reg_en:"MAS Payment Services Act; DPT license; world's most Web3-friendly jurisdiction; Project Guardian",reg_zh:"MAS\u300a\u652f\u4ed8\u670d\u52a1\u6cd5\u300b\uff1bDPT\u724c\u7167\uff1b\u5168\u7403\u6700Web3\u53cb\u597d\u53f8\u6cd5\u7ba1\u8f96\u533a",reg_es:"Ley de Servicios de Pago MAS; licencia DPT; jurisdiccion mas amigable con Web3; Project Guardian",reg_fr:"Loi sur les Services de Paiement MAS; licence DPT; juridiction la plus favorable au Web3; Project Guardian",reg_ru:"\u0417\u0430\u043a\u043e\u043d \u043e \u043f\u043b\u0430\u0442\u0435\u0436\u043d\u044b\u0445 \u0441\u0435\u0440\u0432\u0438\u0441\u0430\u0445 MAS; \u043b\u0438\u0446\u0435\u043d\u0437\u0438\u044f DPT; \u0441\u0430\u043c\u0430\u044f Web3-\u0434\u0440\u0443\u0436\u0435\u043b\u044e\u0431\u043d\u0430\u044f \u044e\u0440\u0438\u0441\u0434\u0438\u043a\u0446\u0438\u044f; Project Guardian",reg_ar:"\u0642\u0627\u0646\u0648\u0646 \u062e\u062f\u0645\u0627\u062a \u0627\u0644\u062f\u0641\u0639 MAS\u061b \u062a\u0631\u062e\u064a\u0635 DPT\u061b \u0627\u0644\u0648\u0644\u0627\u064a\u0629 \u0627\u0644\u0642\u0636\u0627\u0626\u064a\u0629 \u0627\u0644\u0623\u0643\u062b\u0631 \u0635\u062f\u0627\u0642\u0629 \u0644\u0640 Web3\u061b Project Guardian",friendly:"high",path_en:"SGD -> SOL (via Independent Reserve/Gemini SG) -> EACO (via Jupiter)",path_zh:"\u65b0\u5143 -> SOL(Independent Reserve/Gemini SG) -> EACO(Jupiter)",path_es:"SGD -> SOL (via Independent Reserve/Gemini SG) -> EACO (via Jupiter)",path_fr:"SGD -> SOL (via Independent Reserve/Gemini SG) -> EACO (via Jupiter)",path_ru:"SGD -> SOL (\u0447\u0435\u0440\u0435\u0437 Independent Reserve/Gemini SG) -> EACO (\u0447\u0435\u0440\u0435\u0437 Jupiter)",path_ar:"SGD -> SOL (\u0639\u0628\u0631 Independent Reserve/Gemini SG) -> EACO (\u0639\u0628\u0631 Jupiter)",note_en:"Asia's Web3 hub; connects SEA capital with global crypto",note_zh:"\u4e9a\u6d32Web3\u679c\u5fc3\uff1b\u8fde\u63a5\u4e1c\u5357\u4e9a\u8d44\u672c\u4e0e\u5168\u7403\u52a0\u5bc6",note_es:"Hub Web3 de Asia; conecta capital del SEA con cripto global",note_fr:"Hub Web3 d'Asie; connecte capital SEA au crypto global",note_ru:"Web3-\u0445\u0430\u0431 \u0410\u0437\u0438\u0438; \u0441\u043e\u0435\u0434\u0438\u043d\u044f\u0435\u0442 \u043a\u0430\u043f\u0438\u0442\u0430\u043b \u042e\u0412\u0410 \u0441 \u0433\u043b\u043e\u0431\u0430\u043b\u044c\u043d\u044b\u043c \u043a\u0440\u0438\u043f\u0442\u043e",note_ar:"\u0645\u0631\u0643\u0632 Web3 \u0641\u064a \u0622\u0633\u064a\u0627\u061b \u064a\u0631\u0628\u0642 \u0631\u0623\u0633 \u0645\u0627\u0644 \u062c\u0646\u0648\u0628 \u0634\u0631\u0642 \u0622\u0633\u064a\u0627 \u0628\u0627\u0644\u0639\u0645\u0644\u0627\u062a \u0627\u0644\u0645\u0634\u0641\u0631\u0629 \u0627\u0644\u0639\u0627\u0644\u0645\u064a\u0629"},
+  {sym:"KRW",flag:"🇰🇷",name_en:"South Korean Won",name_zh:"\u97e9\u5143",name_es:"Won Surcoreano",name_fr:"Won Sud-Corean",name_ru:"\u042e\u0436\u043d\u043e\u043a\u043e\u0440\u0435\u0439\u0441\u043a\u0430\u044f \u0412\u043e\u043d\u0430",name_ar:"\u0627\u0644\u0648\u0648\u0646 \u0627\u0644\u0643\u0648\u0631\u064a \u0627\u0644\u062c\u0646\u0648\u0628\u064a",region_en:"South Korea",region_zh:"\u97e9\u56fd",region_es:"Corea del Sur",region_fr:"Coree du Sud",region_ru:"\u042e\u0436\u043d\u0430\u044f \u041a\u043e\u0440\u0435\u044f",region_ar:"\u0643\u0648\u0631\u064a\u0627 \u0627\u0644\u062c\u0646\u0648\u0628\u064a\u0629",rate:"1 KRW = 0.00000698 SOL",reg_en:"Special Financial Information Act (2024); Virtual Asset Committee; Upbit dominates KRW trading",reg_zh:"\u300a\u7279\u5b9a\u91d1\u878d\u4fe1\u606f\u6cd5\u300b(2024)\uff1b\u865a\u62df\u8d44\u4ea7\u59d4\u5458\u4f1a\uff1bUpbit\u4e3b\u5bfc\u97e9\u5143\u4ea4\u6613",reg_es:"Ley de Informacion Financiera Especial (2024); Comite de Activos Virtuales; Upbit domina el trading KRW",reg_fr:"Loi sur l'Information Financiere Speciale (2024); Comite des Actifs Virtuels; Upbit domine le trading KRW",reg_ru:"\u0417\u0430\u043a\u043e\u043d \u043e \u0441\u043f\u0435\u0446. \u0444\u0438\u043d\u0430\u043d\u0441\u043e\u0432\u043e\u0439 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u0438 (2024); \u041a\u043e\u043c\u0438\u0442\u0435\u0442 \u043f\u043e \u0432\u0438\u0440\u0442\u0443\u0430\u043b\u044c\u043d\u044b\u043c \u0430\u043a\u0442\u0438\u0432\u0430\u043c; Upbit \u0434\u043e\u043c\u0438\u043d\u0438\u0440\u0443\u0435\u0442 \u0432 KRW-\u0442\u043e\u0440\u0433\u043e\u0432\u043b\u0435",reg_ar:"\u0642\u0627\u0646\u0648\u0646 \u0627\u0644\u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0627\u0644\u0645\u0627\u0644\u064a\u0629 \u0627\u0644\u062e\u0627\u0635\u0629 (2024)\u061b \u0644\u062c\u0646\u0629 \u0627\u0644\u0623\u0635\u0648\u0644 \u0627\u0644\u0627\u0641\u062a\u0631\u0627\u0636\u064a\u0629\u061b Upbit \u064a\u0647\u064a\u0645\u0646 \u0639\u0644\u0649 \u062a\u062f\u0627\u0648\u0644 KRW",friendly:"med",path_en:"KRW -> SOL (via Upbit/Bithumb) -> EACO (via Jupiter)",path_zh:"\u97e9\u5143 -> SOL(Upbit/Bithumb) -> EACO(Jupiter)",path_es:"KRW -> SOL (via Upbit/Bithumb) -> EACO (via Jupiter)",path_fr:"KRW -> SOL (via Upbit/Bithumb) -> EACO (via Jupiter)",path_ru:"KRW -> SOL (\u0447\u0435\u0440\u0435\u0437 Upbit/Bithumb) -> EACO (\u0447\u0435\u0440\u0435\u0437 Jupiter)",path_ar:"KRW -> SOL (\u0639\u0628\u0631 Upbit/Bithumb) -> EACO (\u0639\u0628\u0631 Jupiter)",note_en:"Korea is top-3 crypto trading nation; strong retail demand",note_zh:"\u97e9\u56fd\u662f\u524d\u4e09\u52a0\u5bc6\u4ea4\u6613\u56fd\uff1b\u96f6\u552e\u9700\u6c42\u5f3a\u52b2",note_es:"Corea es la 3ra nacion de trading cripto; fuerte demanda minorista",note_fr:"Coree est la 3eme nation de trading crypto; forte demande de detail",note_ru:"\u041a\u043e\u0440\u0435\u044f \u2014 3-\u044f \u043f\u043e \u043e\u0431\u044a\u0435\u043c\u0443 \u043a\u0440\u0438\u043f\u0442\u043e-\u0442\u043e\u0440\u0433\u043e\u0432\u043b\u0438 \u0441\u0442\u0440\u0430\u043d\u0430; \u0441\u0438\u043b\u044c\u043d\u044b\u0439 \u0440\u043e\u0437\u043d\u0438\u0447\u043d\u044b\u0439 \u0441\u043f\u0440\u043e\u0441",note_ar:"\u0643\u0648\u0631\u064a\u0627 \u0647\u064a \u062b\u0627\u0644\u062b \u062f\u0648\u0644\u0629 \u0641\u064a \u062a\u062f\u0627\u0648\u0644 \u0627\u0644\u0639\u0645\u0644\u0627\u062a \u0627\u0644\u0645\u0634\u0641\u0631\u0629\u061b \u0637\u0644\u0628 \u0642\u0648\u064a \u0645\u0646 \u0627\u0644\u062a\u062c\u0632\u0626\u0629"}
+];
+
+var EXCHANGE_PATHS = [
+  {sym:"GBP",flag:"🇬🇧",title_en:"GBP to EACO Exchange Path",title_zh:"\u82f1\u9551\u5151\u6362EACO\u8def\u5f84",title_es:"Ruta de Intercambio GBP a EACO",title_fr:"Route d \u00c9change GBP vers EACO",title_ru:"\u041f\u0443\u0442\u044c \u041e\u0431\u043c\u0435\u043d\u0430 GBP \u043d\u0430 EACO",title_ar:"\u0645\u0633\u0627\u0631 \u062a\u0628\u0627\u062f\u0644 GBP \u0625\u0644\u0649 EACO",rate:"1 GBP \u2248 0.0161 SOL \u2248 2.4 EACO",steps_en:["1. Buy SOL with GBP via CoinList, Bitstamp, or Coinbase UK","2. Transfer SOL to Phantom or Solflare wallet","3. Swap SOL to EACO on Jupiter aggregator or Orca DEX","4. EACO tokens appear in your wallet - stake or hold"],steps_zh:["1. \u5728 CoinList\u3001Bitstamp \u6216 Coinbase UK \u7528\u82f1\u9551\u8d2d\u4e70 SOL","2. \u5c06 SOL \u8f6c\u5165 Phantom \u6216 Solflare \u94b1\u5305","3. \u5728 Jupiter \u805a\u5408\u5668\u6216 Orca DEX \u4e0a\u5c06 SOL \u5151\u6362\u4e3a EACO","4. EACO \u4ee3\u5e01\u5230\u8d26\uff0c\u53ef\u8d28\u62bc\u6216\u6301\u6709"],steps_es:["1. Comprar SOL con GBP via CoinList, Bitstamp o Coinbase UK","2. Transferir SOL a la cartera Phantom o Solflare","3. Cambiar SOL por EACO en el agregador Jupiter o DEX Orca","4. Los tokens EACO aparecen en su cartera - staking o mantener"],steps_fr:["1. Acheter SOL avec GBP via CoinList, Bitstamp ou Coinbase UK","2. Transferer SOL vers le portefeuille Phantom ou Solflare","3. Echanger SOL contre EACO sur l agregateur Jupiter ou Orca DEX","4. Les tokens EACO apparaissent dans votre portefeuille - staking ou conserver"],steps_ru:["1. \u041a\u0443\u043f\u0438\u0442\u044c SOL \u0437\u0430 GBP \u0447\u0435\u0440\u0435\u0437 CoinList, Bitstamp \u0438\u043b\u0438 Coinbase UK","2. \u041f\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438 SOL \u0432 \u043a\u043e\u0448\u0435\u043b\u0435\u043a Phantom \u0438\u043b\u0438 Solflare","3. \u041e\u0431\u043c\u0435\u043d\u044f\u0442\u044c SOL \u043d\u0430 EACO \u043d\u0430 \u0430\u0433\u0440\u0435\u0433\u0430\u0442\u043e\u0440\u0435 Jupiter \u0438\u043b\u0438 DEX Orca","4. \u0422\u043e\u043a\u0435\u043d\u044b EACO \u043f\u043e\u044f\u0432\u044f\u0442\u0441\u044f \u0432 \u043a\u043e\u0448\u0435\u043b\u044c\u043a\u0435 \u2014 \u0441\u0442\u0435\u0439\u043a\u0438\u043d\u0433 \u0438\u043b\u0438 \u0445\u0440\u0430\u043d\u0435\u043d\u0438\u0435"],steps_ar:["1. \u0634\u0631\u0627\u0621 SOL \u0628\u0640 GBP \u0639\u0628\u0631 CoinList \u0623\u0648 Bitstamp \u0623\u0648 Coinbase UK","2. \u062a\u062d\u0648\u064a\u0644 SOL \u0625\u0644\u0649 \u0645\u062d\u0641\u0638\u0629 Phantom \u0623\u0648 Solflare","3. \u0627\u0633\u062a\u0628\u062f\u0627\u0644 SOL \u0628\u0640 EACO \u0639\u0644\u0649 \u0645\u062c\u0645\u0639 Jupiter \u0623\u0648 Orca DEX","4. \u062a\u0638\u0647\u0631 \u0631\u0645\u0648\u0632 EACO \u0641\u064a \u0645\u062d\u0641\u0638\u062a\u0643 - \u062a\u062c\u0645\u064a\u062f \u0623\u0648 \u0627\u062d\u062a\u0641\u0627\u0638"]},
+  {sym:"EUR",flag:"🇪🇺",title_en:"EUR to EACO Exchange Path",title_zh:"\u6b27\u5143\u5151\u6362EACO\u8def\u5f84",title_es:"Ruta de Intercambio EUR a EACO",title_fr:"Route d \u00c9change EUR vers EACO",title_ru:"\u041f\u0443\u0442\u044c \u041e\u0431\u043c\u0435\u043d\u0430 EUR \u043d\u0430 EACO",title_ar:"\u0645\u0633\u0627\u0631 \u062a\u0628\u0627\u062f\u0644 EUR \u0625\u0644\u0649 EACO",rate:"1 EUR \u2248 0.0137 SOL \u2248 2.0 EACO",steps_en:["1. Buy SOL with EUR via MYKOBO (direct Solana onramp) or Bitvavo","2. EURC stablecoin on Solana can also bridge to EACO","3. Swap SOL/EURC to EACO on Jupiter or Meteora (EACO pool host)","4. Hold EACO or provide liquidity on Meteora DAMM v2"],steps_zh:["1. \u901a\u8fc7 MYKOBO(\u76f4\u63a5Solana\u5165\u91d1)\u6216 Bitvavo \u7528\u6b27\u5143\u8d2d\u4e70 SOL","2. Solana\u4e0a\u7684 EURC \u7a33\u5b9a\u5e01\u4e5f\u53ef\u6865\u63a5\u5230 EACO","3. \u5728 Jupiter \u6216 Meteora(EACO\u6c60\u6258\u7ba1)\u5c06 SOL/EURC \u5151\u6362\u4e3a EACO","4. \u6301\u6709 EACO \u6216\u5728 Meteora DAMM v2 \u63d0\u4f9b\u6d41\u52a8\u6027"],steps_es:["1. Comprar SOL con EUR via MYKOBO (entrada directa Solana) o Bitvavo","2. El stablecoin EURC en Solana tambien puede conectar con EACO","3. Cambiar SOL/EURC a EACO en Jupiter o Meteora (host del pool EACO)","4. Mantener EACO o proveer liquidez en Meteora DAMM v2"],steps_fr:["1. Acheter SOL avec EUR via MYKOBO (entree directe Solana) ou Bitvavo","2. Le stablecoin EURC sur Solana peut aussi pont vers EACO","3. Echanger SOL/EURC contre EACO sur Jupiter ou Meteora (heberge le pool EACO)","4. Conserver EACO ou fournir de la liquidite sur Meteora DAMM v2"],steps_ru:["1. \u041a\u0443\u043f\u0438\u0442\u044c SOL \u0437\u0430 EUR \u0447\u0435\u0440\u0435\u0437 MYKOBO (\u043f\u0440\u044f\u043c\u043e\u0439 \u0432\u0432\u043e\u0434 Solana) \u0438\u043b\u0438 Bitvavo","2. \u0421\u0442\u0435\u0439\u0431\u043b\u043a\u043e\u0438\u043d EURC \u043d\u0430 Solana \u0442\u0430\u043a\u0436\u0435 \u043c\u043e\u0436\u0435\u0442 \u043c\u043e\u0441\u0442 \u043a EACO","3. \u041e\u0431\u043c\u0435\u043d\u044f\u0442\u044c SOL/EURC \u043d\u0430 EACO \u043d\u0430 Jupiter \u0438\u043b\u0438 Meteora (\u0445\u043e\u0441\u0442 \u043f\u0443\u043b\u0430 EACO)","4. \u0425\u0440\u0430\u043d\u0438\u0442\u044c EACO \u0438\u043b\u0438 \u043e\u0431\u0435\u0441\u043f\u0435\u0447\u0438\u0442\u044c \u043b\u0438\u043a\u0432\u0438\u0434\u043d\u043e\u0441\u0442\u044c \u043d\u0430 Meteora DAMM v2"],steps_ar:["1. \u0634\u0631\u0627\u0621 SOL \u0628\u0640 EUR \u0639\u0628\u0631 MYKOBO (\u0625\u064a\u062f\u0627\u0639 \u0645\u0628\u0627\u0634\u0631 \u0644\u0640 Solana) \u0623\u0648 Bitvavo","2. \u064a\u0645\u0643\u0646 \u0644\u0640 EURC \u0627\u0644\u0645\u0633\u062a\u0642\u0631 \u0639\u0644\u0649 Solana \u0623\u064a\u0636\u0627\u064b \u0623\u0646 \u064a\u0631\u0628\u0637 \u0625\u0644\u0649 EACO","3. \u0627\u0633\u062a\u0628\u062f\u0627\u0644 SOL/EURC \u0628\u0640 EACO \u0639\u0644\u0649 Jupiter \u0623\u0648 Meteora (\u0645\u0636\u064a\u0641 \u062a\u062c\u0645\u0639 EACO)","4. \u0627\u0644\u0627\u062d\u062a\u0641\u0627\u0638 \u0628\u0640 EACO \u0623\u0648 \u062a\u0648\u0641\u064a\u0631 \u0633\u064a\u0648\u0644\u0629 \u0639\u0644\u0649 Meteora DAMM v2"]},
+  {sym:"CAD",flag:"🇨🇦",title_en:"CAD to EACO Exchange Path",title_zh:"\u52a0\u5143\u5151\u6362EACO\u8def\u5f84",title_es:"Ruta de Intercambio CAD a EACO",title_fr:"Route d \u00c9change CAD vers EACO",title_ru:"\u041f\u0443\u0442\u044c \u041e\u0431\u043c\u0435\u043d\u0430 CAD \u043d\u0430 EACO",title_ar:"\u0645\u0633\u0627\u0631 \u062a\u0628\u0627\u062f\u0644 CAD \u0625\u0644\u0649 EACO",rate:"1 CAD \u2248 0.0084 SOL \u2248 1.26 EACO",steps_en:["1. Buy SOL with CAD via Wealthsimple or Netcoins","2. Transfer SOL to Phantom wallet","3. Swap SOL to EACO on Jupiter or Orca","4. Optional: Stake EACO or join Meteora liquidity pool"],steps_zh:["1. \u901a\u8fc7 Wealthsimple \u6216 Netcoins \u7528\u52a0\u5143\u8d2d\u4e70 SOL","2. \u5c06 SOL \u8f6c\u5165 Phantom \u94b1\u5305","3. \u5728 Jupiter \u6216 Orca \u4e0a\u5c06 SOL \u5151\u6362\u4e3a EACO","4. \u53ef\u9009\uff1a\u8d28\u62bc EACO \u6216\u52a0\u5165 Meteora \u6d41\u52a8\u6027\u6c60"],steps_es:["1. Comprar SOL con CAD via Wealthsimple o Netcoins","2. Transferir SOL a la cartera Phantom","3. Cambiar SOL por EACO en Jupiter o Orca","4. Opcional: Staking de EACO o unirse al pool de liquidez Meteora"],steps_fr:["1. Acheter SOL avec CAD via Wealthsimple ou Netcoins","2. Transferer SOL vers le portefeuille Phantom","3. Echanger SOL contre EACO sur Jupiter ou Orca","4. Optionnel: Staking EACO ou rejoindre le pool de liquidite Meteora"],steps_ru:["1. \u041a\u0443\u043f\u0438\u0442\u044c SOL \u0437\u0430 CAD \u0447\u0435\u0440\u0435\u0437 Wealthsimple \u0438\u043b\u0438 Netcoins","2. \u041f\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438 SOL \u0432 \u043a\u043e\u0448\u0435\u043b\u0435\u043a Phantom","3. \u041e\u0431\u043c\u0435\u043d\u044f\u0442\u044c SOL \u043d\u0430 EACO \u043d\u0430 Jupiter \u0438\u043b\u0438 Orca","4. \u041f\u043e \u0436\u0435\u043b\u0430\u043d\u0438\u044e: \u0441\u0442\u0435\u0439\u043a\u0438\u043d\u0433 EACO \u0438\u043b\u0438 \u043f\u0443\u043b \u043b\u0438\u043a\u0432\u0438\u0434\u043d\u043e\u0441\u0442\u0438 Meteora"],steps_ar:["1. \u0634\u0631\u0627\u0621 SOL \u0628\u0640 CAD \u0639\u0628\u0631 Wealthsimple \u0623\u0648 Netcoins","2. \u062a\u062d\u0648\u064a\u0644 SOL \u0625\u0644\u0649 \u0645\u062d\u0641\u0638\u0629 Phantom","3. \u0627\u0633\u062a\u0628\u062f\u0627\u0644 SOL \u0628\u0640 EACO \u0639\u0644\u0649 Jupiter \u0623\u0648 Orca","4. \u0627\u062e\u062a\u064a\u0627\u0631\u064a: \u062a\u062c\u0645\u064a\u062f EACO \u0623\u0648 \u0627\u0644\u0627\u0646\u0636\u0645\u0627\u0645 \u0625\u0644\u0649 \u062a\u062c\u0645\u0639 \u0633\u064a\u0648\u0644\u0629 Meteora"]},
+  {sym:"AUD",flag:"🇦🇺",title_en:"AUD to EACO Exchange Path",title_zh:"\u6fb3\u5143\u5151\u6362EACO\u8def\u5f84",title_es:"Ruta de Intercambio AUD a EACO",title_fr:"Route d \u00c9change AUD vers EACO",title_ru:"\u041f\u0443\u0442\u044c \u041e\u0431\u043c\u0435\u043d\u0430 AUD \u043d\u0430 EACO",title_ar:"\u0645\u0633\u0627\u0631 \u062a\u0628\u0627\u062f\u0644 AUD \u0625\u0644\u0649 EACO",rate:"1 AUD \u2248 0.0083 SOL \u2248 1.25 EACO",steps_en:["1. Buy SOL with AUD via CoinSpot or BTC Markets","2. EACO au-trade platform supports AUD-SEA corridor","3. Swap SOL to EACO on Jupiter or Orca DEX","4. Use EACO for RWA trading on au-trade platform"],steps_zh:["1. \u901a\u8fc7 CoinSpot \u6216 BTC Markets \u7528\u6fb3\u5143\u8d2d\u4e70 SOL","2. EACO au-trade \u5e73\u53f0\u652f\u6301\u6fb3\u5143-\u4e1c\u5357\u4e9a\u8d70\u5eca","3. \u5728 Jupiter \u6216 Orca DEX \u4e0a\u5c06 SOL \u5151\u6362\u4e3a EACO","4. \u4f7f\u7528 EACO \u5728 au-trade \u5e73\u53f0\u8fdb\u884c RWA \u4ea4\u6613"],steps_es:["1. Comprar SOL con AUD via CoinSpot o BTC Markets","2. La plataforma au-trade de EACO soporta el corredor AUD-SEA","3. Cambiar SOL por EACO en Jupiter o Orca DEX","4. Usar EACO para trading RWA en la plataforma au-trade"],steps_fr:["1. Acheter SOL avec AUD via CoinSpot ou BTC Markets","2. La plateforme au-trade d EACO supporte le corridor AUD-SEA","3. Echanger SOL contre EACO sur Jupiter ou Orca DEX","4. Utiliser EACO pour le trading RWA sur la plateforme au-trade"],steps_ru:["1. \u041a\u0443\u043f\u0438\u0442\u044c SOL \u0437\u0430 AUD \u0447\u0435\u0440\u0435\u0437 CoinSpot \u0438\u043b\u0438 BTC Markets","2. \u041f\u043b\u0430\u0442\u0444\u043e\u0440\u043c\u0430 au-trade EACO \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u0442 \u043a\u043e\u0440\u0438\u0434\u043e\u0440 AUD-SEA","3. \u041e\u0431\u043c\u0435\u043d\u044f\u0442\u044c SOL \u043d\u0430 EACO \u043d\u0430 Jupiter \u0438\u043b\u0438 Orca DEX","4. \u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c EACO \u0434\u043b\u044f RWA-\u0442\u043e\u0440\u0433\u043e\u0432\u043b\u0438 \u043d\u0430 \u043f\u043b\u0430\u0442\u0444\u043e\u0440\u043c\u0435 au-trade"],steps_ar:["1. \u0634\u0631\u0627\u0621 SOL \u0628\u0640 AUD \u0639\u0628\u0631 CoinSpot \u0623\u0648 BTC Markets","2. \u0645\u0646\u0635\u0629 au-trade \u0627\u0644\u062e\u0627\u0635\u0629 \u0628\u0640 EACO \u062a\u062f\u0639\u0645 \u0645\u0645\u0631 AUD-SEA","3. \u0627\u0633\u062a\u0628\u062f\u0627\u0644 SOL \u0628\u0640 EACO \u0639\u0644\u0649 Jupiter \u0623\u0648 Orca DEX","4. \u0627\u0633\u062a\u062e\u062f\u0627\u0645 EACO \u0644\u062a\u062f\u0627\u0648\u0644 RWA \u0639\u0644\u0649 \u0645\u0646\u0635\u0629 au-trade"]},
+  {sym:"SGD",flag:"🇸🇬",title_en:"SGD to EACO Exchange Path",title_zh:"\u65b0\u5143\u5151\u6362EACO\u8def\u5f84",title_es:"Ruta de Intercambio SGD a EACO",title_fr:"Route d \u00c9change SGD vers EACO",title_ru:"\u041f\u0443\u0442\u044c \u041e\u0431\u043c\u0435\u043d\u0430 SGD \u043d\u0430 EACO",title_ar:"\u0645\u0633\u0627\u0631 \u062a\u0628\u0627\u062f\u0644 SGD \u0625\u0644\u0649 EACO",rate:"1 SGD \u2248 0.0090 SOL \u2248 1.35 EACO",steps_en:["1. Buy SOL with SGD via Independent Reserve or Gemini SG","2. Singapore MAS-licensed platforms ensure compliance","3. Swap SOL to EACO on Jupiter aggregator","4. EACO can bridge to eCNH stablecoin for SEA-China trade"],steps_zh:["1. \u901a\u8fc7 Independent Reserve \u6216 Gemini SG \u7528\u65b0\u5143\u8d2d\u4e70 SOL","2. \u65b0\u52a0\u5761 MAS \u6301\u724c\u5e73\u53f0\u786e\u4fdd\u5408\u89c4","3. \u5728 Jupiter \u805a\u5408\u5668\u4e0a\u5c06 SOL \u5151\u6362\u4e3a EACO","4. EACO \u53ef\u6865\u63a5\u5230 eCNH \u7a33\u5b9a\u5e01\u7528\u4e8e\u4e1c\u5357\u4e9a-\u4e2d\u56fd\u8d38\u6613"],steps_es:["1. Comprar SOL con SGD via Independent Reserve o Gemini SG","2. Plataformas con licencia MAS de Singapur aseguran cumplimiento","3. Cambiar SOL por EACO en el agregador Jupiter","4. EACO puede conectar al stablecoin eCNH para comercio SEA-China"],steps_fr:["1. Acheter SOL avec SGD via Independent Reserve ou Gemini SG","2. Plateformes sous licence MAS de Singapour assurent la conformite","3. Echanger SOL contre EACO sur l agregateur Jupiter","4. EACO peut pont vers le stablecoin eCNH pour le commerce SEA-Chine"],steps_ru:["1. \u041a\u0443\u043f\u0438\u0442\u044c SOL \u0437\u0430 SGD \u0447\u0435\u0440\u0435\u0437 Independent Reserve \u0438\u043b\u0438 Gemini SG","2. \u041f\u043b\u0430\u0442\u0444\u043e\u0440\u043c\u044b \u0441 \u043b\u0438\u0446\u0435\u043d\u0437\u0438\u0435\u0439 MAS \u0421\u0438\u043d\u0433\u0430\u043f\u0443\u0440\u0430 \u043e\u0431\u0435\u0441\u043f\u0435\u0447\u0438\u0432\u0430\u044e\u0442 \u043a\u043e\u043c\u043f\u043b\u0430\u0435\u043d\u0441","3. \u041e\u0431\u043c\u0435\u043d\u044f\u0442\u044c SOL \u043d\u0430 EACO \u043d\u0430 \u0430\u0433\u0440\u0435\u0433\u0430\u0442\u043e\u0440\u0435 Jupiter","4. EACO \u043c\u043e\u0436\u0435\u0442 \u043c\u043e\u0441\u0442 \u043a \u0441\u0442\u0435\u0439\u0431\u043b\u043a\u043e\u0438\u043d\u0443 eCNH \u0434\u043b\u044f \u0442\u043e\u0440\u0433\u043e\u0432\u043b\u0438 \u042e\u0412\u0410-\u041a\u0438\u0442\u0430\u0439"],steps_ar:["1. \u0634\u0631\u0627\u0621 SOL \u0628\u0640 SGD \u0639\u0628\u0631 Independent Reserve \u0623\u0648 Gemini SG","2. \u0645\u0646\u0635\u0627\u062a \u0645\u0631\u062e\u0635\u0629 \u0645\u0646 MAS \u0633\u0646\u063a\u0641\u0648\u0631\u0629 \u062a\u0636\u0645\u0646 \u0627\u0644\u0627\u0645\u062a\u062b\u0627\u0644","3. \u0627\u0633\u062a\u0628\u062f\u0627\u0644 SOL \u0628\u0640 EACO \u0639\u0644\u0649 \u0645\u062c\u0645\u0639 Jupiter","4. \u064a\u0645\u0643\u0646 \u0644\u0640 EACO \u0627\u0644\u062a\u0648\u0627\u0635\u0644 \u0645\u0639 eCNH \u0627\u0644\u0645\u0633\u062a\u0642\u0631 \u0644\u062a\u062c\u0627\u0631\u0629 \u062c\u0646\u0648\u0628 \u0634\u0631\u0642 \u0622\u0633\u064a\u0627-\u0627\u0644\u0635\u064a\u0646"]},
+  {sym:"KRW",flag:"🇰🇷",title_en:"KRW to EACO Exchange Path",title_zh:"\u97e9\u5143\u5151\u6362EACO\u8def\u5f84",title_es:"Ruta de Intercambio KRW a EACO",title_fr:"Route d \u00c9change KRW vers EACO",title_ru:"\u041f\u0443\u0442\u044c \u041e\u0431\u043c\u0435\u043d\u0430 KRW \u043d\u0430 EACO",title_ar:"\u0645\u0633\u0627\u0631 \u062a\u0628\u0627\u062f\u0644 KRW \u0625\u0644\u0649 EACO",rate:"1 KRW \u2248 0.00000698 SOL",steps_en:["1. Buy SOL with KRW via Upbit or Bithumb","2. Transfer SOL to Phantom wallet (Solana network)","3. Swap SOL to EACO on Jupiter or Orca","4. Korea's strong retail demand drives EACO adoption"],steps_zh:["1. \u901a\u8fc7 Upbit \u6216 Bithumb \u7528\u97e9\u5143\u8d2d\u4e70 SOL","2. \u5c06 SOL \u8f6c\u5165 Phantom \u94b1\u5305(Solana\u7f51\u7edc)","3. \u5728 Jupiter \u6216 Orca \u4e0a\u5c06 SOL \u5151\u6362\u4e3a EACO","4. \u97e9\u56fd\u5f3a\u52b2\u7684\u96f6\u552e\u9700\u6c42\u63a8\u52a8 EACO \u91c7\u7eb3"],steps_es:["1. Comprar SOL con KRW via Upbit o Bithumb","2. Transferir SOL a la cartera Phantom (red Solana)","3. Cambiar SOL por EACO en Jupiter o Orca","4. La fuerte demanda minorista de Corea impulsa la adopcion de EACO"],steps_fr:["1. Acheter SOL avec KRW via Upbit ou Bithumb","2. Transferer SOL vers le portefeuille Phantom (reseau Solana)","3. Echanger SOL contre EACO sur Jupiter ou Orca","4. La forte demande de detail coreenne stimule l adoption d EACO"],steps_ru:["1. \u041a\u0443\u043f\u0438\u0442\u044c SOL \u0437\u0430 KRW \u0447\u0435\u0440\u0435\u0437 Upbit \u0438\u043b\u0438 Bithumb","2. \u041f\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438 SOL \u0432 \u043a\u043e\u0448\u0435\u043b\u0435\u043a Phantom (\u0441\u0435\u0442\u044c Solana)","3. \u041e\u0431\u043c\u0435\u043d\u044f\u0442\u044c SOL \u043d\u0430 EACO \u043d\u0430 Jupiter \u0438\u043b\u0438 Orca","4. \u0421\u0438\u043b\u044c\u043d\u044b\u0439 \u0440\u043e\u0437\u043d\u0438\u0447\u043d\u044b\u0439 \u0441\u043f\u0440\u043e\u0441 \u041a\u043e\u0440\u0435\u0438 \u0441\u0442\u0438\u043c\u0443\u043b\u0438\u0440\u0443\u0435\u0442 \u0432\u043d\u0435\u0434\u0440\u0435\u043d\u0438\u0435 EACO"],steps_ar:["1. \u0634\u0631\u0627\u0621 SOL \u0628\u0640 KRW \u0639\u0628\u0631 Upbit \u0623\u0648 Bithumb","2. \u062a\u062d\u0648\u064a\u0644 SOL \u0625\u0644\u0649 \u0645\u062d\u0641\u0638\u0629 Phantom (\u0634\u0628\u0643\u0629 Solana)","3. \u0627\u0633\u062a\u0628\u062f\u0627\u0644 SOL \u0628\u0640 EACO \u0639\u0644\u0649 Jupiter \u0623\u0648 Orca","4. \u0627\u0644\u0637\u0644\u0628 \u0627\u0644\u0642\u0648\u064a \u0645\u0646 \u0627\u0644\u062a\u062c\u0632\u0626\u0629 \u0641\u064a \u0643\u0648\u0631\u064a\u0627 \u064a\u062f\u0641\u0639 \u062a\u0628\u0646\u064a EACO"]}
+];
+
+var DEX_ITEMS = [
+  {icon:"🦏",name:"Jupiter",vol_en:"$3B+",vol_zh:"30\u4ebf\u7f8e\u5143+",vol_es:"$3B+",vol_fr:"$3B+",vol_ru:"$3B+",vol_ar:"$3B+",fee:"0.05%",best_en:"Best aggregator, all Solana tokens",best_zh:"\u6700\u4f73\u805a\u5408\u5668\uff0c\u6240\u6709Solana\u4ee3\u5e01",best_es:"Mejor agregador, todos los tokens Solana",best_fr:"Meilleur agregateur, tous les tokens Solana",best_ru:"\u041b\u0443\u0447\u0448\u0438\u0439 \u0430\u0433\u0440\u0435\u0433\u0430\u0442\u043e\u0440, \u0432\u0441\u0435 \u0442\u043e\u043a\u0435\u043d\u044b Solana",best_ar:"\u0623\u0641\u0636\u0644 \u0645\u062c\u0645\u0639\u060c \u062c\u0645\u064a\u0639 \u0631\u0645\u0648\u0632 Solana"},
+  {icon:"🐢",name:"Orca",vol_en:"$1B+",vol_zh:"10\u4ebf\u7f8e\u5143+",vol_es:"$1B+",vol_fr:"$1B+",vol_ru:"$1B+",vol_ar:"$1B+",fee:"0.03%",best_en:"Best UX, concentrated liquidity",best_zh:"\u6700\u4f73\u7528\u6237\u4f53\u9a8c\uff0c\u96c6\u4e2d\u6d41\u52a8\u6027",best_es:"Mejor UX, liquidez concentrada",best_fr:"Meilleur UX, liquidite concentree",best_ru:"\u041b\u0443\u0447\u0448\u0438\u0439 UX, \u043a\u043e\u043d\u0446\u0435\u043d\u0442\u0440\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u0430\u044f \u043b\u0438\u043a\u0432\u0438\u0434\u043d\u043e\u0441\u0442\u044c",best_ar:"\u0623\u0641\u0636\u0644 \u062a\u062c\u0631\u0628\u0629 \u0645\u0633\u062a\u062e\u062f\u0645\u060c \u0633\u064a\u0648\u0644\u0629 \u0645\u0631\u0643\u0632\u0629"},
+  {icon:"🟣",name:"Raydium",vol_en:"$800M+",vol_zh:"8\u4ebf\u7f8e\u5143+",vol_es:"$800M+",vol_fr:"$800M+",vol_ru:"$800M+",vol_ar:"$800M+",fee:"0.04%",best_en:"Deep liquidity, fast execution",best_zh:"\u6df1\u5ea6\u6d41\u52a8\u6027\uff0c\u5feb\u901f\u6267\u884c",best_es:"Liquidez profunda, ejecucion rapida",best_fr:"Liquidite profonde, execution rapide",best_ru:"\u0413\u043b\u0443\u0431\u043e\u043a\u0430\u044f \u043b\u0438\u043a\u0432\u0438\u0434\u043d\u043e\u0441\u0442\u044c, \u0431\u044b\u0441\u0442\u0440\u043e\u0435 \u0438\u0441\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u0435",best_ar:"\u0633\u064a\u0648\u0644\u0629 \u0639\u0645\u064a\u0642\u0629\u060c \u062a\u0646\u0641\u064a\u0630 \u0633\u0631\u064a\u0639"},
+  {icon:"🌌",name:"Meteora",vol_en:"$500M+",vol_zh:"5\u4ebf\u7f8e\u5143+",vol_es:"$500M+",vol_fr:"$500M+",vol_ru:"$500M+",vol_ar:"$500M+",fee:"0.04%",best_en:"EACO liquidity pool host, dynamic AMM",best_zh:"EACO\u6d41\u52a8\u6027\u6c60\u6258\u7ba1\uff0c\u52a8\u6001AMM",best_es:"Host del pool de liquidez EACO, AMM dinamico",best_fr:"Heberge le pool de liquidite EACO, AMM dynamique",best_ru:"\u0425\u043e\u0441\u0442 \u043f\u0443\u043b\u0430 \u043b\u0438\u043a\u0432\u0438\u0434\u043d\u043e\u0441\u0442\u0438 EACO, \u0434\u0438\u043d\u0430\u043c\u0438\u0447\u0435\u0441\u043a\u0438\u0439 AMM",best_ar:"\u0645\u0636\u064a\u0641 \u062a\u062c\u0645\u0639 \u0633\u064a\u0648\u0644\u0629 EACO\u060c AMM \u062f\u064a\u0646\u0627\u0645\u064a\u0643\u064a"},
+  {icon:"🔥",name:"Phoenix",vol_en:"$400M+",vol_zh:"4\u4ebf\u7f8e\u5143+",vol_es:"$400M+",vol_fr:"$400M+",vol_ru:"$400M+",vol_ar:"$400M+",fee:"0.02%",best_en:"CLOB model, lowest fees",best_zh:"CLOB\u6a21\u578b\uff0c\u6700\u4f4e\u624b\u7eed\u8d39",best_es:"Modelo CLOB, comisiones mas bajas",best_fr:"Modele CLOB, frais les plus bas",best_ru:"\u041c\u043e\u0434\u0435\u043b\u044c CLOB, \u0441\u0430\u043c\u044b\u0435 \u043d\u0438\u0437\u043a\u0438\u0435 \u043a\u043e\u043c\u0438\u0441\u0441\u0438\u0438",best_ar:"\u0646\u0645\u0648\u0630\u062c CLOB\u060c \u0623\u0642\u0644 \u0627\u0644\u0631\u0633\u0648\u0645"}
+];
+
+var ONRAMPS = [
+  {name:"MYKOBO",region_en:"Eurozone",region_zh:"\u6b27\u5143\u533a",region_es:"Eurozona",region_fr:"Zone Euro",region_ru:"\u0415\u0432\u0440\u043e\u0437\u043e\u043d\u0430",region_ar:"\u0645\u0646\u0637\u0642\u0629 \u0627\u0644\u064a\u0648\u0631\u0648",detail_en:"Direct EUR to Solana onramp; SEPA transfers",detail_zh:"\u76f4\u63a5\u6b27\u5143\u5165Solana\uff1bSEPA\u8f6c\u8d26",detail_es:"Entrada directa EUR a Solana; transferencias SEPA",detail_fr:"Entree directe EUR vers Solana; virements SEPA",detail_ru:"\u041f\u0440\u044f\u043c\u043e\u0439 \u0432\u0432\u043e\u0434 EUR \u0432 Solana; \u043f\u0435\u0440\u0435\u0432\u043e\u0434\u044b SEPA",detail_ar:"\u0625\u064a\u062f\u0627\u0639 \u0645\u0628\u0627\u0634\u0631 \u0644\u0640 EUR \u0625\u0644\u0649 Solana\u061b \u062a\u062d\u0648\u064a\u0644\u0627\u062a SEPA"},
+  {name:"Stripe Crypto",region_en:"Global (US/EU/UK)",region_zh:"\u5168\u7403(\u7f8e/\u6b27/\u82f1)",region_es:"Global (EE.UU./UE/UK)",region_fr:"Global (US/UE/UK)",region_ru:"\u0413\u043b\u043e\u0431\u0430\u043b\u044c\u043d\u043e (\u0421\u0428\u0410/\u0415\u0421/UK)",region_ar:"\u0639\u0627\u0644\u0645\u064a (\u0627\u0644\u0648\u0644\u0627\u064a\u0627\u062a \u0627\u0644\u0645\u062a\u062d\u062f\u0629/\u0627\u0644\u0627\u062a\u062d\u0627\u062f \u0627\u0644\u0623\u0648\u0631\u0648\u0628\u064a/\u0627\u0644\u0645\u0645\u0644\u0643\u0629 \u0627\u0644\u0645\u062a\u062d\u062f\u0629)",detail_en:"USD/EUR/GBP to SOL via Stripe onramp API",detail_zh:"\u7f8e\u5143/\u6b27\u5143/\u82f1\u9551\u901a\u8fc7Stripe\u5165\u91d1SOL",detail_es:"USD/EUR/GBP a SOL via API de entrada Stripe",detail_fr:"USD/EUR/GBP vers SOL via API d'entree Stripe",detail_ru:"USD/EUR/GBP \u0432 SOL \u0447\u0435\u0440\u0435\u0437 API \u0432\u0432\u043e\u0434\u0430 Stripe",detail_ar:"USD/EUR/GBP \u0625\u0644\u0649 SOL \u0639\u0628\u0631 \u0648\u0627\u062c\u0647\u0629 \u0625\u064a\u062f\u0627\u0639 Stripe"},
+  {name:"Onramp Money",region_en:"100+ countries",region_zh:"100+\u56fd\u5bb6",region_es:"100+ paises",region_fr:"100+ pays",region_ru:"100+ \u0441\u0442\u0440\u0430\u043d",region_ar:"+100 \u062f\u0648\u0644\u0629",detail_en:"Multi-currency to SOL; supports SGD/AUD/CAD",detail_zh:"\u591a\u8d27\u5e01\u5165SOL\uff1b\u652f\u6301\u65b0\u5143/\u6fb3\u5143/\u52a0\u5143",detail_es:"Multimoneda a SOL; soporta SGD/AUD/CAD",detail_fr:"Multi-devise vers SOL; supporte SGD/AUD/CAD",detail_ru:"\u041c\u0443\u043b\u044c\u0442\u0438\u0432\u0430\u043b\u044e\u0442\u043d\u044b\u0439 \u0432\u0432\u043e\u0434 \u0432 SOL; \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u0442 SGD/AUD/CAD",detail_ar:"\u0645\u062a\u0639\u062f\u062f \u0627\u0644\u0639\u0645\u0644\u0627\u062a \u0625\u0644\u0649 SOL\u061b \u064a\u062f\u0639\u0645 SGD/AUD/CAD"},
+  {name:"CoinGate",region_en:"EU/Global",region_zh:"\u6b27\u76df/\u5168\u7403",region_es:"UE/Global",region_fr:"UE/Global",region_ru:"\u0415\u0421/\u0413\u043b\u043e\u0431\u0430\u043b\u044c\u043d\u043e",region_ar:"\u0627\u0644\u0627\u062a\u062d\u0627\u062f \u0627\u0644\u0623\u0648\u0631\u0648\u0628\u064a/\u0639\u0627\u0644\u0645\u064a",detail_en:"EUR and other currencies to crypto via card/SEPA",detail_zh:"\u6b27\u5143\u53ca\u5176\u4ed6\u8d27\u5e01\u901a\u8fc7\u5361/SEPA\u5165\u91d1",detail_es:"EUR y otras monedas a cripto via tarjeta/SEPA",detail_fr:"EUR et autres devises vers crypto via carte/SEPA",detail_ru:"EUR \u0438 \u0434\u0440\u0443\u0433\u0438\u0435 \u0432\u0430\u043b\u044e\u0442\u044b \u0432 \u043a\u0440\u0438\u043f\u0442\u043e \u0447\u0435\u0440\u0435\u0437 \u043a\u0430\u0440\u0442\u0443/SEPA",detail_ar:"EUR \u0648\u0639\u0645\u0644\u0627\u062a \u0623\u062e\u0631\u0649 \u0625\u0644\u0649 \u0639\u0645\u0644\u0627\u062a \u0645\u0634\u0641\u0631\u0629 \u0639\u0628\u0631 \u0628\u0637\u0627\u0642\u0629/SEPA"},
+  {name:"Bitvavo",region_en:"Netherlands/EU",region_zh:"\u8377\u5170/\u6b27\u76df",region_es:"Paises Bajos/UE",region_fr:"Pays-Bas/UE",region_ru:"\u041d\u0438\u0434\u0435\u0440\u043b\u0430\u043d\u0434\u044b/\u0415\u0421",region_ar:"\u0647\u0648\u0644\u0646\u062f\u0627/\u0627\u0644\u0627\u062a\u062d\u0627\u062f \u0627\u0644\u0623\u0648\u0631\u0648\u0628\u064a",detail_en:"EUR to SOL with low fees; iDEAL payments",detail_zh:"\u6b27\u5143\u5165SOL\u4f4e\u624b\u7eed\u8d39\uff1biDEAL\u652f\u4ed8",detail_es:"EUR a SOL con bajas comisiones; pagos iDEAL",detail_fr:"EUR vers SOL avec frais bas; paiements iDEAL",detail_ru:"EUR \u0432 SOL \u0441 \u043d\u0438\u0437\u043a\u0438\u043c\u0438 \u043a\u043e\u043c\u0438\u0441\u0441\u0438\u044f\u043c\u0438; \u043f\u043b\u0430\u0442\u0435\u0436\u0438 iDEAL",detail_ar:"EUR \u0625\u0644\u0649 SOL \u0628\u0631\u0633\u0648\u0645 \u0645\u0646\u062e\u0641\u0636\u0629\u061b \u0645\u062f\u0641\u0648\u0639\u0627\u062a iDEAL"},
+  {name:"Phantom Wallet",region_en:"Global",region_zh:"\u5168\u7403",region_es:"Global",region_fr:"Global",region_ru:"\u0413\u043b\u043e\u0431\u0430\u043b\u044c\u043d\u043e",region_ar:"\u0639\u0627\u0644\u0645\u064a",detail_en:"Built-in fiat onramp; multi-currency support",detail_zh:"\u5185\u7f6e\u6cd5\u5e01\u5165\u91d1\uff1b\u591a\u8d27\u5e01\u652f\u6301",detail_es:"Entrada fiat integrada; soporte multimoneda",detail_fr:"Entree fiat integree; support multi-devise",detail_ru:"\u0412\u0441\u0442\u0440\u043e\u0435\u043d\u043d\u044b\u0439 \u0444\u0438\u0430\u0442\u043d\u044b\u0439 \u0432\u0432\u043e\u0434; \u043c\u0443\u043b\u044c\u0442\u0438\u0432\u0430\u043b\u044e\u0442\u043d\u0430\u044f \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u043a\u0430",detail_ar:"\u0625\u064a\u062f\u0627\u0639 \u0639\u0645\u0644\u0627\u062a \u0648\u0631\u0642\u064a\u0629 \u0645\u062f\u0645\u062c\u061b \u062f\u0639\u0645 \u0645\u062a\u0639\u062f\u062f \u0627\u0644\u0639\u0645\u0644\u0627\u062a"}
+];
+
+var STRATEGIES = [
+  {p_en:"Phase 1",p_zh:"\u9636\u6bb5\u4e00",p_es:"Fase 1",p_fr:"Phase 1",p_ru:"\u0424\u0430\u0437\u0430 1",p_ar:"\u0627\u0644\u0645\u0631\u062d\u0644\u0629 1",t_en:"Foundation: SOL-EACO Liquidity Pool",t_zh:"\u57fa\u7840\uff1aSOL-EACO\u6d41\u52a8\u6027\u6c60",t_es:"Fundacion: Pool de Liquidez SOL-EACO",t_fr:"Fondation: Pool de Liquidite SOL-EACO",t_ru:"\u041e\u0441\u043d\u043e\u0432\u0430: \u041f\u0443\u043b \u043b\u0438\u043a\u0432\u0438\u0434\u043d\u043e\u0441\u0442\u0438 SOL-EACO",t_ar:"\u0627\u0644\u0623\u0633\u0627\u0633: \u062a\u062c\u0645\u0639 \u0633\u064a\u0648\u0644\u0629 SOL-EACO",d_en:"Maintain Meteora DAMM v2 pool (EACO/SOL pair); ensure stable APR and 100% permanently locked",d_zh:"\u7ef4\u62a4Meteora DAMM v2\u6c60(EACO/SOL\u5bf9)\uff1b\u786e\u4fdd\u7a33\u5b9aAPR\u548c100%\u6c38\u4e45\u9501\u4ed3",d_es:"Mantener pool Meteora DAMM v2 (par EACO/SOL); asegurar APR estable y 100% bloqueado permanentemente",d_fr:"Maintenir le pool Meteora DAMM v2 (paire EACO/SOL); assurer APR stable et 100% verrouille definitivement",d_ru:"\u041f\u043e\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0442\u044c \u043f\u0443\u043b Meteora DAMM v2 (\u043f\u0430\u0440\u0430 EACO/SOL); \u043e\u0431\u0435\u0441\u043f\u0435\u0447\u0438\u0432\u0430\u0442\u044c \u0441\u0442\u0430\u0431\u0438\u043b\u044c\u043d\u044b\u0439 APR \u0438 100% \u043f\u0435\u0440\u043c\u0430\u043d\u0435\u043d\u0442\u043d\u043e\u0439 \u0431\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u043a\u0438",d_ar:"\u0627\u0644\u062d\u0641\u0627\u0638 \u0639\u0644\u0649 \u062a\u062c\u0645\u0639 Meteora DAMM v2 (\u0632\u0648\u062c EACO/SOL)\u061b \u0636\u0645\u0627\u0646 APR \u0645\u0633\u062a\u0642\u0631 \u0648\u062a\u062c\u0645\u064a\u062f 100% \u062f\u0627\u0626\u0645"},
+  {p_en:"Phase 2",p_zh:"\u9636\u6bb5\u4e8c",p_es:"Fase 2",p_fr:"Phase 2",p_ru:"\u0424\u0430\u0437\u0430 2",p_ar:"\u0627\u0644\u0645\u0631\u062d\u0644\u0629 2",t_en:"EUR Integration: MiCA-Compliant Onramp",t_zh:"\u6b27\u5143\u6574\u5408\uff1aMiCA\u5408\u89c4\u5165\u91d1",t_es:"Integracion EUR: Entrada conforme a MiCA",t_fr:"Integration EUR: Entree conforme MiCA",t_ru:"\u0418\u043d\u0442\u0435\u0433\u0440\u0430\u0446\u0438\u044f EUR: MiCA-\u0441\u043e\u0432\u043c\u0435\u0441\u0442\u0438\u043c\u044b\u0439 \u0432\u0432\u043e\u0434",t_ar:"\u062f\u0645\u062c EUR: \u0625\u064a\u062f\u0627\u0639 \u0645\u062a\u0648\u0627\u0641\u0642 \u0645\u0639 MiCA",d_en:"Partner with MYKOBO for direct EUR-to-Solana bridge; promote EURC stablecoin as intermediary",d_zh:"\u4e0eMYKOBO\u5408\u4f5c\u5efa\u7acb\u76f4\u63a5\u6b27\u5143-Solana\u6865\u63a5\uff1b\u63a8\u5e7fEURC\u7a33\u5b9a\u5e01\u4f5c\u4e3a\u4e2d\u4ecb",d_es:"Asociarse con MYKOBO para puente directo EUR-Solana; promover stablecoin EURC como intermediario",d_fr:"Parteneriat avec MYKOBO pour pont direct EUR-Solana; promouvoir le stablecoin EURC comme intermediaire",d_ru:"\u041f\u0430\u0440\u0442\u043d\u0435\u0440\u0441\u0442\u0432\u043e \u0441 MYKOBO \u0434\u043b\u044f \u043f\u0440\u044f\u043c\u043e\u0433\u043e \u043c\u043e\u0441\u0442\u0430 EUR-Solana; \u043f\u0440\u043e\u0434\u0432\u0438\u0436\u0435\u043d\u0438\u0435 \u0441\u0442\u0435\u0439\u0431\u043b\u043a\u043e\u0438\u043d\u0430 EURC \u043a\u0430\u043a \u043f\u043e\u0441\u0440\u0435\u0434\u043d\u0438\u043a\u0430",d_ar:"\u0627\u0644\u0634\u0631\u0627\u0643\u0629 \u0645\u0639 MYKOBO \u0644\u062c\u0633\u0631 \u0645\u0628\u0627\u0634\u0631 EUR-Solana\u061b \u062a\u0639\u0632\u064a\u0632 EURC \u0627\u0644\u0645\u0633\u062a\u0642\u0631 \u0643\u0648\u0633\u064a\u0637"},
+  {p_en:"Phase 3",p_zh:"\u9636\u6bb5\u4e09",p_es:"Fase 3",p_fr:"Phase 3",p_ru:"\u0424\u0430\u0437\u0430 3",p_ar:"\u0627\u0644\u0645\u0631\u062d\u0644\u0629 3",t_en:"GBP Channel: UK Market Entry",t_zh:"\u82f1\u9551\u901a\u9053\uff1a\u82f1\u56fd\u5e02\u573a\u8fdb\u5165",t_es:"Canal GBP: Entrada al mercado del Reino Unido",t_fr:"Canal GBP: Entree sur le marche britannique",t_ru:"\u041a\u0430\u043d\u0430\u043b GBP: \u0412\u044b\u0445\u043e\u0434 \u043d\u0430 \u0440\u044b\u043d\u043e\u043a \u0412\u0435\u043b\u0438\u043a\u043e\u0431\u0440\u0438\u0442\u0430\u043d\u0438\u0438",t_ar:"\u0642\u0646\u0627\u0629 GBP: \u0627\u0644\u062f\u062e\u0648\u0644 \u0625\u0644\u0649 \u0627\u0644\u0633\u0648\u0642 \u0627\u0644\u0628\u0631\u064a\u0637\u0627\u0646\u064a",d_en:"Leverage FCA's lifted ETN ban; list EACO on UK-friendly platforms; target 15B GBP volume market",d_zh:"\u5229\u7528FCA\u89e3\u9664ETN\u7981\u4ee4\uff1b\u5728\u82f1\u56fd\u53cb\u597d\u5e73\u53f0\u4e0a\u5217EACO\uff1b\u76ee\u680715\u4ebf\u82f1\u9551\u5e02\u573a",d_es:"Aprovechar levantamiento de prohibicion ETN del FCA; listar EACO en plataformas amigables con UK; objetivo mercado de 15B GBP",d_fr:"Profiter de la levee de l'interdiction ETN du FCA; lister EACO sur les plateformes favorables au UK; cible marche de 15B GBP",d_ru:"\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c \u0441\u043d\u044f\u0442\u0438\u0435 \u0437\u0430\u043f\u0440\u0435\u0442\u0430 FCA \u043d\u0430 ETN; \u043b\u0438\u0441\u0442\u0438\u043d\u0433 EACO \u043d\u0430 UK-\u0434\u0440\u0443\u0436\u0435\u043b\u044e\u0431\u043d\u044b\u0445 \u043f\u043b\u0430\u0442\u0444\u043e\u0440\u043c\u0430\u0445; \u0446\u0435\u043b\u044c \u2014 \u0440\u044b\u043d\u043e\u043a 15B GBP",d_ar:"\u0627\u0633\u062a\u063a\u0644\u0627\u0644 \u0631\u0641\u0639 FCA \u0644\u062d\u0638\u0631 ETN\u061b \u0625\u062f\u0631\u0627\u062c EACO \u0639\u0644\u0649 \u0645\u0646\u0635\u0627\u062a \u0635\u062f\u064a\u0642\u0629 \u0644\u0644\u0645\u0645\u0644\u0643\u0629 \u0627\u0644\u0645\u062a\u062d\u062f\u0629\u061b \u0627\u0633\u062a\u0647\u062f\u0627\u0641 \u0633\u0648\u0642 15B GBP"},
+  {p_en:"Phase 4",p_zh:"\u9636\u6bb5\u56db",p_es:"Fase 4",p_fr:"Phase 4",p_ru:"\u0424\u0430\u0437\u0430 4",p_ar:"\u0627\u0644\u0645\u0631\u062d\u0644\u0629 4",t_en:"APAC Expansion: SGD/AUD/KRW",t_zh:"\u4e9a\u592a\u6269\u5f20\uff1a\u65b0\u5143/\u6fb3\u5143/\u97e9\u5143",t_es:"Expansion APAC: SGD/AUD/KRW",t_fr:"Expansion APAC: SGD/AUD/KRW",t_ru:"\u0420\u0430\u0441\u0448\u0438\u0440\u0435\u043d\u0438\u0435 APAC: SGD/AUD/KRW",t_ar:"\u0627\u0644\u062a\u0648\u0633\u0639 \u0641\u064a \u0622\u0633\u064a\u0627 \u0648\u0627\u0644\u0645\u062d\u064a\u0637 \u0627\u0644\u0647\u0627\u062f\u0626: SGD/AUD/KRW",d_en:"Integrate with Upbit (KRW), CoinSpot (AUD), Independent Reserve (SGD); leverage au-trade platform",d_zh:"\u63a5\u5165Upbit(\u97e9\u5143)\u3001CoinSpot(\u6fb3\u5143)\u3001Independent Reserve(\u65b0\u5143)\uff1b\u5229\u7528au-trade\u5e73\u53f0",d_es:"Integrar con Upbit (KRW), CoinSpot (AUD), Independent Reserve (SGD); aprovechar plataforma au-trade",d_fr:"Integrer avec Upbit (KRW), CoinSpot (AUD), Independent Reserve (SGD); exploiter la plateforme au-trade",d_ru:"\u0418\u043d\u0442\u0435\u0433\u0440\u0430\u0446\u0438\u044f \u0441 Upbit (KRW), CoinSpot (AUD), Independent Reserve (SGD); \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0435 \u043f\u043b\u0430\u0442\u0444\u043e\u0440\u043c\u044b au-trade",d_ar:"\u0627\u0644\u062a\u0643\u0627\u0645\u0644 \u0645\u0639 Upbit (KRW) \u0648 CoinSpot (AUD) \u0648 Independent Reserve (SGD)\u061b \u0627\u0644\u0627\u0633\u062a\u0641\u0627\u062f\u0629 \u0645\u0646 \u0645\u0646\u0635\u0629 au-trade"},
+  {p_en:"Phase 5",p_zh:"\u9636\u6bb5\u4e94",p_es:"Fase 5",p_fr:"Phase 5",p_ru:"\u0424\u0430\u0437\u0430 5",p_ar:"\u0627\u0644\u0645\u0631\u062d\u0644\u0629 5",t_en:"HK Gateway: CNH-Linked Access",t_zh:"\u9999\u6e2f\u95e8\u6237\uff1a\u4eba\u6c11\u5e01\u5173\u8054\u63a5\u5165",t_es:"Puerta HK: Acceso vinculado a CNH",t_fr:"Porte HK: Acces lie au CNH",t_ru:"\u0428\u043b\u044e\u0437 HK: \u0414\u043e\u0441\u0442\u0443\u043f \u0447\u0435\u0440\u0435\u0437 CNH",t_ar:"\u0628\u0648\u0627\u0628\u0629 \u0647\u0648\u0646\u063a \u0643\u0648\u0646\u063a: \u0648\u0635\u0648\u0644 \u0645\u0631\u062a\u0628\u0637 \u0628\u0640 CNH",d_en:"Utilize HK Stablecoin Ordinance; bridge CNH capital via HKD/USDT to Solana; target Chinese diaspora",d_zh:"\u5229\u7528\u9999\u6e2f\u7a33\u5b9a\u5e01\u6761\u4f8b\uff1b\u901a\u8fc7HKD/USDT\u6865\u63a5\u4eba\u6c11\u5e01\u8d44\u672c\u81f3Solana\uff1b\u76ee\u6807\u534e\u4fa8\u793e\u533a",d_es:"Utilizar Ordenanza de Stablecoins de HK; puentear capital CNH via HKD/USDT a Solana; objetivo comunidad china en el extranjero",d_fr:"Utiliser l'Ordonnance sur les Stablecoins de HK; pontee le capital CNH via HKD/USDT vers Solana; cible diaspora chinoise",d_ru:"\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c \u041e\u0440\u0434\u043e\u043d\u0430\u043d\u0441 \u0413\u043e\u043d\u043a\u043e\u043d\u0433\u0430 \u043f\u043e \u0441\u0442\u0435\u0439\u0431\u043b\u043a\u043e\u0438\u043d\u0430\u043c; \u043c\u043e\u0441\u0442 CNH-\u043a\u0430\u043f\u0438\u0442\u0430\u043b\u0430 \u0447\u0435\u0440\u0435\u0437 HKD/USDT \u0432 Solana; \u0446\u0435\u043b\u044c \u2014 \u043a\u0438\u0442\u0430\u0439\u0441\u043a\u0430\u044f \u0434\u0438\u0430\u0441\u043f\u043e\u0440\u0430",d_ar:"\u0627\u0633\u062a\u062e\u062f\u0627\u0645 \u0645\u0631\u0633\u0648\u0645 \u0627\u0644\u0639\u0645\u0644\u0627\u062a \u0627\u0644\u0645\u0633\u062a\u0642\u0631\u0629 \u0641\u064a \u0647\u0648\u0646\u063a \u0643\u0648\u0646\u063a\u061b \u062c\u0633\u0631 \u0631\u0623\u0633 \u0645\u0627\u0644 CNH \u0639\u0628\u0631 HKD/USDT \u0625\u0644\u0649 Solana\u061b \u0627\u0633\u062a\u0647\u062f\u0627\u0641 \u0627\u0644\u0645\u063a\u062a\u0631\u0628\u064a\u0646 \u0627\u0644\u0635\u064a\u0646\u064a\u064a\u0646"},
+  {p_en:"Phase 6",p_zh:"\u9636\u6bb5\u516d",p_es:"Fase 6",p_fr:"Phase 6",p_ru:"\u0424\u0430\u0437\u0430 6",p_ar:"\u0627\u0644\u0645\u0631\u062d\u0644\u0629 6",t_en:"Swiss Institutional: CHF Channel",t_zh:"\u745e\u58eb\u673a\u6784\uff1aCHF\u901a\u9053",t_es:"Institucional Suizo: Canal CHF",t_fr:"Institutionnel Suisse: Canal CHF",t_ru:"\u0428\u0432\u0435\u0439\u0446\u0430\u0440\u0441\u043a\u0438\u0439 \u0418\u043d\u0441\u0442\u0438\u0442\u0443\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u044b\u0439: \u041a\u0430\u043d\u0430\u043b CHF",t_ar:"\u0645\u0624\u0633\u0633\u064a \u0633\u0648\u064a\u0633\u0631\u064a: \u0642\u0646\u0627\u0629 CHF",d_en:"Partner with Sygnum/SEBA for institutional CHF-to-SOL; position EACO as RWA asset",d_zh:"\u4e0eSygnum/SEBA\u5408\u4f5c\u673a\u6784\u7ea7CHF\u5165SOL\uff1b\u5c06EACO\u5b9a\u4f4d\u4e3aRWA\u8d44\u4ea7",d_es:"Asociarse con Sygnum/SEBA para CHF institucional a SOL; posicionar EACO como activo RWA",d_fr:"Parteneriat avec Sygnum/SEBA pour CHF institutionnel vers SOL; positionner EACO comme actif RWA",d_ru:"\u041f\u0430\u0440\u0442\u043d\u0435\u0440\u0441\u0442\u0432\u043e \u0441 Sygnum/SEBA \u0434\u043b\u044f \u0438\u043d\u0441\u0442\u0438\u0442\u0443\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u043e\u0433\u043e CHF-\u0432-SOL; \u043f\u043e\u0437\u0438\u0446\u0438\u043e\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 EACO \u043a\u0430\u043a RWA-\u0430\u043a\u0442\u0438\u0432\u0430",d_ar:"\u0627\u0644\u0634\u0631\u0627\u0643\u0629 \u0645\u0639 Sygnum/SEBA \u0644\u0640 CHF \u0645\u0624\u0633\u0633\u064a \u0625\u0644\u0649 SOL\u061b \u0648\u0636\u0639 EACO \u0643\u0623\u0635\u0644 RWA"},
+  {p_en:"Phase 7",p_zh:"\u9636\u6bb5\u4e03",p_es:"Fase 7",p_fr:"Phase 7",p_ru:"\u0424\u0430\u0437\u0430 7",p_ar:"\u0627\u0644\u0645\u0631\u062d\u0644\u0629 7",t_en:"Global DEX Aggregation",t_zh:"\u5168\u7403DEX\u805a\u5408",t_es:"Agregacion Global DEX",t_fr:"Aggregation Globale DEX",t_ru:"\u0413\u043b\u043e\u0431\u0430\u043b\u044c\u043d\u0430\u044f DEX-\u0430\u0433\u0440\u0435\u0433\u0430\u0446\u0438\u044f",t_ar:"\u062a\u062c\u0645\u064a\u0639 DEX \u0627\u0644\u0639\u0627\u0644\u0645\u064a",d_en:"Integrate EACO across all major Solana DEXs; Jupiter as primary aggregator; ensure best price routing",d_zh:"\u5728\u6240\u6709\u4e3b\u8981Solana DEX\u63a5\u5165EACO\uff1bJupiter\u4e3a\u4e3b\u805a\u5408\u5668\uff1b\u786e\u4fdd\u6700\u4f18\u4ef7\u683c\u8def\u7531",d_es:"Integrar EACO en todos los DEX principales de Solana; Jupiter como agregador principal; asegurar mejor enrutamiento de precios",d_fr:"Integrer EACO sur tous les principaux DEX Solana; Jupiter comme agregateur principal; assurer le meilleur routage des prix",d_ru:"\u0418\u043d\u0442\u0435\u0433\u0440\u0430\u0446\u0438\u044f EACO \u043d\u0430 \u0432\u0441\u0435\u0445 \u043a\u0440\u0443\u043f\u043d\u044b\u0445 DEX Solana; Jupiter \u043a\u0430\u043a \u043e\u0441\u043d\u043e\u0432\u043d\u043e\u0439 \u0430\u0433\u0440\u0435\u0433\u0430\u0442\u043e\u0440; \u043e\u0431\u0435\u0441\u043f\u0435\u0447\u0435\u043d\u0438\u0435 \u043b\u0443\u0447\u0448\u0435\u0433\u043e \u0446\u0435\u043d\u043e\u0432\u043e\u0433\u043e \u043c\u0430\u0440\u0448\u0440\u0443\u0442\u0438\u0437\u0430\u0446\u0438\u0438",d_ar:"\u062f\u0645\u062c EACO \u0641\u064a \u062c\u0645\u064a\u0639 \u0645\u0646\u0635\u0627\u062a DEX \u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629 \u0639\u0644\u0649 Solana\u061b Jupiter \u0643\u0645\u062c\u0645\u0639 \u0631\u0626\u064a\u0633\u064a\u061b \u0636\u0645\u0627\u0646 \u0623\u0641\u0636\u0644 \u062a\u0648\u062c\u064a\u0647 \u0644\u0644\u0623\u0633\u0639\u0627\u0631"}
+];
+
+var ECO_LINKS = [
+  {icon:"🌍",url:"https://ucoingroup.github.io/earths-best-coin/",t_en:"Earth's Best Coin",t_zh:"\u5730\u7403\u6700\u4f73\u8d27\u5e01",t_es:"Earth's Best Coin",t_fr:"Earth's Best Coin",t_ru:"Earth's Best Coin",t_ar:"Earth's Best Coin"},
+  {icon:"🪙",url:"https://orbmarkets.io/token/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH",t_en:"OrbMarkets EACO",t_zh:"OrbMarkets EACO",t_es:"OrbMarkets EACO",t_fr:"OrbMarkets EACO",t_ru:"OrbMarkets EACO",t_ar:"OrbMarkets EACO"},
+  {icon:"🌐",url:"https://ucoingroup.github.io/eaco-web3/",t_en:"EACO Web3",t_zh:"EACO Web3",t_es:"EACO Web3",t_fr:"EACO Web3",t_ru:"EACO Web3",t_ar:"EACO Web3"},
+  {icon:"🌏",url:"https://ucoingroup.github.io/au-trade/",t_en:"AU-Trade Platform",t_zh:"AU-Trade\u5e73\u53f0",t_es:"Plataforma AU-Trade",t_fr:"Plateforme AU-Trade",t_ru:"\u041f\u043b\u0430\u0442\u0444\u043e\u0440\u043c\u0430 AU-Trade",t_ar:"\u0645\u0646\u0635\u0629 AU-Trade"},
+  {icon:"💵",url:"https://app.meteora.ag/dammv2/H4P6RUcyQPG7yCrSyE51P4sfj32aTJC2qE86hodCH1Cc",t_en:"Meteora EACO Pool",t_zh:"Meteora EACO\u6c60",t_es:"Pool EACO Meteora",t_fr:"Pool EACO Meteora",t_ru:"\u041f\u0443\u043b EACO Meteora",t_ar:"\u062a\u062c\u0645\u0639 EACO Meteora"},
+  {icon:"👥",url:"https://ucoingroup.github.io/earth-100-friends/",t_en:"Earth's 100 Friends",t_zh:"\u5730\u7403\u6700\u597d\u7684100\u4e2a\u670b\u53cb",t_es:"100 Amigos de la Tierra",t_fr:"100 Amis de la Terre",t_ru:"100 \u0414\u0440\u0443\u0437\u0435\u0439 \u0417\u0435\u043c\u043b\u0438",t_ar:"100 \u0635\u062f\u064a\u0642 \u0644\u0644\u0623\u0631\u0636"},
+  {icon:"🔗",url:"https://ucoingroup.github.io/eacoSWAP/",t_en:"EACO SWAP",t_zh:"EACO SWAP",t_es:"EACO SWAP",t_fr:"EACO SWAP",t_ru:"EACO SWAP",t_ar:"EACO SWAP"},
+  {icon:"🧭",url:"https://ucoingroup.github.io/Mohist-Tech/",t_en:"Mohist Tech",t_zh:"\u58a8\u5bb6\u79d1\u6280",t_es:"Mohist Tech",t_fr:"Mohist Tech",t_ru:"Mohist Tech",t_ar:"Mohist Tech"},
+  {icon:"📚",url:"https://ucoingroup.github.io/good-books/",t_en:"Good Books",t_zh:"Good Books",t_es:"Good Books",t_fr:"Good Books",t_ru:"Good Books",t_ar:"Good Books"},
+  {icon:"🚀",url:"https://ucoingroup.github.io/Footsteps-of-Civilization/",t_en:"Footsteps of Civilization",t_zh:"\u6587\u660e\u7684\u811a\u5370",t_es:"Huellas de la Civilizacion",t_fr:"Empreintes de la Civilisation",t_ru:"\u0428\u0430\u0433\u0438 \u0426\u0438\u0432\u0438\u043b\u0438\u0437\u0430\u0446\u0438\u0438",t_ar:"\u0622\u062b\u0627\u0631 \u0627\u0644\u062d\u0636\u0627\u0631\u0629"},
+  {icon:"🌐",url:"https://eastcoin.base44.app/",t_en:"East Coin",t_zh:"East Coin",t_es:"East Coin",t_fr:"East Coin",t_ru:"East Coin",t_ar:"East Coin"},
+  {icon:"🎨",url:"https://eaco-build-world.base44.app/",t_en:"EACO Build World",t_zh:"EACO \u6784\u5efa\u4e16\u754c",t_es:"EACO Construir Mundo",t_fr:"EACO Construire le Monde",t_ru:"EACO \u0421\u043e\u0437\u0434\u0430\u0442\u044c \u041c\u0438\u0440",t_ar:"EACO \u0628\u0646\u0627\u0621 \u0627\u0644\u0639\u0627\u0644\u0645"},
+  {icon:"🌍",url:"https://ucoingroup.github.io/eaco-faucet/",t_en:"EACO Faucet",t_zh:"EACO \u6c34\u9f99\u5934",t_es:"EACO Faucet",t_fr:"EACO Faucet",t_ru:"EACO Faucet",t_ar:"EACO Faucet"},
+  {icon:"🔎",url:"https://ucoingroup.github.io/eaco50rate/",t_en:"EACO 50 Rate",t_zh:"EACO 50\u6c47\u7387",t_es:"EACO Tasa 50",t_fr:"EACO Taux 50",t_ru:"EACO \u041a\u0443\u0440\u0441 50",t_ar:"EACO \u0645\u0639\u062f\u0644 50"}
+];
+
+// ============ RENDER ============
+var lang = 'en';
+
+function t(key) { return (I18N[lang] || I18N['en'])[key] || key; }
+
+function getVal(obj, field) {
+  var v = obj[field + '_' + lang];
+  if (v) return v;
+  return obj[field + '_en'] || obj[field] || '';
+}
+
+function renderCurrencies() {
+  var grid = document.getElementById('currency-grid');
+  grid.innerHTML = CURRENCIES.map(function(c) {
+    var name = getVal(c, 'name');
+    var region = getVal(c, 'region');
+    var reg = getVal(c, 'reg');
+    var path = getVal(c, 'path');
+    var note = getVal(c, 'note');
+    var fl = c.friendly === 'high' ? t('f_high') : c.friendly === 'med' ? t('f_med') : t('f_low');
+    return '<div class="card">' +
+      '<div class="card-head"><span class="flag">' + c.flag + '</span><span class="sym">' + c.sym + '</span><span class="name">' + name + '</span><span class="friendly ' + c.friendly + '">' + fl + '</span></div>' +
+      '<div class="card-row"><span class="label">' + t('lbl_region') + '</span><span class="val">' + region + '</span></div>' +
+      '<div class="card-row"><span class="label">' + t('lbl_rate') + '</span><span class="val">' + c.rate + '</span></div>' +
+      '<div class="card-row"><span class="label">' + t('lbl_reg') + '</span><span class="val">' + reg + '</span></div>' +
+      '<div class="card-row"><span class="label">' + t('lbl_path') + '</span><span class="val">' + path + '</span></div>' +
+      '<div class="note">' + note + '</div>' +
+      '</div>';
+  }).join('');
+}
+
+function renderPaths() {
+  var grid = document.getElementById('path-grid');
+  grid.innerHTML = EXCHANGE_PATHS.map(function(p) {
+    var title = getVal(p, 'title');
+    var steps = p['steps_' + lang] || p.steps_en;
+    return '<div class="path-card">' +
+      '<div class="path-head"><span class="flag">' + p.flag + '</span><span class="title">' + title + '</span></div>' +
+      '<div class="path-rate">' + p.rate + '</div>' +
+      '<ol class="path-steps">' + steps.map(function(s) { return '<li>' + s + '</li>'; }).join('') + '</ol>' +
+      '</div>';
+  }).join('');
+}
+
+function renderDex() {
+  var grid = document.getElementById('dex-grid');
+  grid.innerHTML = DEX_ITEMS.map(function(d) {
+    var vol = getVal(d, 'vol');
+    var best = getVal(d, 'best');
+    return '<div class="dex-card"><div class="icon">' + d.icon + '</div><div class="name">' + d.name + '</div><div class="vol">' + vol + '</div><div class="fee">' + d.fee + ' fee</div><div class="best">' + best + '</div></div>';
+  }).join('');
+}
+
+function renderOnramps() {
+  var grid = document.getElementById('onramp-grid');
+  grid.innerHTML = ONRAMPS.map(function(o) {
+    var region = getVal(o, 'region');
+    var detail = getVal(o, 'detail');
+    return '<div class="onramp-card"><div class="name">' + o.name + '</div><div class="region">' + region + '</div><div class="detail">' + detail + '</div></div>';
+  }).join('');
+}
+
+function renderStrategies() {
+  var list = document.getElementById('strategy-list');
+  list.innerHTML = STRATEGIES.map(function(s) {
+    var phase = getVal(s, 'p');
+    var title = getVal(s, 't');
+    var desc = getVal(s, 'd');
+    return '<div class="strategy-card"><div class="phase">' + phase + '</div><div class="body"><div class="title">' + title + '</div><div class="desc">' + desc + '</div></div></div>';
+  }).join('');
+}
+
+function renderLinks() {
+  var grid = document.getElementById('link-grid');
+  grid.innerHTML = ECO_LINKS.map(function(l) {
+    var text = getVal(l, 't');
+    return '<a class="link-card" href="' + l.url + '" target="_blank" rel="noopener"><span class="icon">' + l.icon + '</span><span class="text">' + text + '</span></a>';
+  }).join('');
+}
+
+function setLang(l) {
+  lang = l;
+  document.documentElement.lang = l === 'ar' ? 'ar' : l === 'zh' ? 'zh' : l === 'ru' ? 'ru' : l === 'es' ? 'es' : l === 'fr' ? 'fr' : 'en';
+  document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
+  localStorage.setItem('eacoswap_lang', l);
+  
+  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.dataset.lang === l);
+  });
+  
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    var txt = t(key);
+    if (el.children.length > 0 && txt.includes('<')) {
+      el.innerHTML = txt;
+    } else if (el.children.length > 0) {
+      el.innerHTML = txt;
+    } else {
+      el.textContent = txt;
+    }
+  });
+  
+  renderCurrencies();
+  renderPaths();
+  renderDex();
+  renderOnramps();
+  renderStrategies();
+  renderLinks();
+}
+
+function setTheme(theme) {
+  document.body.setAttribute('data-theme', theme);
+  localStorage.setItem('eacoswap_theme', theme);
+  document.querySelectorAll('.theme-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.dataset.theme === theme);
+  });
+}
+
+function copyCA() {
+  var ca = 'DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH';
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(ca).then(function() { showToast(); });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = ca;
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch(e) {}
+    document.body.removeChild(ta);
+    showToast();
+  }
+}
+
+function showToast() {
+  var toast = document.getElementById('toast');
+  toast.textContent = t('toast_copied');
+  toast.classList.add('show');
+  setTimeout(function() { toast.classList.remove('show'); }, 2000);
+}
+
+// Starfield animation
+function initStarfield() {
+  var canvas = document.getElementById('starfield');
+  var ctx = canvas.getContext('2d');
+  var stars = [];
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  for (var i = 0; i < 200; i++) {
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.5,
+      o: Math.random(),
+      tw: Math.random() * 0.02
+    });
+  }
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(function(s) {
+      s.o += s.tw;
+      if (s.o > 1 || s.o < 0) s.tw = -s.tw;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(200,220,' + Math.abs(s.o) + ')';
+      ctx.fill();
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+// Event listeners
+document.querySelectorAll('.lang-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() { setLang(btn.dataset.lang); });
+});
+document.querySelectorAll('.theme-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() { setTheme(btn.dataset.theme); });
+});
+
+// Init
+initStarfield();
+var savedLang = localStorage.getItem('eacoswap_lang') || 'en';
+var savedTheme = localStorage.getItem('eacoswap_theme') || 'cosmic';
+setTheme(savedTheme);
+setLang(savedLang);
+</script>
+</body>
+</html>
