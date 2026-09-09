@@ -784,33 +784,20 @@ function updateRates(force) {
     return;
   }
 
-  fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd&include_24hr_change=true')
+  fetch('/api/sol-price')
     .then(function(r) { return r.json(); })
     .then(function(data) {
-      if (data && data.solana && data.solana.usd) {
-        EACO_BASE.solPrice = data.solana.usd;
-        if (data.solana.usd_24h_change !== undefined) EACO_BASE.solChange24h = data.solana.usd_24h_change;
-        saveSolPrice(data.solana.usd, data.solana.usd_24h_change);
+      if (data && data.success && data.data && data.data.solana) {
+        EACO_BASE.solPrice = data.data.solana.usd;
+        if (data.data.solana.usd_24h_change !== undefined) EACO_BASE.solChange24h = data.data.solana.usd_24h_change;
+        saveSolPrice(data.data.solana.usd, data.data.solana.usd_24h_change);
       }
       EACO_BASE.lastUpdate = new Date();
       renderRates();
     })
     .catch(function() {
-      fetch('/api/sol-price')
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-          if (data && data.success && data.data && data.data.solana) {
-            EACO_BASE.solPrice = data.data.solana.usd;
-            if (data.data.solana.usd_24h_change !== undefined) EACO_BASE.solChange24h = data.data.solana.usd_24h_change;
-            saveSolPrice(data.data.solana.usd, data.data.solana.usd_24h_change);
-          }
-          EACO_BASE.lastUpdate = new Date();
-          renderRates();
-        })
-        .catch(function() {
-          EACO_BASE.lastUpdate = new Date();
-          renderRates();
-        });
+      EACO_BASE.lastUpdate = new Date();
+      renderRates();
     })
     .finally(function() {
       if (btn) { btn.disabled = false; btn.textContent = t('sr_refresh'); }

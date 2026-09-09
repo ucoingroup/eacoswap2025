@@ -100,7 +100,7 @@ app.use((err, req, res, next) => {
 // ===== Start Server =====
 app.listen(PORT, () => {
   console.log('\n========================================');
-  console.log('  EACOswap Backend Server v1.0.0');
+  console.log('  EACOswap Backend Server v1.1.0');
   console.log('========================================');
   console.log(`  Port:        ${PORT}`);
   console.log(`  CORS:        ${CORS_ORIGINS.join(', ')}`);
@@ -110,8 +110,13 @@ app.listen(PORT, () => {
   console.log(`  CoinGecko:   Available (free)`);
   console.log(`  Jupiter:     Available (free)`);
   console.log('----------------------------------------');
+  console.log('  EACO Mint:   DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH');
+  console.log(`  EACO/SOL:    1 SOL = 2,953,614 EACO`);
+  console.log('----------------------------------------');
   console.log(`  API Base:    http://localhost:${PORT}/api`);
   console.log(`  Health:      http://localhost:${PORT}/api/health`);
+  console.log(`  Exchange:    http://localhost:${PORT}/api/eaco-exchange-rates`);
+  console.log(`  Config:      http://localhost:${PORT}/api/config`);
   console.log('========================================\n');
 });
 

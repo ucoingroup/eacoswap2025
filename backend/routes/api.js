@@ -67,7 +67,60 @@ router.get('/sol-price', async (req, res) => {
   res.json(result);
 });
 
-// ===== 2. Top SPL Tokens by Market Cap (CoinGecko Free API) =====
+// ===== 2. EACO Exchange Rates (SOL pool ratio + CoinGecko fiat rates) =====
+router.get('/eaco-exchange-rates', async (req, res) => {
+  const cacheKey = 'eaco-exchange-rates';
+  const cached = getCache(cacheKey);
+  if (cached) return res.json(cached);
+  
+  // Fetch SOL price in all target currencies from CoinGecko
+  const fiats = 'usd,cny,eur,jpy,gbp,aud,cad,chf,hkd,sgd';
+  const result = await proxyRequest(
+    `https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=${fiats}&include_24hr_change=true`
+  );
+  
+  if (!result.success) {
+    return res.json({ success: false, error: 'Failed to fetch exchange rates from CoinGecko', details: result.error });
+  }
+  
+  const solData = result.data.solana || {};
+  const solPrice = solData.usd || 0;
+  // EACO pool ratio: 1 SOL = 2,953,614 EACO (from OrbMarkets)
+  const eacoPerSol = 2953614;
+  const eacoPrice = solPrice > 0 ? solPrice / eacoPerSol : 0;
+  
+  const currencies = [
+    { code: 'USD', name: 'US Dollar',        flag: '🇺🇸', rate: solData.usd ? (solData.usd / eacoPrice) : 0,        symbol: '$' },
+    { code: 'CNY', name: 'Chinese Yuan',     flag: '🇨🇳', rate: solData.cny ? (solData.cny / eacoPrice) : 0,        symbol: '¥' },
+    { code: 'EUR', name: 'Euro',             flag: '🇪🇺', rate: solData.eur ? (solData.eur / eacoPrice) : 0,        symbol: '€' },
+    { code: 'JPY', name: 'Japanese Yen',     flag: '🇯🇵', rate: solData.jpy ? (solData.jpy / eacoPrice) : 0,        symbol: '¥' },
+    { code: 'GBP', name: 'British Pound',    flag: '🇬🇧', rate: solData.gbp ? (solData.gbp / eacoPrice) : 0,        symbol: '£' },
+    { code: 'AUD', name: 'Australian Dollar',flag: '🇦🇺', rate: solData.aud ? (solData.aud / eacoPrice) : 0,        symbol: 'A$' },
+    { code: 'CAD', name: 'Canadian Dollar',  flag: '🇨🇦', rate: solData.cad ? (solData.cad / eacoPrice) : 0,        symbol: 'C$' },
+    { code: 'CHF', name: 'Swiss Franc',      flag: '🇨🇭', rate: solData.chf ? (solData.chf / eacoPrice) : 0,        symbol: 'Fr' },
+    { code: 'HKD', name: 'Hong Kong Dollar', flag: '🇭🇰', rate: solData.hkd ? (solData.hkd / eacoPrice) : 0,        symbol: 'HK$' },
+    { code: 'SGD', name: 'Singapore Dollar', flag: '🇸🇬', rate: solData.sgd ? (solData.sgd / eacoPrice) : 0,        symbol: 'S$' },
+  ];
+  
+  // Add SOL row
+  currencies.push({
+    code: 'SOL', name: 'Solana', flag: '☀️', rate: eacoPerSol, symbol: '◎'
+  });
+  
+  const data = {
+    solPrice,
+    solChange24h: solData.usd_24h_change || 0,
+    eacoPrice,
+    eacoPerSol,
+    currencies,
+    lastUpdated: new Date().toISOString()
+  };
+  
+  setCache(cacheKey, { success: true, data }, 3600); // Cache 1 hour
+  res.json({ success: true, data });
+});
+
+// ===== 3. Top SPL Tokens by Market Cap (CoinGecko Free API) =====
 router.get('/tokens/market-cap', async (req, res) => {
   const perPage = Math.min(parseInt(req.query.per_page) || 100, 250);
   const page = Math.max(parseInt(req.query.page) || 1, 1);
@@ -101,10 +154,20 @@ router.post('/helius/rpc', async (req, res) => {
   // Log for monitoring (don't log sensitive data in production)
   console.log(`[Helius RPC] Method: ${body?.method || 'unknown'}`);
   
+  // Auto-append maxSupportedTransactionVersion for v1 support (Simd-0296)
+  const modifiedBody = { ...body };
+  if (modifiedBody.params && Array.isArray(modifiedBody.params)) {
+    // For getBlock/getTransaction/getTransactionsForAddress, ensure v1 is supported
+    const v1Methods = ['getBlock', 'getTransaction', 'getTransactionsForAddress'];
+    if (v1Methods.includes(modifiedBody.method) && !modifiedBody.params.some(p => p && typeof p === 'object' && 'maxSupportedTransactionVersion' in p)) {
+      modifiedBody.params.push({ maxSupportedTransactionVersion: 1 });
+    }
+  }
+  
   const result = await proxyRequest(rpcUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
+    body: JSON.stringify(modifiedBody)
   });
   
   res.json(result);
@@ -286,12 +349,35 @@ router.get('/health', (req, res) => {
 });
 
 // ===== 10. Server Config Info (safe to expose) =====
+// EACO token constants (public on-chain data, safe to expose)
+const EACO_MINT = 'DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH';
+const SOL_MINT = 'So11111111111111111111111111111111111111112';
+const EACO_PER_SOL = 2953614; // Pool ratio from OrbMarkets
+
 router.get('/config', (req, res) => {
   res.json({
     heliusConfigured: !!HELIUS_KEY,
     birdeyeConfigured: !!BIRDEYE_KEY,
     cacheTtl: CACHE_TTL,
-    version: '1.0.0'
+    version: '1.1.0',
+    constants: {
+      eacoMint: EACO_MINT,
+      solMint: SOL_MINT,
+      eacoPerSol: EACO_PER_SOL
+    },
+    endpoints: [
+      'GET /api/sol-price',
+      'GET /api/eaco-exchange-rates',
+      'GET /api/tokens/market-cap',
+      'POST /api/helius/rpc',
+      'GET /api/helius/das/assets-by-owner',
+      'GET /api/helius/token-accounts',
+      'GET /api/birdeye/token/:address',
+      'GET /api/birdeye/price/:address',
+      'GET /api/jupiter/quote',
+      'GET /api/health',
+      'GET /api/config'
+    ]
   });
 });
 
