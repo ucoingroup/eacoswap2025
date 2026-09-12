@@ -529,6 +529,35 @@ let liveDataStatus = 'idle';
 let liveDataLastFetch = null;
 let liveDataSource = '';
 
+// Load cached data from localStorage on startup
+(function loadMcapFromStorage(){
+  try {
+    const stored = localStorage.getItem('eacoswap_mcap_cache');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (parsed && Array.isArray(parsed.tokens) && parsed.tokens.length > 0) {
+        liveTokenCache = parsed.tokens;
+        liveDataLastFetch = new Date(parsed.timestamp);
+        liveDataSource = 'localStorage';
+        liveDataStatus = 'success';
+        console.log('[EACOswap] Loaded ' + liveTokenCache.length + ' tokens from localStorage cache');
+      }
+    }
+  } catch(e) { /* Storage load failed */ }
+})();
+
+// Save cache to localStorage
+function saveMcapToStorage(){
+  try {
+    if (liveTokenCache.length > 0 && liveDataStatus === 'success') {
+      localStorage.setItem('eacoswap_mcap_cache', JSON.stringify({
+        tokens: liveTokenCache,
+        timestamp: liveDataLastFetch ? liveDataLastFetch.toISOString() : new Date().toISOString()
+      }));
+    }
+  } catch(e) { /* Storage quota exceeded */ }
+}
+
 // Format numbers for display
 function fmtPrice(p){ if(p==null||p===undefined)return '--'; return '$'+(p>=1?p.toFixed(2):p.toFixed(6)); }
 function fmtMcap(m){ if(m==null||m===undefined)return '--'; if(m>=1e9)return '$'+(m/1e9).toFixed(2)+'B'; if(m>=1e6)return '$'+(m/1e6).toFixed(1)+'M'; return '$'+m.toFixed(0); }
@@ -565,6 +594,7 @@ async function fetchMarketCapData(range){
     liveDataStatus='success';
     liveDataSource='Server';
     liveDataLastFetch=new Date();
+    saveMcapToStorage();
     renderMcapFromCache(range);
   }catch(err){
     liveDataStatus='error';
@@ -824,6 +854,25 @@ async function fetchSolPrice(){
   } catch (e) {
     // fallback
   }
+
+  // Fetch Solana TVL & DEX Volume from backend ecosystem endpoint
+  try {
+    const resp = await fetch(API_BASE + '/api/solana/ecosystem');
+    if (!resp.ok) throw new Error('Ecosystem API error');
+    const d = await resp.json();
+    if (d && d.success && d.data) {
+      const tvl = d.data.tvl;
+      const dexVol = d.data.dexVolume24h;
+      if (tvl) {
+        const tvlEl = document.getElementById('statSolTvl');
+        if (tvlEl) tvlEl.textContent = '$' + (tvl / 1e9).toFixed(2) + 'B';
+      }
+      if (dexVol) {
+        const volEl = document.getElementById('statDexVol');
+        if (volEl) volEl.textContent = '$' + (dexVol / 1e9).toFixed(2) + 'B';
+      }
+    }
+  } catch (e) { /* DeFiLlama fallback unavailable */ }
 
   // Fetch SPL token count via backend or direct RPC
   const rpcUrl = getHeliusRpcUrl();

@@ -121,8 +121,10 @@ router.get('/eaco-exchange-rates', async (req, res) => {
 });
 
 // ===== 3. Top SPL Tokens by Market Cap (CoinGecko Free API) =====
+// Supports both 'per_page' (canonical) and 'range' (frontend legacy) parameters
 router.get('/tokens/market-cap', async (req, res) => {
-  const perPage = Math.min(parseInt(req.query.per_page) || 100, 250);
+  // Accept 'range' from frontend or 'per_page' as canonical parameter
+  const perPage = Math.min(parseInt(req.query.per_page || req.query.range) || 100, 250);
   const page = Math.max(parseInt(req.query.page) || 1, 1);
   const vs = req.query.vs_currency || 'usd';
   
@@ -348,11 +350,47 @@ router.get('/health', (req, res) => {
   });
 });
 
+// ===== 9b. Solana Ecosystem Stats (DeFiLlama - Free, No Key) =====
+router.get('/solana/ecosystem', async (req, res) => {
+  const cacheKey = 'solana-ecosystem';
+  const cached = getCache(cacheKey);
+  if (cached) return res.json(cached);
+
+  try {
+    // Fetch Solana chain TVL from DeFiLlama
+    const tvlResult = await proxyRequest('https://api.llama.fi/v2/chains');
+    let solanaTvl = 0;
+    if (tvlResult.success && Array.isArray(tvlResult.data)) {
+      const solana = tvlResult.data.find(c => c.name === 'Solana');
+      if (solana && solana.tvl) {
+        solanaTvl = solana.tvl[solana.tvl.length - 1]?.tvl || solana.tvl;
+      }
+    }
+
+    // Fetch Solana DEX volume from DeFiLlama
+    const volResult = await proxyRequest('https://api.llama.fi/summary/dexs/solana');
+    let dexVol24h = 0;
+    if (volResult.success && volResult.data) {
+      dexVol24h = volResult.data.total24h || volResult.data.totalVolume24h || 0;
+    }
+
+    const data = {
+      tvl: solanaTvl,
+      dexVolume24h: dexVol24h,
+      lastUpdated: new Date().toISOString()
+    };
+    setCache(cacheKey, { success: true, data }, 300); // Cache 5min
+    res.json({ success: true, data });
+  } catch (err) {
+    res.json({ success: false, error: err.message });
+  }
+});
+
 // ===== 10. Server Config Info (safe to expose) =====
 // EACO token constants (public on-chain data, safe to expose)
 const EACO_MINT = 'DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH';
 const SOL_MINT = 'So11111111111111111111111111111111111111112';
-const EACO_PER_SOL = 2953614; // Pool ratio from OrbMarkets
+const EACO_PER_SOL = 2891354; // Pool ratio from OrbMarkets (2026-09-10: SOL $101.66 / EACO $0.00003516)
 
 router.get('/config', (req, res) => {
   res.json({
@@ -375,6 +413,7 @@ router.get('/config', (req, res) => {
       'GET /api/birdeye/token/:address',
       'GET /api/birdeye/price/:address',
       'GET /api/jupiter/quote',
+      'GET /api/solana/ecosystem',
       'GET /api/health',
       'GET /api/config'
     ]
